@@ -1,6 +1,6 @@
 from fastapi import FastAPI, APIRouter, HTTPException
 from configurations import collection, client
-from database.schemas import all_orders, individual_order
+from database.schemas import individual_order
 from database.models import Order
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -52,7 +52,3 @@ async def create_order(new_order: Order):
         return HTTPException(status_code=500, detail=f"Could not create an order: {e}")
 
 app.include_router(router)
-
-"""@app.get("/", tags=["root"])
-async def read_root() -> dict:
-    return {"message": "Hello, World!"}"""
