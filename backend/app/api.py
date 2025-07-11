@@ -9,8 +9,6 @@ app = FastAPI()
 router = APIRouter()
 
 
-
-
 origins = [
     "http://localhost:5173",
     "localhost:5173"
@@ -33,6 +31,11 @@ async def db_response():
         return {"info": info}
     except Exception as e:
         return HTTPException(status_code=500, detail=f"{e}")
+
+
+@router.get("/healthcheck")
+async def health_check():
+    return {"message": "Server is working fine."}
 
 
 @router.get("/")
