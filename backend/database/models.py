@@ -7,7 +7,18 @@ class Account(BaseModel):
     email: str
 
 
+class Ingredient(BaseModel):
+    name: str
+    weight: int
+    price: int
+
+
+class Burger(BaseModel):
+    name: str
+    ingredients: list[Ingredient]
+
+
 class Order(BaseModel):
-    number: int
+    number: str
     status: str
-    content: str
+    content: list[Burger]
