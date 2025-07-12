@@ -20,5 +20,8 @@ class Burger(BaseModel):
 
 class Order(BaseModel):
     number: str
+    customer: str
     status: str
     content: list[Burger]
+    price: int
+    weight: int
