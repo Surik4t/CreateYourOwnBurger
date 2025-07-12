@@ -1,27 +1,27 @@
 from pydantic import BaseModel
 
 
-class Account(BaseModel):
+class AccountModel(BaseModel):
     name: str
     password: str
     email: str
 
 
-class Ingredient(BaseModel):
+class IngredientModel(BaseModel):
     name: str
     weight: int
     price: int
 
 
-class Burger(BaseModel):
+class BurgerModel(BaseModel):
     name: str
-    ingredients: list[Ingredient]
+    ingredients: list[IngredientModel]
 
 
-class Order(BaseModel):
+class OrderModel(BaseModel):
     number: str
     customer: str
     status: str
-    content: list[Burger]
+    content: list[BurgerModel]
     price: int
     weight: int

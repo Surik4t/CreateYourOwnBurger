@@ -1,7 +1,8 @@
 from fastapi import FastAPI, APIRouter, HTTPException
-from configurations import collection, client
-from database.schemas import individual_order
-from database.models import Order
+from configurations import orders_collection, client
+from .services import Ingredients
+from database.schemas import order_schema
+from database.models import OrderModel
 from fastapi.middleware.cors import CORSMiddleware
 from bson.objectid import ObjectId
 
@@ -43,15 +44,15 @@ async def health_check():
 @router.get("/", tags=["orders"])
 async def get_all_orders():
     result = list()
-    async for order in collection.find():
-        result.append(individual_order(order))
+    async for order in orders_collection.find():
+        result.append(order_schema(order))
     return result
 
 
 @router.post("/", tags=["orders"])
-async def create_order(new_order: Order):
+async def create_order(new_order: OrderModel):
     try:
-        cursor = await collection.insert_one(dict(new_order))
+        cursor = await orders_collection.insert_one(dict(new_order))
         return {"status_code": 200, "id": str(cursor)}
     except Exception as e:
         return HTTPException(status_code=500, detail=f"Could not create an order: {e}")
@@ -60,13 +61,15 @@ async def create_order(new_order: Order):
 @router.delete("/{order_id}", tags=["orders"])
 async def remove_order(order_id):
     try:
-        order = await collection.find_one({"_id": ObjectId(order_id)})
+        order = await orders_collection.find_one({"_id": ObjectId(order_id)})
         if order:
-            await collection.delete_one({"_id": ObjectId(order_id)})
+            await orders_collection.delete_one({"_id": ObjectId(order_id)})
             return {"message": "Order removed."}
         else:
             return HTTPException(status_code=404, detail="Order not found.")
     except Exception as e:
         return HTTPException(status_code=500, detail=f"An error occured: {e}")
 
+
 app.include_router(router)
+app.include_router(Ingredients.router)
