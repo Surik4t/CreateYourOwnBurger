@@ -28,7 +28,8 @@ app.add_middleware(
 async def db_response():
     try:
         info = await client.server_info()
-        return {"info": info}
+        if info:
+            return {"message": "DB connection: OK"}
     except Exception as e:
         return HTTPException(status_code=500, detail=f"{e}")
 
