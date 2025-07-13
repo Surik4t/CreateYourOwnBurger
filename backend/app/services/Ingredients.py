@@ -20,17 +20,31 @@ async def add_ingredient(new_ingredient: IngredientModel):
         cursor = await ingredient_collection.insert_one(dict(new_ingredient))
         return {"status_code": 200, "id": str(cursor)}
     except Exception as e:
-        return HTTPException(status_code=500, detail=f"Could not create an order: {e}")
+        return HTTPException(status_code=500, detail=f"Could not create an ingredient: {e}")
+
+
+@router.put("/{ingredient_id}")
+async def update_ingredient(ingredient_id, updated_ingredient: IngredientModel):
+    try:
+        ingredient = await ingredient_collection.find_one({"_id": ObjectId(ingredient_id)})
+        if ingredient:
+            await ingredient_collection.replace_one({"_id": ObjectId(ingredient_id)}, dict(updated_ingredient))
+            return {"message": "Ingredient changed."}
+        else:
+            return HTTPException(status_code=404, detail="Ingredient not found.")
+    except Exception as e:
+        return HTTPException(status_code=500, detail=f"Error updating ingredient: {e}")
+
 
 
 @router.delete("/{ingredient_id}")
 async def remove_ingredient(ingredient_id):
     try:
-        order = await ingredient_collection.find_one({"_id": ObjectId(ingredient_id)})
-        if order:
+        ingredient = await ingredient_collection.find_one({"_id": ObjectId(ingredient_id)})
+        if ingredient:
             await ingredient_collection.delete_one({"_id": ObjectId(ingredient_id)})
             return {"message": "Ingredient removed."}
         else:
             return HTTPException(status_code=404, detail="Ingredient not found.")
     except Exception as e:
-        return HTTPException(status_code=500, detail=f"An error occured: {e}")
+        return HTTPException(status_code=500, detail=f"Error deleting ingredient: {e}")
