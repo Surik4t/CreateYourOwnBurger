@@ -36,7 +36,6 @@ async def update_ingredient(ingredient_id, updated_ingredient: IngredientModel):
         return HTTPException(status_code=500, detail=f"Error updating ingredient: {e}")
 
 
-
 @router.delete("/{ingredient_id}")
 async def remove_ingredient(ingredient_id):
     try:

@@ -1,4 +1,5 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+from datetime import datetime
 
 
 class AccountModel(BaseModel):
@@ -9,8 +10,8 @@ class AccountModel(BaseModel):
 
 class IngredientModel(BaseModel):
     name: str
-    weight: int
-    price: int
+    weight: int = Field(gt=0, description="The price must be greater than zero")
+    price: int = Field(gt=0, description="The weight must be greater than zero")
 
 
 class BurgerModel(BaseModel):
@@ -23,5 +24,6 @@ class OrderModel(BaseModel):
     customer: str
     status: str
     content: list[BurgerModel]
-    price: int
-    weight: int
+    price: int = Field(gt=0, description="The price must be greater than zero")
+    weight: int = Field(gt=0, description="The weight must be greater than zero")
+    creation_datetime: datetime
