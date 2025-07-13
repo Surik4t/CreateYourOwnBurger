@@ -28,7 +28,7 @@ export default function Order() {
         <ChakraProvider value={defaultSystem}>
             <Container mt={100}>
                 <h1>TEST</h1>
-        </Container>
-    </ChakraProvider>
+            </Container>
+        </ChakraProvider>
     );
 }

@@ -1,35 +1,49 @@
-import { Flex, Tabs } from "@chakra-ui/react"
+import { List } from "@chakra-ui/react"
+import axios, { AxiosError } from "axios";
+import { useEffect, useState } from "react";
 
-const Demo = () => {
-    return (
-        <Flex
-            align="center"
-            width="100%"
-            padding="rem"
-            backgroundColor="Blue"
-            justify="center"    
-        >
-            <Tabs.Root defaultValue="members" variant="plain">
-            <Tabs.List bg="red" rounded="l3" p="1">
-                <Tabs.Trigger value="members">
-                Creator
-                </Tabs.Trigger>
-                <Tabs.Trigger value="projects">
-                Orders
-                </Tabs.Trigger>
-                <Tabs.Trigger value="tasks">
-                About
-                </Tabs.Trigger>
-                <Tabs.Indicator rounded="l2" />
-            </Tabs.List>
-            <Tabs.Content value="members">Manage your team members</Tabs.Content>
-            <Tabs.Content value="projects">Manage your projects</Tabs.Content>
-            <Tabs.Content value="tasks">
-                Manage your tasks for freelancers
-            </Tabs.Content>
-            </Tabs.Root>
-        </Flex>
-    )
+
+interface Ingredient {
+    id: string,
+    name: string,
+    weight: number,
+    price: number,
 }
 
-export default Demo;
+
+const Creator = () => {
+    const [ingredients, setIngredients] = useState<Ingredient[]>([]);
+
+    useEffect(() => {get_ingredients(), healthcheck()}, []);
+
+    async function get_ingredients() {
+        const url = "http://localhost:8000/ingredients/";
+        await axios.get(url)
+            .then(response => setIngredients(response.data))
+            .catch((error: AxiosError) => console.error(error.message))    
+    }
+
+
+    async function healthcheck() {
+        const url = "http://localhost:8000/healthcheck";
+        await axios.get(url)
+            .then(response => console.log(response.data.message))
+            .catch((error: AxiosError) => {
+                if (error.response) {
+                    console.error("Error status code:", error.response.status);
+                    console.error("Details:", error.message);
+                }
+            });
+    }
+   
+   
+    return (
+        <List.Root>
+            {ingredients.map((ingredient) => (
+                <List.Item key={ingredient.id}>{ingredient.name}</List.Item>
+            ))}
+        </List.Root>
+    );
+}
+
+export default Creator;
