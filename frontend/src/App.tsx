@@ -1,4 +1,4 @@
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, createSystem, defineConfig, defaultConfig } from "@chakra-ui/react";
 import { defaultSystem } from "@chakra-ui/react"
 import Background from "./components/Background";
 import Order from './components/Order';
@@ -8,7 +8,7 @@ function App() {
 
     return (
         <ChakraProvider value={defaultSystem}>
-        <Background />
+            <Background />
         </ChakraProvider>
     )
 }

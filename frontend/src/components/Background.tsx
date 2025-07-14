@@ -4,31 +4,29 @@ import Menu from "./Menu";
 
 const Background = () => {
     return (
-        <Flex bg="red">
-
+        <Flex bg="red.900" colorPalette="orange">
+            {/* Шапка */} 
             <Flex
                 as="nav"
                 align="center"
                 justify="space-between"
-                bg="gray.400"
+                bg="blackAlpha.900"
                 height="100px"
                 width="100%"
                 position="fixed"
-                top="0"
                 flexWrap="wrap"
             >
                 <Header />
             </Flex>
 
+            {/* Меню */} 
             <Flex
-                bg="blue"
                 mt="100px"
                 width="100%"
                 justify="center"
             >
                 <Menu />
             </Flex>
-              
         </Flex>
     );
 };

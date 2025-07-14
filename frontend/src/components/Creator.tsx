@@ -1,4 +1,4 @@
-import { List } from "@chakra-ui/react"
+import { Table, Button } from "@chakra-ui/react"
 import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 
@@ -38,11 +38,43 @@ const Creator = () => {
    
    
     return (
+        <Table.Root
+            bg="orange"
+            color="black"
+            variant="outline"
+            size="sm"
+            maxWidth="50%"
+        >
+            <Table.Header bg="orange.600">
+                <Table.Row>
+                    <Table.ColumnHeader>Ingredient</Table.ColumnHeader>
+                    <Table.ColumnHeader>Price</Table.ColumnHeader>
+                    <Table.ColumnHeader textAlign="end">Add</Table.ColumnHeader>
+                </Table.Row>
+            </Table.Header>
+            <Table.Body>
+                {ingredients.map((ingredient) => (
+                <Table.Row key={ingredient.id}>
+                    <Table.Cell>{ingredient.name}</Table.Cell>
+                    <Table.Cell>{ingredient.price}</Table.Cell>
+                    <Table.Cell textAlign="end">
+                        <Button bg="orange.600"
+                        >
+                            +
+                        </Button>
+                    </Table.Cell>
+                </Table.Row>
+                ))}
+            </Table.Body>
+        </Table.Root>
+
+        /*
         <List.Root>
             {ingredients.map((ingredient) => (
                 <List.Item key={ingredient.id}>{ingredient.name}</List.Item>
             ))}
         </List.Root>
+        */
     );
 }
 
