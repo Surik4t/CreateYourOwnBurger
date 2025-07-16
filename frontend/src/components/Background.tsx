@@ -22,6 +22,7 @@ const Background = () => {
             {/* Меню */} 
             <Flex
                 mt="100px"
+                mb="100px"
                 width="100%"
                 justify="center"
             >

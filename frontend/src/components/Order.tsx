@@ -1,4 +1,3 @@
-
 import { Container } from "@chakra-ui/react";
 import { defaultSystem } from "@chakra-ui/react";
 import { ChakraProvider } from "@chakra-ui/react";
