@@ -40,7 +40,7 @@ const Creator = () => {
     useEffect(() => {get_ingredients(), healthcheck()}, []);
 
     async function get_ingredients() {
-        const url = "http://localhost:8000/ingredients/";
+        const url = "http://localhost:8000/ingredients";
         await axios.get(url)
             .then(response => setIngredients(response.data))
             .catch((error: AxiosError) => console.error(error.message))    

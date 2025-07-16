@@ -6,7 +6,7 @@ from bson.objectid import ObjectId
 
 router = APIRouter(prefix="/ingredients", tags=["ingredients"])
 
-@router.get("/")
+@router.get("")
 async def get_all_ingredients():
     result = list()
     async for ingredient in ingredient_collection.find():
@@ -14,7 +14,7 @@ async def get_all_ingredients():
     return result
 
 
-@router.post("/")
+@router.post("")
 async def add_ingredient(new_ingredient: IngredientModel):
     try:
         cursor = await ingredient_collection.insert_one(dict(new_ingredient))
