@@ -52,6 +52,7 @@ const Creator = () => {
    
     return (
         <Flex justify="space-between">
+            {/* Список добавленных ингредиентов */} 
             <List.Root mr="10p">
                 {selectedIngredients.map((selectedIngredient) => (
                     <List.Item key={selectedIngredient.id}>
@@ -61,6 +62,13 @@ const Creator = () => {
                                 ml="100px"
                                 size="sm"
                                 bg="orange.600"
+                                onClick={() => 
+                                    setSelectedIngredients(
+                                        selectedIngredients.filter(ingr =>
+                                            ingr.id !== selectedIngredient.id
+                                        )
+                                    )
+                                }
                             >
                             </CloseButton>
                         </Flex>
