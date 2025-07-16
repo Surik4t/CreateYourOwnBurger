@@ -6,13 +6,13 @@ const Menu = () => {
     return (
         <Tabs.Root defaultValue="creator" fitted width="75%">
             <Tabs.List p="1">
-                <Tabs.Trigger value="creator">
+                <Tabs.Trigger rounded="none" color="black" bg="orange.400" value="creator">
                     Creator
                 </Tabs.Trigger>
-                <Tabs.Trigger value="orders">
+                <Tabs.Trigger rounded="none" color="black" bg="orange.400" value="orders">
                     Orders
                 </Tabs.Trigger>
-                <Tabs.Trigger value="about">
+                <Tabs.Trigger rounded="none" color="black" bg="orange.400" value="about">
                     About
                 </Tabs.Trigger>
             </Tabs.List>

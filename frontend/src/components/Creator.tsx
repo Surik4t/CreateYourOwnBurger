@@ -17,6 +17,7 @@ const Creator = () => {
     const [nextId, setNextId] = useState<number>(0);
     const [orderPrice, setOrderPrice] = useState<number>(0);
     const [orderWeight, setOrderWeight] = useState<number>(0);
+    const len = selectedIngredients.length;
 
     useEffect(() => {
         setOrderPrice(selectedIngredients.reduce((sum, ingr) => sum + ingr.price, 0));
@@ -70,7 +71,7 @@ const Creator = () => {
                                 {selectedIngredient.name}
                                 <CloseButton 
                                     ml="100px"
-                                    size="sm"
+                                    size="2xs"
                                     bg="orange.600"
                                     onClick={() => 
                                         setSelectedIngredients(
@@ -92,6 +93,7 @@ const Creator = () => {
                     variant="outline"
                     size="sm"
                     maxWidth="50%"
+                    stickyHeader
                 >
                     <Table.Header bg="orange.600">
                         <Table.Row>
@@ -120,7 +122,7 @@ const Creator = () => {
             </Flex>
             <Flex>
                 <h1>
-                    Total price: {orderPrice}, Weight: {orderWeight} 
+                    Total price: {orderPrice}, Weight: {orderWeight}, len: {len}
                 </h1>
             </Flex>
         </Flex>
