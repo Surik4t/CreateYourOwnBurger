@@ -1,4 +1,4 @@
-import { Table, List, Button, Flex, CloseButton, Input, Box } from "@chakra-ui/react"
+import { Table, List, Button, Flex, CloseButton, Input, Box, Image } from "@chakra-ui/react"
 import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 
@@ -62,10 +62,33 @@ const Creator = () => {
    
     return (
         <Flex wrap="wrap">
-            <Flex minWidth="100%" justifyContent="space-between">
+            <Flex minWidth="100%" justifyContent="space-between" gap="2em" >
+
+                {/* Динамическая иллюстрация бургера */}
+                <Flex direction="column" gap="1em">
+                    <Image
+                        rounded="md" 
+                        src="https://img.freepik.com/free-photo/delicious-burgers-studio_23-2150902146.jpg?semt=ais_items_boosted&w=740"
+                        height="400px"
+                        width="400px"
+                        alt="BURGA"
+                    />
+                    <Flex direction="column" width="400px" gap="1em">
+                        <Input
+                            bg="orange.200"
+                            color="black"
+                            placeholder="Name your burger!"
+                            variant="subtle"
+                            >
+                        </Input>
+                        <Button bg="orange.400">
+                            Add to order
+                        </Button>
+                    </Flex>
+                </Flex>
 
                 {/* Список добавленных ингредиентов */} 
-                <List.Root mr="10p">
+                <List.Root color="black" mr="10p">
                     {selectedIngredients.map((selectedIngredient) => (
                         <List.Item key={selectedIngredient.id}>
                             <Flex justifyContent="space-between">
@@ -73,7 +96,7 @@ const Creator = () => {
                                 <CloseButton 
                                     ml="100px"
                                     size="2xs"
-                                    bg="orange.600"
+                                    bg="orange.400"
                                     onClick={() => 
                                         setSelectedIngredients(
                                             selectedIngredients.filter(ingr =>
@@ -89,13 +112,13 @@ const Creator = () => {
                 {/* Таблица ингредиентов */} 
                 <Table.ScrollArea width="50%" height="25rem">
                     <Table.Root
-                        bg="orange"
+                        bg="orange.200"
                         color="black"
                         variant="outline"
                         size="sm"
                         stickyHeader
                     >
-                        <Table.Header bg="orange.600">
+                        <Table.Header bg="orange.400">
                             <Table.Row>
                                 <Table.ColumnHeader>Ingredient</Table.ColumnHeader>
                                 <Table.ColumnHeader>Price</Table.ColumnHeader>
@@ -109,7 +132,7 @@ const Creator = () => {
                                 <Table.Cell>{ingredient.price}</Table.Cell>
                                 <Table.Cell textAlign="end">
                                     <Button
-                                        bg="orange.600"
+                                        bg="orange.400"
                                         onClick={() => selectIngredient(ingredient)}
                                     >
                                         +
@@ -122,25 +145,12 @@ const Creator = () => {
                 </Table.ScrollArea>
 
             </Flex>
-            <Flex direction="column" gap="2em" mt="1em">
-                <Box>
-                    <Input
-                        bg="orange.200"
-                        color="white"
-                        placeholder="Name your burger!"
-                        variant="subtle"
-                        >
-                    </Input>
-                    <Button bg="orange.600">
-                        Add to order
-                    </Button>
-                </Box>
-                <Box>
-                    <h1>
-                        Total price: {orderPrice}, Weight: {orderWeight}, len: {len}
-                    </h1>
-                </Box>
-            </Flex>
+
+            <Box mt="1em" color="black">
+                <h1>
+                    Total price: {orderPrice}, Weight: {orderWeight}, len: {len}
+                </h1>
+            </Box>
 
         </Flex>
     );

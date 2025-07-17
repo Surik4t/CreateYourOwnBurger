@@ -4,13 +4,13 @@ import Menu from "./Menu";
 
 const Background = () => {
     return (
-        <Flex bg="red.900" colorPalette="orange">
+        <Flex bg="#F5EBDC" colorPalette="orange">
             {/* Шапка */} 
             <Flex
                 as="nav"
                 align="center"
                 justify="space-between"
-                bg="blackAlpha.900"
+                bg="#502212ff"
                 height="100px"
                 width="100%"
                 position="fixed"
