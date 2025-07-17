@@ -1,4 +1,4 @@
-import { Table, List, Button, Flex, CloseButton, Container, Box } from "@chakra-ui/react"
+import { Table, List, Button, Flex, CloseButton, Input, Box } from "@chakra-ui/react"
 import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 
@@ -63,6 +63,7 @@ const Creator = () => {
     return (
         <Flex wrap="wrap">
             <Flex minWidth="100%" justifyContent="space-between">
+
                 {/* Список добавленных ингредиентов */} 
                 <List.Root mr="10p">
                     {selectedIngredients.map((selectedIngredient) => (
@@ -82,49 +83,65 @@ const Creator = () => {
                                 </CloseButton>
                             </Flex>
                         </List.Item>
-
                     ))}
                 </List.Root>
 
                 {/* Таблица ингредиентов */} 
-                <Table.Root
-                    bg="orange"
-                    color="black"
-                    variant="outline"
-                    size="sm"
-                    maxWidth="50%"
-                    stickyHeader
-                >
-                    <Table.Header bg="orange.600">
-                        <Table.Row>
-                            <Table.ColumnHeader>Ingredient</Table.ColumnHeader>
-                            <Table.ColumnHeader>Price</Table.ColumnHeader>
-                            <Table.ColumnHeader textAlign="end">Add</Table.ColumnHeader>
-                        </Table.Row>
-                    </Table.Header>
-                    <Table.Body>
-                        {ingredients.map((ingredient) => (
-                        <Table.Row key={ingredient.id}>
-                            <Table.Cell>{ingredient.name}</Table.Cell>
-                            <Table.Cell>{ingredient.price}</Table.Cell>
-                            <Table.Cell textAlign="end">
-                                <Button
-                                    bg="orange.600"
-                                    onClick={() => selectIngredient(ingredient)}
-                                >
-                                    +
-                                </Button>
-                            </Table.Cell>
-                        </Table.Row>
-                        ))}
-                    </Table.Body>
-                </Table.Root>
+                <Table.ScrollArea width="50%" height="25rem">
+                    <Table.Root
+                        bg="orange"
+                        color="black"
+                        variant="outline"
+                        size="sm"
+                        stickyHeader
+                    >
+                        <Table.Header bg="orange.600">
+                            <Table.Row>
+                                <Table.ColumnHeader>Ingredient</Table.ColumnHeader>
+                                <Table.ColumnHeader>Price</Table.ColumnHeader>
+                                <Table.ColumnHeader textAlign="end">Add</Table.ColumnHeader>
+                            </Table.Row>
+                        </Table.Header>
+                        <Table.Body>
+                            {ingredients.map((ingredient) => (
+                            <Table.Row key={ingredient.id}>
+                                <Table.Cell>{ingredient.name}</Table.Cell>
+                                <Table.Cell>{ingredient.price}</Table.Cell>
+                                <Table.Cell textAlign="end">
+                                    <Button
+                                        bg="orange.600"
+                                        onClick={() => selectIngredient(ingredient)}
+                                    >
+                                        +
+                                    </Button>
+                                </Table.Cell>
+                            </Table.Row>
+                            ))}
+                        </Table.Body>
+                    </Table.Root>
+                </Table.ScrollArea>
+
             </Flex>
-            <Flex>
-                <h1>
-                    Total price: {orderPrice}, Weight: {orderWeight}, len: {len}
-                </h1>
+            <Flex direction="column" gap="2em" mt="1em">
+                <Box>
+                    <Input
+                        bg="orange.200"
+                        color="white"
+                        placeholder="Name your burger!"
+                        variant="subtle"
+                        >
+                    </Input>
+                    <Button bg="orange.600">
+                        Add to order
+                    </Button>
+                </Box>
+                <Box>
+                    <h1>
+                        Total price: {orderPrice}, Weight: {orderWeight}, len: {len}
+                    </h1>
+                </Box>
             </Flex>
+
         </Flex>
     );
 }
