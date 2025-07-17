@@ -68,7 +68,8 @@ const Creator = () => {
                 <Flex direction="column" gap="1em">
                     <Image
                         rounded="md" 
-                        src="https://img.freepik.com/free-photo/delicious-burgers-studio_23-2150902146.jpg?semt=ais_items_boosted&w=740"
+                        //src="https://img.freepik.com/free-photo/delicious-burgers-studio_23-2150902146.jpg?semt=ais_items_boosted&w=740"
+                        src="https://img.freepik.com/premium-photo/big-tasty-home-made-burger-with-flying-ingredients-white-background-isolated_158023-1.jpg?semt=ais_hybrid&w=740"
                         height="400px"
                         width="400px"
                         alt="BURGA"
@@ -88,34 +89,36 @@ const Creator = () => {
                 </Flex>
 
                 {/* Список добавленных ингредиентов */} 
-                <List.Root color="black" mr="10p">
-                    {selectedIngredients.map((selectedIngredient) => (
-                        <List.Item key={selectedIngredient.id}>
-                            <Flex justifyContent="space-between">
-                                {selectedIngredient.name}
-                                <CloseButton 
-                                    ml="100px"
-                                    size="2xs"
-                                    bg="orange.400"
-                                    onClick={() => 
-                                        setSelectedIngredients(
-                                            selectedIngredients.filter(ingr =>
-                                                ingr.id !== selectedIngredient.id
-                                            ))}
-                                >
-                                </CloseButton>
-                            </Flex>
-                        </List.Item>
-                    ))}
-                </List.Root>
+                <Flex bg="white" rounded="xl" width="25%">
+                    <List.Root color="black" mt="1em" ml="auto" mr="auto" fontSize="xl" width="80%">
+                        {selectedIngredients.map((selectedIngredient) => (
+                            <List.Item key={selectedIngredient.id}>
+                                <Flex justifyContent="space-between">
+                                    {selectedIngredient.name}
+                                    <CloseButton 
+                                        size="2xs"
+                                        bg="orange.400"
+                                        onClick={() => 
+                                            setSelectedIngredients(
+                                                selectedIngredients.filter(ingr =>
+                                                    ingr.id !== selectedIngredient.id
+                                                ))}
+                                    >
+                                    </CloseButton>
+                                </Flex>
+                            </List.Item>
+                        ))}
+                    </List.Root>
+                </Flex>
 
                 {/* Таблица ингредиентов */} 
-                <Table.ScrollArea width="50%" height="25rem">
+                <Table.ScrollArea width="50%" height="100%">
                     <Table.Root
                         bg="orange.200"
                         color="black"
                         variant="outline"
                         size="sm"
+                        rounded="xl"
                         stickyHeader
                     >
                         <Table.Header bg="orange.400">

@@ -4,7 +4,7 @@ import Menu from "./Menu";
 
 const Background = () => {
     return (
-        <Flex bg="#F5EBDC" colorPalette="orange">
+        <Flex bg="#f8ebd7ff" colorPalette="orange">
             {/* Шапка */} 
             <Flex
                 as="nav"
