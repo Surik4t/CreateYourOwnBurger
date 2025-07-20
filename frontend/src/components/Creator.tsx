@@ -67,9 +67,8 @@ const Creator = () => {
                 {/* Динамическая иллюстрация бургера */}
                 <Flex direction="column" gap="1em">
                     <Image
-                        rounded="md" 
-                        //src="https://img.freepik.com/free-photo/delicious-burgers-studio_23-2150902146.jpg?semt=ais_items_boosted&w=740"
-                        src="https://img.freepik.com/premium-photo/big-tasty-home-made-burger-with-flying-ingredients-white-background-isolated_158023-1.jpg?semt=ais_hybrid&w=740"
+                        rounded="md"
+                        src="https://img.freepik.com/free-photo/delicious-burgers-studio_23-2150902146.jpg?semt=ais_items_boosted&w=740"
                         height="400px"
                         width="400px"
                         alt="BURGA"
@@ -112,40 +111,43 @@ const Creator = () => {
                 </Flex>
 
                 {/* Таблица ингредиентов */} 
-                <Table.ScrollArea width="50%" height="100%">
-                    <Table.Root
-                        bg="orange.200"
-                        color="black"
-                        variant="outline"
-                        size="sm"
-                        rounded="xl"
-                        stickyHeader
-                    >
-                        <Table.Header bg="orange.400">
-                            <Table.Row>
-                                <Table.ColumnHeader>Ingredient</Table.ColumnHeader>
-                                <Table.ColumnHeader>Price</Table.ColumnHeader>
-                                <Table.ColumnHeader textAlign="end">Add</Table.ColumnHeader>
-                            </Table.Row>
-                        </Table.Header>
-                        <Table.Body>
-                            {ingredients.map((ingredient) => (
-                            <Table.Row key={ingredient.id}>
-                                <Table.Cell>{ingredient.name}</Table.Cell>
-                                <Table.Cell>{ingredient.price}</Table.Cell>
-                                <Table.Cell textAlign="end">
-                                    <Button
-                                        bg="orange.400"
-                                        onClick={() => selectIngredient(ingredient)}
-                                    >
-                                        +
-                                    </Button>
-                                </Table.Cell>
-                            </Table.Row>
-                            ))}
-                        </Table.Body>
-                    </Table.Root>
-                </Table.ScrollArea>
+                <Flex width="50%">
+                    <Table.ScrollArea height="100%" flex="1">
+                        <Table.Root
+                            bg="orange.200"
+                            color="black"
+                            variant="outline"
+                            size="sm"
+                            width=""
+                            rounded="xl"
+                            stickyHeader
+                        >
+                            <Table.Header bg="orange.400">
+                                <Table.Row>
+                                    <Table.ColumnHeader>Ingredient</Table.ColumnHeader>
+                                    <Table.ColumnHeader>Price</Table.ColumnHeader>
+                                    <Table.ColumnHeader textAlign="end">Add</Table.ColumnHeader>
+                                </Table.Row>
+                            </Table.Header>
+                            <Table.Body>
+                                {ingredients.map((ingredient) => (
+                                <Table.Row key={ingredient.id}>
+                                    <Table.Cell>{ingredient.name}</Table.Cell>
+                                    <Table.Cell>{ingredient.price}</Table.Cell>
+                                    <Table.Cell textAlign="end">
+                                        <Button
+                                            bg="orange.400"
+                                            onClick={() => selectIngredient(ingredient)}
+                                        >
+                                            +
+                                        </Button>
+                                    </Table.Cell>
+                                </Table.Row>
+                                ))}
+                            </Table.Body>
+                        </Table.Root>
+                    </Table.ScrollArea>
+                </Flex>
 
             </Flex>
 
