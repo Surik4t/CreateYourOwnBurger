@@ -185,12 +185,13 @@ const Creator = () => {
             </Flex>
             
             {/* Состав заказа */}
-            <Flex mt="1em" width="100%" bg="white" color="black" rounded="xl">
+            <Flex mt="1em" width="100%" bg="white" color="black" rounded="xl" overflowX="auto">
                 {burgers.map((burger) => (
                     <Card.Root
                         bg="orange.200"
                         colorPalette="orange"
-                        width="15%"
+                        minWidth="15%"
+                        flexShrink={0}
                         margin="0.5em"
                         >
                         <Card.Body>
