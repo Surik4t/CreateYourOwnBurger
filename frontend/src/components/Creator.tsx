@@ -1,4 +1,4 @@
-import { Table, Text, List, Button, Flex, CloseButton, Input, Box, Image } from "@chakra-ui/react"
+import { Table, Text, List, Button, Flex, CloseButton, Input, Box, Image, Card } from "@chakra-ui/react"
 import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 
@@ -10,23 +10,32 @@ interface Ingredient {
     price: number,
 }
 
+interface Burger {
+    name: string,
+    ingredients: Ingredient[],
+    weight: number,
+    price: number,
+}
+
 
 const Creator = () => {
     const [ingredients, setIngredients] = useState<Ingredient[]>([]);
+    const [burgers, setBurgers] = useState<Burger[]>([]);
     const [selectedIngredients, setSelectedIngredients] = useState<Ingredient[]>([]);
     const [nextId, setNextId] = useState<number>(0);
-    const [orderPrice, setOrderPrice] = useState<number>(0);
-    const [orderWeight, setOrderWeight] = useState<number>(0);
+    const [burgerPrice, setBurgerPrice] = useState<number>(0);
+    const [burgerWeight, setBurgerWeight] = useState<number>(0);
+    const [burgerName, setBurgerName] = useState("");
     const len = selectedIngredients.length;
 
     useEffect(() => {
-        setOrderPrice(selectedIngredients.reduce((sum, ingr) => sum + ingr.price, 0));
-        setOrderWeight(selectedIngredients.reduce((sum, ingr) => sum + ingr.weight, 0));
+        setBurgerPrice(selectedIngredients.reduce((sum, ingr) => sum + ingr.price, 0));
+        setBurgerWeight(selectedIngredients.reduce((sum, ingr) => sum + ingr.weight, 0));
     }, [selectedIngredients])
 
 
     const selectIngredient = (ingredient: Ingredient) => {
-    setSelectedIngredients([
+        setSelectedIngredients([
             {
                 id: nextId.toString(),
                 name: ingredient.name,
@@ -37,6 +46,18 @@ const Creator = () => {
         ]);
         setNextId(nextId + 1);
     };
+
+    const addToOrder = () => {
+        setBurgers([
+            {
+                name: burgerName,
+                ingredients: selectedIngredients,
+                weight: burgerWeight,
+                price: burgerPrice,
+            },
+            ...burgers,
+        ]);
+    }
 
     useEffect(() => {get_ingredients(), healthcheck()}, []);
 
@@ -67,7 +88,7 @@ const Creator = () => {
                 {/* Динамическая иллюстрация бургера */}
                 <Flex direction="column" gap="1em">
                     <Image
-                        rounded="md"
+                        rounded="xl"
                         src="https://img.freepik.com/free-photo/delicious-burgers-studio_23-2150902146.jpg?semt=ais_items_boosted&w=740"
                         height="400px"
                         width="400px"
@@ -75,13 +96,15 @@ const Creator = () => {
                     />
                     <Flex direction="column" width="400px" gap="1em">
                         <Input
+                            value={burgerName}
+                            onChange={(e) => setBurgerName(e.currentTarget.value)}
                             bg="orange.200"
                             color="black"
                             placeholder="Name your burger!"
                             variant="subtle"
                             >
                         </Input>
-                        <Button bg="orange.400">
+                        <Button bg="orange.400" onClick={addToOrder}>
                             Add to order
                         </Button>
                     </Flex>
@@ -151,10 +174,23 @@ const Creator = () => {
                 </Flex>
 
             </Flex>
-
+            
+            {/* Состав заказа */}
+            <Flex mt="1em" width="100%" bg="white" color="black" rounded="xl">
+                {burgers.map((burger) => (
+                    <Card.Root>
+                        <Card.Body>
+                            <Card.Title>
+                                {burger.name}
+                            </Card.Title>
+                        </Card.Body>
+                    </Card.Root>
+                ))}
+            </Flex>
+            
             <Box mt="1em" color="black">
                 <h1>
-                    Total price: {orderPrice}, Weight: {orderWeight}
+                    Price: {burgerPrice}, Weight: {burgerWeight}
                 </h1>
             </Box>
 
