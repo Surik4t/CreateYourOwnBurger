@@ -11,10 +11,11 @@ const Background = () => {
                 align="center"
                 justify="space-between"
                 bg="#502212ff"
-                height="100px"
+                height="75px"
                 width="100%"
                 position="fixed"
                 flexWrap="wrap"
+                zIndex="1000"
             >
                 <Header />
             </Flex>
