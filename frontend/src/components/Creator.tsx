@@ -1,4 +1,4 @@
-import { Table, List, Button, Flex, CloseButton, Input, Box, Image } from "@chakra-ui/react"
+import { Table, Text, List, Button, Flex, CloseButton, Input, Box, Image } from "@chakra-ui/react"
 import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 
@@ -90,6 +90,7 @@ const Creator = () => {
                 {/* Список добавленных ингредиентов */} 
                 <Flex bg="white" rounded="xl" width="25%">
                     <List.Root color="black" mt="1em" ml="auto" mr="auto" fontSize="xl" width="80%">
+                        <Text>ingredients: {len}/15</Text>
                         {selectedIngredients.map((selectedIngredient) => (
                             <List.Item key={selectedIngredient.id}>
                                 <Flex justifyContent="space-between">
@@ -153,7 +154,7 @@ const Creator = () => {
 
             <Box mt="1em" color="black">
                 <h1>
-                    Total price: {orderPrice}, Weight: {orderWeight}, len: {len}
+                    Total price: {orderPrice}, Weight: {orderWeight}
                 </h1>
             </Box>
 
