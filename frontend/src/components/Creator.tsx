@@ -191,6 +191,7 @@ const Creator = () => {
                         bg="orange.200"
                         colorPalette="orange"
                         minWidth="15%"
+                        maxWidth="15%"
                         flexShrink={0}
                         margin="0.5em"
                         >
