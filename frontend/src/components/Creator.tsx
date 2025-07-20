@@ -1,4 +1,4 @@
-import { Table, Text, List, Button, Flex, CloseButton, Input, Box, Image, Card } from "@chakra-ui/react"
+import { Table, Text, List, Button, Flex, CloseButton, Input, Box, Image, Card, CardDescription, CardFooter } from "@chakra-ui/react"
 import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 
@@ -20,12 +20,12 @@ interface Burger {
 
 const Creator = () => {
     const [ingredients, setIngredients] = useState<Ingredient[]>([]);
+    const [selectedIngredients, setSelectedIngredients] = useState<Ingredient[]>([]);    
     const [burgers, setBurgers] = useState<Burger[]>([]);
-    const [selectedIngredients, setSelectedIngredients] = useState<Ingredient[]>([]);
-    const [nextId, setNextId] = useState<number>(0);
     const [burgerPrice, setBurgerPrice] = useState<number>(0);
     const [burgerWeight, setBurgerWeight] = useState<number>(0);
     const [burgerName, setBurgerName] = useState("");
+    const [nextId, setNextId] = useState<number>(0);
     const len = selectedIngredients.length;
 
     useEffect(() => {
@@ -33,6 +33,10 @@ const Creator = () => {
         setBurgerWeight(selectedIngredients.reduce((sum, ingr) => sum + ingr.weight, 0));
     }, [selectedIngredients])
 
+    const clearBurgerCreator = () => {
+        setSelectedIngredients([]);
+        setBurgerName("");
+    }
 
     const selectIngredient = (ingredient: Ingredient) => {
         setSelectedIngredients([
@@ -45,18 +49,19 @@ const Creator = () => {
             ...selectedIngredients,
         ]);
         setNextId(nextId + 1);
-    };
+    }
 
     const addToOrder = () => {
         setBurgers([
             {
-                name: burgerName,
+                name: burgerName || "Custom Burger",
                 ingredients: selectedIngredients,
                 weight: burgerWeight,
                 price: burgerPrice,
             },
             ...burgers,
         ]);
+        clearBurgerCreator();
     }
 
     useEffect(() => {get_ingredients(), healthcheck()}, []);
@@ -112,8 +117,13 @@ const Creator = () => {
 
                 {/* Список добавленных ингредиентов */} 
                 <Flex bg="white" rounded="xl" width="25%">
-                    <List.Root color="black" mt="1em" ml="auto" mr="auto" fontSize="xl" width="80%">
-                        <Text>ingredients: {len}/15</Text>
+                    <List.Root
+                        color="black"
+                        ml="auto" mr="auto"
+                        fontSize="xl"
+                        width="80%"
+                        >
+                        <Text textStyle="2xl">Ingredients: {len}/15</Text>
                         {selectedIngredients.map((selectedIngredient) => (
                             <List.Item key={selectedIngredient.id}>
                                 <Flex justifyContent="space-between">
@@ -142,7 +152,6 @@ const Creator = () => {
                             color="black"
                             variant="outline"
                             size="sm"
-                            width=""
                             rounded="xl"
                             stickyHeader
                         >
@@ -178,12 +187,25 @@ const Creator = () => {
             {/* Состав заказа */}
             <Flex mt="1em" width="100%" bg="white" color="black" rounded="xl">
                 {burgers.map((burger) => (
-                    <Card.Root>
+                    <Card.Root
+                        bg="orange.200"
+                        colorPalette="orange"
+                        width="15%"
+                        margin="0.5em"
+                        >
                         <Card.Body>
                             <Card.Title>
                                 {burger.name}
                             </Card.Title>
+                            <CardDescription>
+                                {burger.ingredients.map(ingr => ingr.name).join(", ")}
+                            </CardDescription>
                         </Card.Body>
+                        <CardFooter>
+                            <Text textStyle="2xl" fontWeight="medium" letterSpacing="tight" mt="2">
+                                {burger.price}₽
+                            </Text>
+                        </CardFooter>
                     </Card.Root>
                 ))}
             </Flex>
