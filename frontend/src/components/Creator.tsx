@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 
 interface Ingredient {
-    id: string,
+    index: number,
     name: string,
     weight: number,
     price: number,
@@ -15,6 +15,15 @@ interface Burger {
     ingredients: Ingredient[],
     weight: number,
     price: number,
+}
+
+interface Order {
+    customer: string,
+    status: string,
+    content: Burger[],
+    price: number,
+    weight: number,
+    creation_datetime: string,
 }
 
 
@@ -52,7 +61,7 @@ const Creator = () => {
     const selectIngredient = (ingredient: Ingredient) => {
         setSelectedIngredients([
             {
-                id: nextId.toString(),
+                index: nextId,
                 name: ingredient.name,
                 weight: ingredient.weight,
                 price: ingredient.price,
@@ -88,6 +97,27 @@ const Creator = () => {
     async function healthcheck() {
         const url = "http://localhost:8000/healthcheck";
         await axios.get(url)
+            .then(response => console.log(response.data.message))
+            .catch((error: AxiosError) => {
+                if (error.response) {
+                    console.error("Error status code:", error.response.status);
+                    console.error("Details:", error.message);
+                }
+            });
+    }
+
+
+    async function createOrder(content:Burger[])  {
+        const order: Order = {
+            customer: "Guest",
+            status: "Waiting for payment",
+            content: content,
+            price: OrderPrice,
+            weight: OrderWeight,
+            creation_datetime: new Date().toISOString(),
+        }
+        const url = `http://localhost:8000/`;
+        axios.post(url, order)
             .then(response => console.log(response.data.message))
             .catch((error: AxiosError) => {
                 if (error.response) {
@@ -135,7 +165,7 @@ const Creator = () => {
                         width="80%"
                         >
                         {selectedIngredients.map((selectedIngredient) => (
-                            <List.Item key={selectedIngredient.id}>
+                            <List.Item key={selectedIngredient.index}>
                                 <Flex justifyContent="space-between">
                                     {selectedIngredient.name}
                                     <CloseButton 
@@ -145,7 +175,7 @@ const Creator = () => {
                                         onClick={() => 
                                             setSelectedIngredients(
                                                 selectedIngredients.filter(ingr =>
-                                                    ingr.id !== selectedIngredient.id
+                                                    ingr.index !== selectedIngredient.index
                                                 ))}
                                     >
                                     </CloseButton>
@@ -176,7 +206,7 @@ const Creator = () => {
                             </Table.Header>
                             <Table.Body>
                                 {ingredients.map((ingredient) => (
-                                <Table.Row key={ingredient.id}>
+                                <Table.Row key={ingredient.index}>
                                     <Table.Cell>{ingredient.name}</Table.Cell>
                                     <Table.Cell>{ingredient.price}</Table.Cell>
                                     <Table.Cell textAlign="end">
@@ -237,6 +267,7 @@ const Creator = () => {
                         height="50%"
                         width="90%"
                         textStyle="4xl"
+                        onClick={() => createOrder(burgers)}
                     >
                         Buy
                     </Button>

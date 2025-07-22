@@ -52,8 +52,8 @@ async def get_all_orders():
 @router.post("/", tags=["orders"])
 async def create_order(new_order: OrderModel):
     try:
-        cursor = await orders_collection.insert_one(dict(new_order))
-        return {"status_code": 200, "id": str(cursor)}
+        cursor = await orders_collection.insert_one(dict(**new_order.model_dump()))
+        return {"status_code": 200, "message": f"Order id: {cursor.inserted_id} created."}
     except Exception as e:
         return HTTPException(status_code=500, detail=f"Could not create an order: {e}")
 
