@@ -40,9 +40,13 @@ const Creator = () => {
         setOrderWeight(burgers.reduce((sum, burger) => sum + burger.weight, 0));
     }, [burgers])
 
-    const clearBurgerCreator = () => {
+    const clearBurger = () => {
         setSelectedIngredients([]);
         setBurgerName("");
+    }
+
+    const clearOrder = () => {
+        setBurgers([]);
     }
 
     const selectIngredient = (ingredient: Ingredient) => {
@@ -68,7 +72,7 @@ const Creator = () => {
             },
             ...burgers,
         ]);
-        clearBurgerCreator();
+        clearBurger();
     }
 
     useEffect(() => {get_ingredients(), healthcheck()}, []);
@@ -137,6 +141,7 @@ const Creator = () => {
                                     <CloseButton 
                                         size="2xs"
                                         bg="orange.400"
+                                        alignSelf="center"
                                         onClick={() => 
                                             setSelectedIngredients(
                                                 selectedIngredients.filter(ingr =>
@@ -192,7 +197,7 @@ const Creator = () => {
             </Flex>
             
             {/* Состав заказа */}
-            <Flex width="100%" mt="1em">
+            <Flex width="100%" minHeight="275px" mt="1em">
                 <Flex width="80%" bg="white" color="black" rounded="xl" overflowX="auto">
                     {burgers.map((burger) => (
                         <Card.Root
@@ -220,10 +225,11 @@ const Creator = () => {
                 </Flex>
                 
                 <Flex
-                    justifyContent="space-evenly"
+                    justifyContent="space-between"
                     align="center"
                     direction="column"
                     width="20%"
+                    height="275px"
                     color="black"
                     >
                     <Button
@@ -235,10 +241,11 @@ const Creator = () => {
                         Buy
                     </Button>
                     <Button
-                        bg="orange.400"
+                        bg="orange.300"
                         height="20%"
                         width="90%"
                         textStyle="3xl"
+                        onClick={clearOrder}
                     >
                         Clear order
                     </Button>
