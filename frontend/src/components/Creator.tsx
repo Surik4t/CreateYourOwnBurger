@@ -25,6 +25,8 @@ const Creator = () => {
     const [burgerPrice, setBurgerPrice] = useState<number>(0);
     const [burgerWeight, setBurgerWeight] = useState<number>(0);
     const [burgerName, setBurgerName] = useState("");
+    const [OrderPrice, setOrderPrice] = useState<number>(0);
+    const [OrderWeight, setOrderWeight] = useState<number>(0);
     const [nextId, setNextId] = useState<number>(0);
     const len = selectedIngredients.length;
 
@@ -32,6 +34,11 @@ const Creator = () => {
         setBurgerPrice(selectedIngredients.reduce((sum, ingr) => sum + ingr.price, 0));
         setBurgerWeight(selectedIngredients.reduce((sum, ingr) => sum + ingr.weight, 0));
     }, [selectedIngredients])
+
+    useEffect(() => {
+        setOrderPrice(burgers.reduce((sum, burger) => sum + burger.price, 0));
+        setOrderWeight(burgers.reduce((sum, burger) => sum + burger.weight, 0));
+    }, [burgers])
 
     const clearBurgerCreator = () => {
         setSelectedIngredients([]);
@@ -116,14 +123,13 @@ const Creator = () => {
                 </Flex>
 
                 {/* Список добавленных ингредиентов */} 
-                <Flex bg="white" rounded="xl" width="25%">
+                <Flex direction="column" color="black" bg="white" rounded="xl" width="25%">
+                    <Text ml="1em"textStyle="2xl">Ingredients: {len}/15</Text>
                     <List.Root
-                        color="black"
                         ml="auto" mr="auto"
                         fontSize="xl"
                         width="80%"
                         >
-                        <Text textStyle="2xl">Ingredients: {len}/15</Text>
                         {selectedIngredients.map((selectedIngredient) => (
                             <List.Item key={selectedIngredient.id}>
                                 <Flex justifyContent="space-between">
@@ -142,6 +148,7 @@ const Creator = () => {
                             </List.Item>
                         ))}
                     </List.Root>
+                    <Text mt="auto" ml="auto" mr="1em" textStyle="2xl">Price: {burgerPrice}₽</Text>
                 </Flex>
 
                 {/* Таблица ингредиентов */} 
@@ -185,39 +192,60 @@ const Creator = () => {
             </Flex>
             
             {/* Состав заказа */}
-            <Flex mt="1em" width="100%" bg="white" color="black" rounded="xl" overflowX="auto">
-                {burgers.map((burger) => (
-                    <Card.Root
-                        bg="orange.200"
-                        colorPalette="orange"
-                        minWidth="15%"
-                        maxWidth="15%"
-                        flexShrink={0}
-                        margin="0.5em"
-                        >
-                        <Card.Body>
-                            <Card.Title>
-                                {burger.name}
-                            </Card.Title>
-                            <CardDescription>
-                                {burger.ingredients.map(ingr => ingr.name).join(", ")}
-                            </CardDescription>
-                        </Card.Body>
-                        <CardFooter>
-                            <Text textStyle="2xl" fontWeight="medium" letterSpacing="tight" mt="2">
-                                {burger.price}₽
-                            </Text>
-                        </CardFooter>
-                    </Card.Root>
-                ))}
-            </Flex>
-            
-            <Box mt="1em" color="black">
-                <h1>
-                    Price: {burgerPrice}, Weight: {burgerWeight}
-                </h1>
-            </Box>
-
+            <Flex width="100%" mt="1em">
+                <Flex width="80%" bg="white" color="black" rounded="xl" overflowX="auto">
+                    {burgers.map((burger) => (
+                        <Card.Root
+                            bg="orange.200"
+                            colorPalette="orange"
+                            width="200px"
+                            flexShrink={0}
+                            margin="0.5em"
+                            >
+                            <Card.Body>
+                                <Card.Title>
+                                    {burger.name}
+                                </Card.Title>
+                                <CardDescription>
+                                    {burger.ingredients.map(ingr => ingr.name).join(", ")}
+                                </CardDescription>
+                            </Card.Body>
+                            <CardFooter>
+                                <Text textStyle="2xl" fontWeight="medium" letterSpacing="tight" mt="2">
+                                    {burger.price}₽
+                                </Text>
+                            </CardFooter>
+                        </Card.Root>
+                    ))}
+                </Flex>
+                
+                <Flex
+                    justifyContent="space-evenly"
+                    align="center"
+                    direction="column"
+                    width="20%"
+                    color="black"
+                    >
+                    <Button
+                        bg="orange.400"
+                        height="50%"
+                        width="90%"
+                        textStyle="4xl"
+                    >
+                        Buy
+                    </Button>
+                    <Button
+                        bg="orange.400"
+                        height="20%"
+                        width="90%"
+                        textStyle="3xl"
+                    >
+                        Clear order
+                    </Button>
+                    <Text>Total price: {OrderPrice}₽, Weight: {OrderWeight}g </Text>
+                </Flex>
+            </Flex>    
+    
         </Flex>
     );
 }
