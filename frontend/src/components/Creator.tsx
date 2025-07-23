@@ -116,7 +116,7 @@ const Creator = () => {
             weight: OrderWeight,
             creation_datetime: new Date().toISOString(),
         }
-        const url = `http://localhost:8000/`;
+        const url = "http://localhost:8000/orders";
         axios.post(url, order)
             .then(response => console.log(response.data.message))
             .catch((error: AxiosError) => {
