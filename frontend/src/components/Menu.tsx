@@ -16,7 +16,16 @@ const Menu = () => {
                     About
                 </Tabs.Trigger>
             </Tabs.List>
-            <Tabs.Content value="creator">
+            <Tabs.Content value="creator"
+            _open={{
+                animationName: "fade-in, scale-in",
+                animationDuration: "300ms",
+            }}
+            _closed={{
+                animationName: "fade-out, scale-out",
+                animationDuration: "120ms",
+            }}
+            >
                 <Creator />
             </Tabs.Content>
             <Tabs.Content value="orders">Previous orders</Tabs.Content>
