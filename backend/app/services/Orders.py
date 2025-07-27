@@ -12,7 +12,7 @@ async def get_all_orders():
     result = list()
     async for order in orders_collection.find():
         result.append(order_schema(order))
-    return result
+    return sorted(result, key=lambda order: order["creation_datetime"], reverse=True)
 
 
 @router.post("")

@@ -1,6 +1,7 @@
 import { Flex, Text, Card, CardDescription, CardFooter } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
+import { format } from "date-fns"
 
 interface Ingredient {
     index: number,
@@ -40,40 +41,43 @@ const Orders = () => {
     useEffect(() => {getOrders()}, []);
 
     return (
-        <Flex rounded="xl" justifySelf="center" width="75%" height="100%" bg="white">
-            <Flex direction="column" rounded="xl" width="100%" padding="1em" bg="pink">
+        <Flex rounded="xl" justifySelf="center" width="75%" height="100%">
+            <Flex direction="column" rounded="xl" width="100%" padding="1em">
                 {orders.map((order) => (
-                    <Flex padding="0.5em" bg="white" color="black" rounded="xl" overflowX="auto">
-                        <Flex direction="column">
+                    <Flex margin="0.5em" bg="white" color="black" rounded="xl">
+                        <Flex padding="1em" direction="column">
                             <Text>Order ID:</Text>
                             <Text>{order.id}</Text>
                             <Text>Status: {order.status}</Text>
-                            <Text>{order.creation_datetime}</Text>
+                            <Text>{format(new Date(order.creation_datetime), "yyyy.MM.dd / HH:mm")}</Text>
+                            <Text>Total price: <b>{order.price}₽</b></Text>
                         </Flex>
-                        {order.content.map((burger) => (
-                            <Card.Root
-                                bg="orange.200"
-                                colorPalette="orange"
-                                width="200px"
-                                maxHeight="200px"
-                                flexShrink={0}
-                                margin="0.5em"
-                                >
-                                <Card.Body>
-                                    <Card.Title>
-                                        {burger.name}
-                                    </Card.Title>
-                                    <CardDescription maxHeight="3em" overflow="hidden" textOverflow="clip">
-                                        {burger.ingredients.map(ingr => ingr.name).join(", ")}
-                                    </CardDescription>
-                                </Card.Body>
-                                <CardFooter alignSelf="end">
-                                    <Text textStyle="2xl" fontWeight="medium" letterSpacing="tight" mt="2">
-                                        {burger.price}₽
-                                    </Text>
-                                </CardFooter>
-                            </Card.Root>
-                        ))}
+                        <Flex overflowX="auto">
+                            {order.content.map((burger) => (
+                                <Card.Root
+                                    bg="orange.200"
+                                    colorPalette="orange"
+                                    width="200px"
+                                    maxHeight="200px"
+                                    flexShrink={0}
+                                    margin="0.5em"
+                                    >
+                                    <Card.Body>
+                                        <Card.Title>
+                                            {burger.name}
+                                        </Card.Title>
+                                        <CardDescription maxHeight="3em" overflow="hidden">
+                                            {burger.ingredients.map(ingr => ingr.name).join(", ")}
+                                        </CardDescription>
+                                    </Card.Body>
+                                    <CardFooter alignSelf="end">
+                                        <Text textStyle="xl" fontWeight="medium" letterSpacing="tight">
+                                            {burger.price}₽
+                                        </Text>
+                                    </CardFooter>
+                                </Card.Root>
+                            ))}
+                        </Flex>
                     </Flex>
                 ))}
             </Flex>
