@@ -84,9 +84,9 @@ const Creator = () => {
         clearBurger();
     }
 
-    useEffect(() => {get_ingredients(), healthcheck()}, []);
+    useEffect(() => {getIngredients(), healthcheck()}, []);
 
-    async function get_ingredients() {
+    async function getIngredients() {
         const url = "http://localhost:8000/ingredients";
         await axios.get(url)
             .then(response => setIngredients(response.data))
