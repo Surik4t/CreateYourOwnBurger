@@ -39,10 +39,7 @@ const Orders = () => {
     }
 
     function orderPaid(order: Order) {
-        if (order.status != "Waiting for payment") {
-            return true;
-        }
-        return false;
+        return (order.status != "Waiting for payment")
     }
 
     useEffect(() => {getOrders()}, []);
