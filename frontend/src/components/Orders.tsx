@@ -1,4 +1,4 @@
-import { Flex, Text, Card, CardDescription, CardFooter } from "@chakra-ui/react";
+import { Flex, Text, Card, CardDescription, CardFooter, Button } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { format } from "date-fns"
@@ -38,21 +38,33 @@ const Orders = () => {
             .catch((error: AxiosError) => console.error(error.message))
     }
 
+    function orderPaid(order: Order) {
+        if (order.status != "Waiting for payment") {
+            return true;
+        }
+        return false;
+    }
+
     useEffect(() => {getOrders()}, []);
 
     return (
-        <Flex rounded="xl" justifySelf="center" width="75%" height="100%">
+        <Flex direction="column" rounded="xl" justifySelf="center" width="85%" height="100%">
+            <Text color="black" >Orders</Text>
             <Flex direction="column" rounded="xl" width="100%" padding="1em">
                 {orders.map((order) => (
-                    <Flex margin="0.5em" bg="white" color="black" rounded="xl">
+                    <Flex margin="0.5em" bg="white" color="black" rounded="xl" justifyContent="space-between">
                         <Flex padding="1em" direction="column">
                             <Text>Order ID:</Text>
                             <Text>{order.id}</Text>
                             <Text>Status: {order.status}</Text>
                             <Text>{format(new Date(order.creation_datetime), "yyyy.MM.dd / HH:mm")}</Text>
                             <Text>Total price: <b>{order.price}₽</b></Text>
+                            <Flex justifyContent="space-between" mt="0.5em">
+                                <Button hidden={orderPaid(order)} bg="orange.400">Redact</Button>
+                                <Button hidden={orderPaid(order)} bg="red.400">Cancel</Button>
+                            </Flex>
                         </Flex>
-                        <Flex overflowX="auto">
+                        <Flex overflowX="auto" marginEnd="auto">
                             {order.content.map((burger) => (
                                 <Card.Root
                                     bg="orange.200"
@@ -77,6 +89,9 @@ const Orders = () => {
                                     </CardFooter>
                                 </Card.Root>
                             ))}
+                        </Flex>
+                        <Flex margin="1em">
+                            <Button hidden={orderPaid(order)} height="100%" width="150px" bg="orange.400">PAY</Button>
                         </Flex>
                     </Flex>
                 ))}
