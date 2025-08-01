@@ -30,6 +30,7 @@ interface Order {
 
 const Orders = () => {
     const [orders, setOrders] = useState<Order[]>([]);
+    //const [nextIndex, setNextIndex] = useState<number>(0);
 
     async function getOrders() {
         const url = "http://localhost:8000/orders";
@@ -49,7 +50,7 @@ const Orders = () => {
             <Text color="black" >Orders</Text>
             <Flex direction="column" rounded="xl" width="100%" padding="1em">
                 {orders.map((order) => (
-                    <Flex margin="0.5em" bg="white" color="black" rounded="xl" justifyContent="space-between">
+                    <Flex key={order.id} margin="0.5em" bg="white" color="black" rounded="xl" justifyContent="space-between">
                         <Flex padding="1em" direction="column">
                             <Text>Order ID:</Text>
                             <Text>{order.id}</Text>
@@ -62,8 +63,9 @@ const Orders = () => {
                             </Flex>
                         </Flex>
                         <Flex overflowX="auto" marginEnd="auto">
-                            {order.content.map((burger) => (
+                            {order.content.map((burger, burgerIndex) => (
                                 <Card.Root
+                                    key={burgerIndex}
                                     bg="orange.200"
                                     colorPalette="orange"
                                     width="200px"
@@ -76,7 +78,7 @@ const Orders = () => {
                                             {burger.name}
                                         </Card.Title>
                                         <CardDescription maxHeight="3em" overflow="hidden">
-                                            {burger.ingredients.map(ingr => ingr.name).join(", ")}
+                                            {burger.ingredients.map(ingr => ingr.name ).join(", ")}
                                         </CardDescription>
                                     </Card.Body>
                                     <CardFooter alignSelf="end">

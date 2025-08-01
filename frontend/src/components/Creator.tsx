@@ -26,8 +26,12 @@ interface Order {
     creation_datetime: string,
 }
 
+interface CreatorProps {
+    changeTab: (Tab: string) => void;
+}
 
-const Creator = () => {
+
+const Creator: React.FC<CreatorProps> = ({ changeTab }) => {
     const [ingredients, setIngredients] = useState<Ingredient[]>([]);
     const [selectedIngredients, setSelectedIngredients] = useState<Ingredient[]>([]);    
     const [burgers, setBurgers] = useState<Burger[]>([]);
@@ -108,23 +112,30 @@ const Creator = () => {
 
 
     async function createOrder(content:Burger[])  {
-        const order: Order = {
-            customer: "Guest",
-            status: "Waiting for payment",
-            content: content,
-            price: OrderPrice,
-            weight: OrderWeight,
-            creation_datetime: new Date().toISOString(),
+        if (content.length != 0) {
+            const order: Order = {
+                customer: "Guest",
+                status: "Waiting for payment",
+                content: content,
+                price: OrderPrice,
+                weight: OrderWeight,
+                creation_datetime: new Date().toISOString(),
+            }
+            const url = "http://localhost:8000/orders";
+            axios.post(url, order)
+                .then(response => console.log(response.data.message))
+                .catch((error: AxiosError) => {
+                    if (error.response) {
+                        console.error("Error status code:", error.response.status);
+                        console.error("Details:", error.message);
+                    }
+                });
+            changeTab("orders");
+        } else {
+            console.error("Empty order.")
+            return;
         }
-        const url = "http://localhost:8000/orders";
-        axios.post(url, order)
-            .then(response => console.log(response.data.message))
-            .catch((error: AxiosError) => {
-                if (error.response) {
-                    console.error("Error status code:", error.response.status);
-                    console.error("Details:", error.message);
-                }
-            });
+
     }
    
     return (
@@ -206,7 +217,7 @@ const Creator = () => {
                             </Table.Header>
                             <Table.Body>
                                 {ingredients.map((ingredient) => (
-                                <Table.Row key={ingredient.index}>
+                                <Table.Row key={ingredient.name}>
                                     <Table.Cell>{ingredient.name}</Table.Cell>
                                     <Table.Cell>{ingredient.price}</Table.Cell>
                                     <Table.Cell textAlign="end">

@@ -1,11 +1,20 @@
 import { Tabs } from "@chakra-ui/react";
+import { useState } from "react";
 import Creator from "./Creator";
 import Orders from "./Orders";
 
 
 const Menu = () => {
+
+    const [tabValue, setTabValue] = useState<string | null>("creator")
+
+    const handleTabChange = (Tab: string) => {
+        console.log("Redirecting to:", Tab);
+        setTabValue(Tab);
+    }
+
     return (
-        <Tabs.Root variant="line" defaultValue="creator" fitted width="75%">
+        <Tabs.Root value={tabValue} onValueChange={(e) => setTabValue(e.value)} variant="line" defaultValue="creator" fitted width="75%">
             <Tabs.List bg="orange.400" p="1" rounded="xl">
                 <Tabs.Trigger color="black" bg="orange.400" value="creator">
                     Creator
@@ -27,7 +36,7 @@ const Menu = () => {
                 animationDuration: "120ms",
             }}
             >
-                <Creator />
+                <Creator changeTab={handleTabChange} />
             </Tabs.Content>
             <Tabs.Content value="orders">
                 <Orders />
