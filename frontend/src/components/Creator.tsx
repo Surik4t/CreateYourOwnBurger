@@ -91,13 +91,17 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
         clearBurger();
     }
 
-    function test(order: Order | null) {
-        console.log(order);
+    function loadOrder(order: any) {
+        if (order) {
+            console.log(order);
+            setOrderId(order.id);
+            setBurgers(order.content);
+        }
     }
 
     useEffect(() => {getIngredients(), healthcheck}, []);
     useEffect(() => {clearBurger(), clearOrder()}, [menuState]);
-    useEffect(() => {test(orderInEdit)}, [orderInEdit]);
+    useEffect(() => {loadOrder(orderInEdit)}, [orderInEdit]);
 
     async function getIngredients() {
         const url = "http://localhost:8000/ingredients";
