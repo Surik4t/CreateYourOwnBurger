@@ -3,10 +3,33 @@ import { useState } from "react";
 import Creator from "./Creator";
 import Orders from "./Orders";
 
+interface Ingredient {
+    index: number,
+    name: string,
+    weight: number,
+    price: number,
+}
+
+interface Burger {
+    name: string,
+    ingredients: Ingredient[],
+    weight: number,
+    price: number,
+}
+
+interface Order {
+    customer: string,
+    status: string,
+    content: Burger[],
+    price: number,
+    weight: number,
+    creation_datetime: string,
+}
 
 const Menu = () => {
 
     const [tabValue, setTabValue] = useState<string | null>("creator")
+    const [orderInEdit, setOrderInEdit] = useState<Order | null>(null);
     const [menuState, setMenuState] = useState(0);
 
     const handleTabChange = (Tab: string) => {
@@ -38,10 +61,10 @@ const Menu = () => {
                 animationDuration: "120ms",
             }}
             >
-                <Creator changeTab={handleTabChange} menuState={menuState} />
+                <Creator changeTab={handleTabChange} menuState={menuState} orderInEdit={orderInEdit} />
             </Tabs.Content>
             <Tabs.Content value="orders">
-                <Orders menuState={menuState} />
+                <Orders changeTab={handleTabChange} menuState={menuState} handleSetEditOrder={setOrderInEdit}/>
             </Tabs.Content>
             <Tabs.Content value="about">About the project</Tabs.Content>
         </Tabs.Root>

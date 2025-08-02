@@ -29,16 +29,18 @@ interface Order {
 interface CreatorProps {
     changeTab: (Tab: string) => void;
     menuState: number;
+    orderInEdit: Order | null;
 }
 
 
-const Creator: React.FC<CreatorProps> = ({ changeTab, menuState }) => {
+const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) => {
     const [ingredients, setIngredients] = useState<Ingredient[]>([]);
     const [selectedIngredients, setSelectedIngredients] = useState<Ingredient[]>([]);    
     const [burgers, setBurgers] = useState<Burger[]>([]);
     const [burgerPrice, setBurgerPrice] = useState<number>(0);
     const [burgerWeight, setBurgerWeight] = useState<number>(0);
     const [burgerName, setBurgerName] = useState("");
+    const [orderId, setOrderId] = useState()
     const [OrderPrice, setOrderPrice] = useState<number>(0);
     const [OrderWeight, setOrderWeight] = useState<number>(0);
     const [nextId, setNextId] = useState<number>(0);
@@ -89,8 +91,13 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState }) => {
         clearBurger();
     }
 
+    function test(order: Order | null) {
+        console.log(order);
+    }
+
     useEffect(() => {getIngredients(), healthcheck}, []);
     useEffect(() => {clearBurger(), clearOrder()}, [menuState]);
+    useEffect(() => {test(orderInEdit)}, [orderInEdit]);
 
     async function getIngredients() {
         const url = "http://localhost:8000/ingredients";
@@ -125,6 +132,34 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState }) => {
             }
             const url = "http://localhost:8000/orders";
             axios.post(url, order)
+                .then(response => console.log(response.data.message))
+                .catch((error: AxiosError) => {
+                    if (error.response) {
+                        console.error("Error status code:", error.response.status);
+                        console.error("Details:", error.message);
+                    }
+                });
+            changeTab("orders");
+        } else {
+            console.error("Empty order.")
+            return;
+        }
+
+    }
+
+
+    async function changeOrder(content:Burger[])  {
+        if (content.length != 0) {
+            const order: Order = {
+                customer: "Guest",
+                status: "Waiting for payment",
+                content: content,
+                price: OrderPrice,
+                weight: OrderWeight,
+                creation_datetime: new Date().toISOString(),
+            }
+            const url = `http://localhost:8000/orders/${orderId}`;
+            axios.put(url, order)
                 .then(response => console.log(response.data.message))
                 .catch((error: AxiosError) => {
                     if (error.response) {

@@ -28,13 +28,21 @@ interface Order {
 }
 
 interface OrderProps {
+    changeTab: (Tab: string) => void;
+    handleSetEditOrder: (order: Order) => void;
     menuState: number;
 }
 
 
-const Orders: React.FC<OrderProps> = ({ menuState }) => {
+const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder }) => {
     const [orders, setOrders] = useState<Order[]>([]);
     //const [nextIndex, setNextIndex] = useState<number>(0);
+
+    const editOrder = (order: Order) => {
+        changeTab("creator");
+        handleSetEditOrder(order);
+    }
+
 
     async function getOrders() {
         const url = "http://localhost:8000/orders";
@@ -62,7 +70,7 @@ const Orders: React.FC<OrderProps> = ({ menuState }) => {
                             <Text>{format(new Date(order.creation_datetime), "yyyy.MM.dd / HH:mm")}</Text>
                             <Text>Total price: <b>{order.price}₽</b></Text>
                             <Flex justifyContent="space-between" mt="0.5em">
-                                <Button hidden={orderPaid(order)} bg="orange.400">Redact</Button>
+                                <Button onClick={() => editOrder(order)} hidden={orderPaid(order)} bg="orange.400">Edit</Button>
                                 <Button hidden={orderPaid(order)} bg="red.400">Cancel</Button>
                             </Flex>
                         </Flex>
