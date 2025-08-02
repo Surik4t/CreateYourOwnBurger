@@ -28,10 +28,11 @@ interface Order {
 
 interface CreatorProps {
     changeTab: (Tab: string) => void;
+    menuState: number;
 }
 
 
-const Creator: React.FC<CreatorProps> = ({ changeTab }) => {
+const Creator: React.FC<CreatorProps> = ({ changeTab, menuState }) => {
     const [ingredients, setIngredients] = useState<Ingredient[]>([]);
     const [selectedIngredients, setSelectedIngredients] = useState<Ingredient[]>([]);    
     const [burgers, setBurgers] = useState<Burger[]>([]);
@@ -88,7 +89,8 @@ const Creator: React.FC<CreatorProps> = ({ changeTab }) => {
         clearBurger();
     }
 
-    useEffect(() => {getIngredients(), healthcheck()}, []);
+    useEffect(() => {getIngredients(), healthcheck}, []);
+    useEffect(() => {clearBurger(), clearOrder()}, [menuState]);
 
     async function getIngredients() {
         const url = "http://localhost:8000/ingredients";

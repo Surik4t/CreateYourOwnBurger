@@ -7,9 +7,11 @@ import Orders from "./Orders";
 const Menu = () => {
 
     const [tabValue, setTabValue] = useState<string | null>("creator")
+    const [menuState, setMenuState] = useState(0);
 
     const handleTabChange = (Tab: string) => {
         console.log("Redirecting to:", Tab);
+        setMenuState(menuState => menuState + 1);
         setTabValue(Tab);
     }
 
@@ -36,10 +38,10 @@ const Menu = () => {
                 animationDuration: "120ms",
             }}
             >
-                <Creator changeTab={handleTabChange} />
+                <Creator changeTab={handleTabChange} menuState={menuState} />
             </Tabs.Content>
             <Tabs.Content value="orders">
-                <Orders />
+                <Orders menuState={menuState} />
             </Tabs.Content>
             <Tabs.Content value="about">About the project</Tabs.Content>
         </Tabs.Root>

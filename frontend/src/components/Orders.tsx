@@ -27,8 +27,12 @@ interface Order {
     creation_datetime: string,
 }
 
+interface OrderProps {
+    menuState: number;
+}
 
-const Orders = () => {
+
+const Orders: React.FC<OrderProps> = ({ menuState }) => {
     const [orders, setOrders] = useState<Order[]>([]);
     //const [nextIndex, setNextIndex] = useState<number>(0);
 
@@ -43,7 +47,7 @@ const Orders = () => {
         return (order.status != "Waiting for payment")
     }
 
-    useEffect(() => {getOrders()}, []);
+    useEffect(() => {getOrders()}, [menuState]);
 
     return (
         <Flex direction="column" rounded="xl" justifySelf="center" width="85%" height="100%">
