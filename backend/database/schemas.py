@@ -21,7 +21,6 @@ def burger_schema(burger):
 
 def ingredient_schema(ingredient):
     return {
-        "index": int(ingredient["index"]),
         "name": str(ingredient["name"]),
         "weight": int(ingredient["weight"]),
         "price": int(ingredient["price"]),

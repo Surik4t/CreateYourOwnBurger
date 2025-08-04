@@ -8,7 +8,6 @@ class AccountModel(BaseModel):
 
 
 class IngredientModel(BaseModel):
-    index: int
     name: str
     price: int = Field(gt=0, description="The price must be greater than zero")
     weight: int = Field(gt=0, description="The weight must be greater than zero")

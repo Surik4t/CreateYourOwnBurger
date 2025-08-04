@@ -4,7 +4,6 @@ import axios, { AxiosError } from "axios";
 import { format } from "date-fns"
 
 interface Ingredient {
-    index: number,
     name: string,
     weight: number,
     price: number,
@@ -36,7 +35,6 @@ interface OrderProps {
 
 const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder }) => {
     const [orders, setOrders] = useState<Order[]>([]);
-    //const [nextIndex, setNextIndex] = useState<number>(0);
 
     const editOrder = (order: Order) => {
         changeTab("creator");

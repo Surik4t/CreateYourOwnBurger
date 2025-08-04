@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 
 
 interface Ingredient {
-    index: number,
     name: string,
     weight: number,
     price: number,
@@ -40,7 +39,7 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
     const [burgerPrice, setBurgerPrice] = useState<number>(0);
     const [burgerWeight, setBurgerWeight] = useState<number>(0);
     const [burgerName, setBurgerName] = useState("");
-    const [orderId, setOrderId] = useState()
+    const [orderId, setOrderId] = useState<string>("")
     const [OrderPrice, setOrderPrice] = useState<number>(0);
     const [OrderWeight, setOrderWeight] = useState<number>(0);
     const [nextId, setNextId] = useState<number>(0);
@@ -68,7 +67,6 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
     const selectIngredient = (ingredient: Ingredient) => {
         setSelectedIngredients([
             {
-                index: nextId,
                 name: ingredient.name,
                 weight: ingredient.weight,
                 price: ingredient.price,
@@ -156,7 +154,7 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
         if (content.length != 0) {
             const order: Order = {
                 customer: "Guest",
-                status: "Editing",
+                status: "Waiting for payment",
                 content: content,
                 price: OrderPrice,
                 weight: OrderWeight,
@@ -164,7 +162,10 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
             }
             const url = `http://localhost:8000/orders/${orderId}`;
             axios.put(url, order)
-                .then(response => console.log(response.data.message))
+                .then(response => { 
+                    console.log(response.data.message);
+                    setOrderId("");
+                })
                 .catch((error: AxiosError) => {
                     if (error.response) {
                         console.error("Error status code:", error.response.status);
@@ -214,8 +215,8 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
                         fontSize="xl"
                         width="80%"
                         >
-                        {selectedIngredients.map((selectedIngredient) => (
-                            <List.Item key={selectedIngredient.index}>
+                        {selectedIngredients.map((selectedIngredient, selectedIngrIndex) => (
+                            <List.Item key={selectedIngrIndex}>
                                 <Flex justifyContent="space-between">
                                     {selectedIngredient.name}
                                     <CloseButton 
@@ -223,10 +224,10 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
                                         bg="orange.400"
                                         alignSelf="center"
                                         onClick={() => 
-                                            setSelectedIngredients(
-                                                selectedIngredients.filter(ingr =>
-                                                    ingr.index !== selectedIngredient.index
-                                                ))}
+                                            setSelectedIngredients(ingr => 
+                                                ingr.filter((_, index) => index !== selectedIngrIndex)
+                                            )
+                                        }
                                     >
                                     </CloseButton>
                                 </Flex>
@@ -314,6 +315,7 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
                     color="black"
                     >
                     <Button
+                        hidden={Boolean(orderId)}
                         bg="orange.400"
                         height="50%"
                         width="90%"
@@ -321,6 +323,16 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
                         onClick={() => createOrder(burgers)}
                     >
                         Buy
+                    </Button>
+                    <Button
+                        hidden={!orderId}
+                        bg="orange.400"
+                        height="50%"
+                        width="90%"
+                        textStyle="4xl"
+                        onClick={() => changeOrder(burgers)}
+                    >
+                        Confirm
                     </Button>
                     <Button
                         bg="orange.300"
