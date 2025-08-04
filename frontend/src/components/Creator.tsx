@@ -134,14 +134,16 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
             }
             const url = "http://localhost:8000/orders";
             axios.post(url, order)
-                .then(response => console.log(response.data.message))
+                .then(response => { 
+                    console.log(response.data.message);
+                    changeTab("orders");
+                })
                 .catch((error: AxiosError) => {
                     if (error.response) {
                         console.error("Error status code:", error.response.status);
                         console.error("Details:", error.message);
                     }
                 });
-            changeTab("orders");
         } else {
             console.error("Empty order.")
             return;
@@ -165,6 +167,7 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
                 .then(response => { 
                     console.log(response.data.message);
                     setOrderId("");
+                    changeTab("orders");
                 })
                 .catch((error: AxiosError) => {
                     if (error.response) {

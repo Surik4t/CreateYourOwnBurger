@@ -41,7 +41,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
         handleSetEditOrder(order);
         if (order.status != "Editing") {
             order.status = "Editing"
-            changeOrder(order);
+            changeOrderStatus(order, "Editing");
         }
     }
 
@@ -55,18 +55,18 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
 
     function orderStatusCheck(
         order: Order,
-        ...statuses: Array<"Waiting for payment" | "Editing">
+        ...statuses: Array<"Waiting for payment" | "Editing" | "Canceled">
     ): boolean {
-        return (statuses.every(status => order.status == status))
+        return (statuses.some(status => order.status == status))
     }
 
     useEffect(() => {getOrders()}, [menuState]);
 
 
-    async function changeOrder(order: Order)  {
+    async function changeOrderStatus(order: Order, newStatus=order.status)  {
         const payload = {
             customer: order.customer,
-            status: order.status,
+            status: newStatus,
             content: order.content,
             price: order.price,
             weight: order.weight,
@@ -98,13 +98,14 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                             <Flex justifyContent="space-between" mt="0.5em">
                                 <Button onClick={
                                     () => editOrder(order)}
-                                    hidden={orderStatusCheck(order, "Waiting for payment", "Editing")}
+                                    hidden={!orderStatusCheck(order, "Waiting for payment", "Editing")}
                                     bg="orange.400"
                                     >
                                         Edit
-                                    </Button>
+                                </Button>
                                 <Button
-                                hidden={orderStatusCheck(order, "Waiting for payment", "Editing")}
+                                onClick={() => (changeOrderStatus(order, "Canceled"), changeTab("orders"))}
+                                hidden={!orderStatusCheck(order, "Waiting for payment", "Editing")}
                                 bg="red.400"
                                 >
                                     Cancel
@@ -139,7 +140,14 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                             ))}
                         </Flex>
                         <Flex margin="1em">
-                            <Button hidden={orderStatusCheck(order)} height="100%" width="150px" bg="orange.400">PAY</Button>
+                            <Button
+                                hidden={!orderStatusCheck(order, "Waiting for payment")} 
+                                height="100%"
+                                width="150px"
+                                bg="orange.400"
+                                >
+                                    PAY
+                            </Button>
                         </Flex>
                     </Flex>
                 ))}
