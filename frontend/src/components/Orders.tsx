@@ -41,6 +41,10 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
     const editOrder = (order: Order) => {
         changeTab("creator");
         handleSetEditOrder(order);
+        if (order.status != "Editing") {
+            order.status = "Editing"
+            changeOrder(order);
+        }
     }
 
 
@@ -51,11 +55,35 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
             .catch((error: AxiosError) => console.error(error.message))
     }
 
-    function orderPaid(order: Order) {
-        return (order.status != "Waiting for payment")
+    function orderStatusCheck(
+        order: Order,
+        ...statuses: Array<"Waiting for payment" | "Editing">
+    ): boolean {
+        return (statuses.every(status => order.status == status))
     }
 
     useEffect(() => {getOrders()}, [menuState]);
+
+
+    async function changeOrder(order: Order)  {
+        const payload = {
+            customer: order.customer,
+            status: order.status,
+            content: order.content,
+            price: order.price,
+            weight: order.weight,
+            creation_datetime: order.creation_datetime,
+        }
+        const url = `http://localhost:8000/orders/${order.id}`;
+        axios.put(url, payload)
+            .then(response => console.log(response.data.message))
+            .catch((error: AxiosError) => {
+                if (error.response) {
+                    console.error("Error status code:", error.response.status);
+                    console.error("Details:", error.message);
+                }
+            });
+    }
 
     return (
         <Flex direction="column" rounded="xl" justifySelf="center" width="85%" height="100%">
@@ -70,8 +98,19 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                             <Text>{format(new Date(order.creation_datetime), "yyyy.MM.dd / HH:mm")}</Text>
                             <Text>Total price: <b>{order.price}₽</b></Text>
                             <Flex justifyContent="space-between" mt="0.5em">
-                                <Button onClick={() => editOrder(order)} hidden={orderPaid(order)} bg="orange.400">Edit</Button>
-                                <Button hidden={orderPaid(order)} bg="red.400">Cancel</Button>
+                                <Button onClick={
+                                    () => editOrder(order)}
+                                    hidden={orderStatusCheck(order, "Waiting for payment", "Editing")}
+                                    bg="orange.400"
+                                    >
+                                        Edit
+                                    </Button>
+                                <Button
+                                hidden={orderStatusCheck(order, "Waiting for payment", "Editing")}
+                                bg="red.400"
+                                >
+                                    Cancel
+                                </Button>
                             </Flex>
                         </Flex>
                         <Flex overflowX="auto" marginEnd="auto">
@@ -102,7 +141,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                             ))}
                         </Flex>
                         <Flex margin="1em">
-                            <Button hidden={orderPaid(order)} height="100%" width="150px" bg="orange.400">PAY</Button>
+                            <Button hidden={orderStatusCheck(order)} height="100%" width="150px" bg="orange.400">PAY</Button>
                         </Flex>
                     </Flex>
                 ))}

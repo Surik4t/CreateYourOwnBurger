@@ -156,7 +156,7 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
         if (content.length != 0) {
             const order: Order = {
                 customer: "Guest",
-                status: "Waiting for payment",
+                status: "Editing",
                 content: content,
                 price: OrderPrice,
                 weight: OrderWeight,
@@ -171,12 +171,10 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
                         console.error("Details:", error.message);
                     }
                 });
-            changeTab("orders");
         } else {
             console.error("Empty order.")
             return;
         }
-
     }
    
     return (
@@ -281,8 +279,9 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
             {/* Состав заказа */}
             <Flex width="100%" minHeight="275px" mt="1em">
                 <Flex width="80%" bg="white" color="black" rounded="xl" overflowX="auto">
-                    {burgers.map((burger) => (
+                    {burgers.map((burger, burgerIndex) => (
                         <Card.Root
+                            key={burgerIndex}
                             bg="orange.200"
                             colorPalette="orange"
                             width="200px"

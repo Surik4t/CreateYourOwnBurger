@@ -27,6 +27,19 @@ async def create_order(new_order: OrderModel):
         return HTTPException(status_code=500, detail=f"Could not create an order: {e}")
 
 
+@router.put("/{order_id}")
+async def update_order(order_id, updated_order: OrderModel):
+    try:
+        order = await orders_collection.find_one({"_id": ObjectId(order_id)})
+        if order:
+            await orders_collection.replace_one({"_id": ObjectId(order_id)}, dict(**updated_order.model_dump()))
+            return {"message": "Order updated."}
+        else:
+            return HTTPException(status_code=404, detail="Order not found.")
+    except Exception as e:
+        return HTTPException(status_code=500, detail=f"Error updating order: {e}")
+
+
 @router.delete("/{order_id}")
 async def remove_order(order_id):
     try:
