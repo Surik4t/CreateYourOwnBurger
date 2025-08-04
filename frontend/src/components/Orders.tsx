@@ -53,7 +53,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
             .catch((error: AxiosError) => console.error(error.message))
     }
 
-    function orderStatusCheck(
+    function orderStatusEquals(
         order: Order,
         ...statuses: Array<"Waiting for payment" | "Editing" | "Canceled">
     ): boolean {
@@ -98,14 +98,14 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                             <Flex justifyContent="space-between" mt="0.5em">
                                 <Button onClick={
                                     () => editOrder(order)}
-                                    hidden={!orderStatusCheck(order, "Waiting for payment", "Editing")}
+                                    hidden={!orderStatusEquals(order, "Waiting for payment", "Editing")}
                                     bg="orange.400"
                                     >
                                         Edit
                                 </Button>
                                 <Button
                                 onClick={() => (changeOrderStatus(order, "Canceled"), changeTab("orders"))}
-                                hidden={!orderStatusCheck(order, "Waiting for payment", "Editing")}
+                                hidden={!orderStatusEquals(order, "Waiting for payment", "Editing")}
                                 bg="red.400"
                                 >
                                     Cancel
@@ -141,7 +141,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                         </Flex>
                         <Flex margin="1em">
                             <Button
-                                hidden={!orderStatusCheck(order, "Waiting for payment")} 
+                                hidden={!orderStatusEquals(order, "Waiting for payment")} 
                                 height="100%"
                                 width="150px"
                                 bg="orange.400"
