@@ -27,9 +27,9 @@ interface Order {
 }
 
 interface OrderProps {
-    changeTab: (Tab: string) => void;
-    handleSetEditOrder: (order: Order) => void;
-    menuState: number;
+    changeTab: (Tab: string) => void,
+    handleSetEditOrder: (order: Order) => void,
+    menuState: number,
 }
 
 
