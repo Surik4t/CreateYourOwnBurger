@@ -73,6 +73,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
         }
     }
 
+
     useEffect(() => {getOrders()}, [menuState]);
 
 
@@ -110,7 +111,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                             <Text>Total price: <b>{order.price}₽</b></Text>
                             <Flex justifyContent="space-between" mt="0.5em">
                                 <Button onClick={
-                                    () => editOrder(order)}
+                                    () => (editOrder(order), getOrders)}
                                     hidden={!orderStatusEquals(order, "Waiting for payment", "Editing")}
                                     bg="orange.400"
                                     >
