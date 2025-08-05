@@ -53,11 +53,24 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
             .catch((error: AxiosError) => console.error(error.message))
     }
 
+
     function orderStatusEquals(
         order: Order,
         ...statuses: Array<"Waiting for payment" | "Editing" | "Canceled">
     ): boolean {
         return (statuses.some(status => order.status == status))
+    }
+
+
+    function applyColorToStatus(status: string) {
+        switch(status) {
+        case "Canceled":
+            return <span style={{color: 'red', fontWeight: 'bold'}}>{status}</span>;
+        case "Complete":
+            return <span style={{color: 'green', fontWeight: 'bold'}}>{status}</span>;
+        default:
+            return <span style={{color: 'orange', fontWeight: 'bold'}}>{status}</span>;
+        }
     }
 
     useEffect(() => {getOrders()}, [menuState]);
@@ -92,7 +105,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                         <Flex padding="1em" direction="column">
                             <Text>Order ID:</Text>
                             <Text>{order.id}</Text>
-                            <Text>Status: {order.status}</Text>
+                            <Text>Status: {applyColorToStatus(order.status)}</Text>
                             <Text>{format(new Date(order.creation_datetime), "yyyy.MM.dd / HH:mm")}</Text>
                             <Text>Total price: <b>{order.price}₽</b></Text>
                             <Flex justifyContent="space-between" mt="0.5em">
