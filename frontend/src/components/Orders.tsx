@@ -99,7 +99,6 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
 
     return (
         <Flex direction="column" rounded="xl" justifySelf="center" width="85%" height="100%">
-            <Text color="black" >Orders</Text>
             <Flex direction="column" rounded="xl" width="100%" padding="1em">
                 {orders.map((order) => (
                     <Flex key={order.id} margin="0.5em" bg="white" color="black" rounded="xl" justifyContent="space-between">
@@ -158,9 +157,10 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                                 hidden={!orderStatusEquals(order, "Waiting for payment")} 
                                 height="100%"
                                 width="150px"
-                                bg="orange.400"
+                                bg="green.400"
+                                textStyle="6xl"
                                 >
-                                    PAY
+                                🛒
                             </Button>
                         </Flex>
                     </Flex>

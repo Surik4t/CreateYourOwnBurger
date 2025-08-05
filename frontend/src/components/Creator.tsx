@@ -319,17 +319,17 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
                     >
                     <Button
                         hidden={Boolean(orderId)}
-                        bg="orange.400"
+                        bg="green.400"
                         height="50%"
                         width="90%"
                         textStyle="4xl"
                         onClick={() => createOrder(burgers)}
                     >
-                        Buy
+                        🛒
                     </Button>
                     <Button
                         hidden={!orderId}
-                        bg="orange.400"
+                        bg="green.400"
                         height="50%"
                         width="90%"
                         textStyle="4xl"
@@ -338,7 +338,7 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
                         Confirm
                     </Button>
                     <Button
-                        bg="orange.300"
+                        bg="red.400"
                         height="20%"
                         width="90%"
                         textStyle="3xl"
