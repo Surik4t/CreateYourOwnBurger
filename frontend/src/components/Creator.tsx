@@ -338,6 +338,7 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
                         Confirm
                     </Button>
                     <Button
+                        hidden={Boolean(orderId)}
                         bg="red.400"
                         height="20%"
                         width="90%"
@@ -345,6 +346,16 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
                         onClick={clearOrder}
                     >
                         Clear order
+                    </Button>
+                    <Button
+                        hidden={!orderId}
+                        bg="red.400"
+                        height="20%"
+                        width="90%"
+                        textStyle="3xl"
+                        onClick={() => changeOrder(burgers)}
+                    >
+                        Cancel
                     </Button>
                     <Text>Total price: {OrderPrice}₽, Weight: {OrderWeight}g </Text>
                 </Flex>
