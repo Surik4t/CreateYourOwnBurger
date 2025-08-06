@@ -7,6 +7,19 @@ class UserModel(BaseModel):
     disabled: bool | None = None
 
 
+class UserInDB(UserModel):
+    hashed_password: str
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class TokenData(BaseModel):
+    username: str | None = None
+
+
 class IngredientModel(BaseModel):
     name: str
     price: int = Field(gt=0, description="The price must be greater than zero")
