@@ -1,10 +1,10 @@
 from pydantic import BaseModel, Field
 
 
-class AccountModel(BaseModel):
-    name: str
-    password: str
-    email: str
+class UserModel(BaseModel):
+    username: str
+    email: str | None = None
+    disabled: bool | None = None
 
 
 class IngredientModel(BaseModel):

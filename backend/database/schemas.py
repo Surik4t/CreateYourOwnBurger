@@ -1,3 +1,12 @@
+def user_schema(user):
+    return {
+        "username": str(user["username"]),
+        "password": str(user["password"]),
+        "email": str(user["email"]),
+        "disabled": bool(user["disabled"]),
+    }
+
+
 def order_schema(order):
     return {
         "id": str(order["_id"]),

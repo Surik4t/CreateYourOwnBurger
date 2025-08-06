@@ -1,6 +1,6 @@
 from fastapi import FastAPI, APIRouter, HTTPException
 from configurations import client
-from .services import Ingredients, Orders
+from .services import Ingredients, Orders, Users
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -38,3 +38,4 @@ async def health_check():
 app.include_router(router)
 app.include_router(Orders.router)
 app.include_router(Ingredients.router)
+app.include_router(Users.router)
