@@ -4,7 +4,6 @@ import Creator from "./Creator";
 import Orders from "./Orders";
 
 interface Ingredient {
-    index: number,
     name: string,
     weight: number,
     price: number,
@@ -18,6 +17,7 @@ interface Burger {
 }
 
 interface Order {
+    id: string,
     customer: string,
     status: string,
     content: Burger[],
