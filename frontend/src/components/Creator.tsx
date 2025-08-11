@@ -97,7 +97,7 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
         }
     }
 
-    useEffect(() => {getIngredients(), healthcheck}, []);
+    useEffect(() => {getIngredients(), healthcheck()}, []);
     useEffect(() => {clearBurger(), clearOrder()}, [menuState]);
     useEffect(() => {loadOrder(orderInEdit)}, [orderInEdit]);
 
