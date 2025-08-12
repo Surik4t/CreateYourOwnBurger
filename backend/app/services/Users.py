@@ -4,6 +4,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from database.models import UserModel, UserInDB, Token, TokenData
+from configurations import users_collection
 from passlib.context import CryptContext
 from datetime import timedelta, datetime, timezone
 
@@ -67,11 +68,6 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     return encoded_jwt
 
 
-def fake_decode_token(token):
-    user = get_user(fake_users_db, token)
-    return user
-
-
 async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -123,3 +119,27 @@ async def read_users_me(
     current_user: Annotated[UserModel, Depends(get_current_active_user)],
 ):
     return current_user
+
+
+@router.post("")
+async def create_user(new_user: UserModel):
+    try:
+        username_exists = users_collection.find_one({"username": new_user["username"]})
+        if username_exists:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="Username already taken"
+            )
+        email_exists = users_collection.find_one({"email": new_user["email"]})
+        if email_exists:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="User with such email already exists"
+            )
+        new_user["hashed_password"] = get_password_hash(new_user.password)
+        cursor = await users_collection.insert_one(dict(new_user))
+        return {"status_code": 200, "message": f"User {str(cursor)} created"}
+    except HTTPException as http_e:
+        raise HTTPException(status_code=http_e.status_code, detail=http_e.detail)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Internal server error: {e}")

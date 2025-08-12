@@ -48,6 +48,8 @@ async def remove_order(order_id):
             await orders_collection.delete_one({"_id": ObjectId(order_id)})
             return {"message": "Order removed."}
         else:
-            return HTTPException(status_code=404, detail="Order not found.")
+            raise HTTPException(status_code=404, detail="Order not found.")
+    except HTTPException as http_e:
+        raise HTTPException(status_code=http_e.status_code, detail=http_e.detail)
     except Exception as e:
-        return HTTPException(status_code=500, detail=f"An error occured: {e}")
+        raise HTTPException(status_code=500, detail=f"An error occured: {e}")
