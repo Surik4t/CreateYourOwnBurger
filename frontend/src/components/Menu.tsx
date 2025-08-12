@@ -53,7 +53,6 @@ const Menu = () => {
 
     return (
         <Box width="75%">
-            <Login />
             <Tabs.Root value={tabValue} onValueChange={(e) => setTabValue(e.value)} variant="line" defaultValue="creator" fitted >
                 <Tabs.List bg="orange.400" p="1" rounded="xl">
                     <Tabs.Trigger color="black" bg="orange.400" value="creator">
