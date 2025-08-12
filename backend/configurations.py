@@ -7,5 +7,6 @@ client = AsyncIOMotorClient(host)
 
 database = client.CreateYourOwnBurgerDB
 
+users_collection = database.get_collection("UsersCollection")
 orders_collection = database.get_collection("OrdersCollection")
 ingredient_collection = database.get_collection("IngredientsCollection")

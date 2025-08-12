@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 class UserModel(BaseModel):
     username: str
     email: str | None = None
-    disabled: bool | None = None
+    disabled: bool = Field(default=False)
 
 
 class UserInDB(UserModel):
