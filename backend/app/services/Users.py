@@ -1,9 +1,10 @@
 import jwt
+import logging
 from jwt.exceptions import InvalidTokenError
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from database.models import UserModel, UserInDB, Token, TokenData
+from database.models import UserModel, NewUserModel, UserInDB, Token, TokenData
 from configurations import users_collection
 from passlib.context import CryptContext
 from datetime import timedelta, datetime, timezone
@@ -32,7 +33,9 @@ fake_users_db = {
     },
 }
 
+logging.getLogger('passlib').setLevel(logging.ERROR)
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
 
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
@@ -122,24 +125,37 @@ async def read_users_me(
 
 
 @router.post("")
-async def create_user(new_user: UserModel):
+async def create_user(new_user: NewUserModel):
     try:
-        username_exists = users_collection.find_one({"username": new_user["username"]})
+        username_exists = await users_collection.find_one(
+            {"username": new_user.username}
+        )
         if username_exists:
+            print(username_exists)
             raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail="Username already taken"
+                status_code=status.HTTP_409_CONFLICT, detail="Username already taken"
             )
-        email_exists = users_collection.find_one({"email": new_user["email"]})
+
+        email_exists = await users_collection.find_one({"email": new_user.email})
         if email_exists:
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
-                detail="User with such email already exists"
+                detail="User with such email already exists",
             )
-        new_user["hashed_password"] = get_password_hash(new_user.password)
-        cursor = await users_collection.insert_one(dict(new_user))
+
+        user_in_db = UserInDB(
+            username=new_user.username,
+            email=new_user.email,
+            disabled=new_user.disabled,
+            hashed_password=get_password_hash(new_user.password),
+        )
+
+        cursor = await users_collection.insert_one(dict(user_in_db))
+
         return {"status_code": 200, "message": f"User {str(cursor)} created"}
+
     except HTTPException as http_e:
         raise HTTPException(status_code=http_e.status_code, detail=http_e.detail)
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal server error: {e}")

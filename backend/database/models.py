@@ -3,8 +3,12 @@ from pydantic import BaseModel, Field
 
 class UserModel(BaseModel):
     username: str
-    email: str | None = None
+    email: str
     disabled: bool = Field(default=False)
+
+
+class NewUserModel(UserModel):
+    password: str
 
 
 class UserInDB(UserModel):
