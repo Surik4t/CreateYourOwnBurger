@@ -131,7 +131,6 @@ async def create_user(new_user: NewUserModel):
             {"username": new_user.username}
         )
         if username_exists:
-            print(username_exists)
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT, detail="Username already taken"
             )
