@@ -1,33 +1,30 @@
-import React, { useState } from 'react';
-import { Router, Route, Routes } from 'react-router-dom';
-import { ChakraProvider } from "@chakra-ui/react";
-import { defaultSystem } from "@chakra-ui/react";
-import Cookies from 'js-cookie';
-import Home from './components/Home';
-
-const AuthContext = React.createContext(null);
-const TokenContext = React.createContext(null);
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext';
+import { ProtectedRoute } from './components/PrivateRoute'
+import Login from './components/Login';
+import Register from './components/Register';
+import Home from './components/Home'
 
 
-function App() {
-
-    const [auth, setAuth] = useState(false);
-    const [token, setToken] = useState("");
-    const readCookie = () => {
-        let token = Cookies.get("token");
-        if (token) {
-            setAuth(true);
-            setToken(token);
-        }
-    };
-    React.useEffect(() => { readCookie() }, []);    
-
+export const App = () => {
     return (
-        <ChakraProvider value={defaultSystem}>
-            <Routes>
-            </Routes>
-        </ChakraProvider>
-    )
-}
+        <BrowserRouter>
+            <AuthProvider>
+                <Routes>
+                    {/* Public routes */}
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />}/>
+                    <Route path="/unauthorized" element={<div>404</div>} />
+
+                    {/* Protected routes */}
+                    <Route path="/" element={<ProtectedRoute />}>
+                        <Route element={<Home />}>
+                        </Route>
+                    </Route>
+                </Routes>
+            </AuthProvider>
+        </BrowserRouter>
+    );
+};
 
 export default App;
