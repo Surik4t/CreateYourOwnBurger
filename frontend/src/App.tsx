@@ -13,13 +13,12 @@ export const App = () => {
                 <Routes>
                     {/* Public routes */}
                     <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />}/>
+                    <Route path="/register" element={<Register />} />
                     <Route path="/unauthorized" element={<div>404</div>} />
 
                     {/* Protected routes */}
-                    <Route path="/" element={<ProtectedRoute />}>
-                        <Route element={<Home />}>
-                        </Route>
+                    <Route element={<ProtectedRoute />}>
+                        <Route path="/" element={<Home />} />
                     </Route>
                 </Routes>
             </AuthProvider>

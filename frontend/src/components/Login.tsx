@@ -21,7 +21,6 @@ export const Login = () => {
     setError('');
 
     try {
-        // 1. Отправляем запрос через axios
         const response = await axios.post(
             'http://localhost:8000/users/token',
             new URLSearchParams({
@@ -34,10 +33,7 @@ export const Login = () => {
             },
             }
         );
-        // 2. Передаем токен в ваш AuthContext
         await login(response.data.access_token);
-        
-        // 3. Перенаправляем пользователя
         navigate(from, { replace: true });
         } catch (err) {
         setError(
@@ -56,7 +52,6 @@ export const Login = () => {
             {error && <div className="error">{error}</div>}
             <form onSubmit={handleSubmit}>
                 <input
-                    //type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Email"
