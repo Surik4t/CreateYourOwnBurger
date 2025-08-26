@@ -11,6 +11,7 @@ export const ProtectedRoute = ({ roles, children }: ProtectedRouteProps) => {
     const location = useLocation();
 
     if (isLoading) {
+        // добавить иконку загрузки 
         return;
     }
 
