@@ -106,7 +106,11 @@ async def login_for_access_token(
 async def read_users_me(
     current_user: Annotated[UserModel, Depends(get_current_active_user)],
 ):
-    return current_user
+    return {
+        "username": current_user.username,
+        "email": current_user.email,
+        "disabled": current_user.disabled
+    }
 
 
 @router.post("")

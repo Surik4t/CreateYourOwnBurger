@@ -1,9 +1,7 @@
 import { Box, Tabs } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import axios, { AxiosError } from "axios";
+import { useState } from "react";
 import Creator from "./Creator";
 import Orders from "./Orders";
-import Login from "./Login";
 
 interface Ingredient {
     name: string,
@@ -39,17 +37,6 @@ const Menu = () => {
         setMenuState(menuState => menuState + 1);
         setTabValue(Tab);
     }
-    
-    
-    async function getUser() {
-        
-        const url = "http://localhost:8000/users/me";
-        await axios.get(url)
-            .then(response => console.log(response.data))
-            .catch((error: AxiosError) => console.error(error.message))    
-    }
-
-    useEffect(() => {getUser()}, []);
 
     return (
         <Box width="75%">
