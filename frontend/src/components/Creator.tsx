@@ -1,6 +1,7 @@
 import { Table, Text, List, Button, Flex, CloseButton, Input, Box, Image, Card, CardDescription, CardFooter } from "@chakra-ui/react"
 import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
 
 
 interface Ingredient {
@@ -17,7 +18,7 @@ interface Burger {
 }
 
 interface Order {
-    customer: string,
+    customer: string | undefined,
     status: string,
     content: Burger[],
     price: number,
@@ -44,6 +45,7 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
     const [OrderWeight, setOrderWeight] = useState<number>(0);
     const [nextId, setNextId] = useState<number>(0);
     const len = selectedIngredients.length;
+    const { user } = useAuth();
 
     useEffect(() => {
         setBurgerPrice(selectedIngredients.reduce((sum, ingr) => sum + ingr.price, 0));
@@ -125,7 +127,7 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
     async function createOrder(content:Burger[])  {
         if (content.length != 0) {
             const order: Order = {
-                customer: "Guest",
+                customer: user?.username,
                 status: "Waiting for payment",
                 content: content,
                 price: OrderPrice,
@@ -155,7 +157,7 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
     async function changeOrder(content:Burger[])  {
         if (content.length != 0) {
             const order: Order = {
-                customer: "Guest",
+                customer: user?.username,
                 status: "Waiting for payment",
                 content: content,
                 price: OrderPrice,

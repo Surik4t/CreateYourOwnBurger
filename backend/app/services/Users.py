@@ -15,7 +15,7 @@ router = APIRouter(prefix="/users", tags=["users"])
 
 SECRET_KEY = "9f072413b83c826db32605b44194d7179b943d2a767d4f0642eb1139ec40b14e"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 10
+ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
 
 logging.getLogger("passlib").setLevel(logging.ERROR)

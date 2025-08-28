@@ -2,6 +2,7 @@ import { Flex, Text, Card, CardDescription, CardFooter, Button } from "@chakra-u
 import { useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { format } from "date-fns"
+import { useAuth } from "../contexts/AuthContext";
 
 interface Ingredient {
     name: string,
@@ -35,6 +36,15 @@ interface OrderProps {
 
 const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder }) => {
     const [orders, setOrders] = useState<Order[]>([]);
+    const { user } = useAuth();
+    const token = localStorage.getItem('access_token');
+
+    const api = axios.create({
+        baseURL: "http://localhost:8000",
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
 
     const editOrder = (order: Order) => {
         changeTab("creator");
@@ -47,8 +57,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
 
 
     async function getOrders() {
-        const url = "http://localhost:8000/orders";
-        await axios.get(url)
+        const response = await api.get(`/orders?customer=${user?.username}`)
             .then(response => setOrders(response.data))
             .catch((error: AxiosError) => console.error(error.message))
     }
@@ -88,7 +97,10 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
         }
         const url = `http://localhost:8000/orders/${order.id}`;
         axios.put(url, payload)
-            .then(response => console.log(response.data.message))
+            .then(response => {
+                console.log(response.data.message)
+                getOrders();
+            })
             .catch((error: AxiosError) => {
                 if (error.response) {
                     console.error("Error status code:", error.response.status);

@@ -1,16 +1,24 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from configurations import orders_collection
 from database.schemas import order_schema
 from database.models import OrderModel
 from bson.objectid import ObjectId
+from .Users import get_current_user
 
 router = APIRouter(prefix="/orders", tags=["orders"])
 
 
 @router.get("")
-async def get_all_orders():
+async def get_orders(
+    customer: str = None, current_user: dict = Depends(get_current_user)
+):
     result = list()
-    async for order in orders_collection.find():
+    if customer:
+        query = {"customer": customer}
+    else:
+        query = {}
+
+    async for order in orders_collection.find(query):
         result.append(order_schema(order))
     return sorted(result, key=lambda order: order["creation_datetime"], reverse=True)
 
@@ -32,7 +40,9 @@ async def update_order(order_id, updated_order: OrderModel):
     try:
         order = await orders_collection.find_one({"_id": ObjectId(order_id)})
         if order:
-            await orders_collection.replace_one({"_id": ObjectId(order_id)}, dict(**updated_order.model_dump()))
+            await orders_collection.replace_one(
+                {"_id": ObjectId(order_id)}, dict(**updated_order.model_dump())
+            )
             return {"message": "Order updated."}
         else:
             return HTTPException(status_code=404, detail="Order not found.")
