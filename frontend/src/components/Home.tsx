@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function Home() {
-    const { isAuthenticated, isLoading } = useAuth();
+    const { isAuthenticated, isLoading, logout } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -50,7 +50,7 @@ function Home() {
                                     Settings
                                 </Menu.Item>
                                 <Menu.Separator />
-                                <Menu.Item value="logout" py={2} px={4} color="red.500">
+                                <Menu.Item onClick={logout} value="logout" py={2} px={4} color="red.500">
                                     Logout
                                 </Menu.Item>
                             </Menu.Content>
