@@ -1,6 +1,6 @@
-import { Flex, Avatar, defineStyle } from "@chakra-ui/react"
+import { Flex, Avatar, defineStyle, Menu, Portal } from "@chakra-ui/react"
 import Header from "./Header";
-import Menu from './Menu';
+import { Menu as MainMenu } from './Menu';
 import { useAuth } from "../contexts/AuthContext"
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -8,13 +8,6 @@ import { useNavigate } from 'react-router-dom';
 function Home() {
     const { isAuthenticated, isLoading } = useAuth();
     const navigate = useNavigate();
-
-    const ringCss = defineStyle({
-    outlineWidth: "2px",
-    outlineColor: "colorPalette.500",
-    outlineOffset: "2px",
-    outlineStyle: "solid",
-    })
 
     useEffect(() => {
             if (!isLoading && !isAuthenticated) {
@@ -40,10 +33,30 @@ function Home() {
                 zIndex="1000"
             >
                 <Header />
-                <Avatar.Root style={{cursor:"pointer"}} css={ringCss} mr="2em">
-                    <Avatar.Fallback name="Test" />
-                    <Avatar.Image src="https://bit.ly/sage-adebayo" />
-                </Avatar.Root>
+                <Menu.Root positioning={{ placement: "right-end" }}>
+                    <Menu.Trigger mr="2em" rounded="2xl" focusRing="inside" bg="orange.900" >
+                        <Avatar.Root size="xl" style={{ cursor:"pointer" }}>
+                            <Avatar.Fallback name="Segun Adebayo" />
+                            <Avatar.Image src="https://bit.ly/sage-adebayo" />
+                        </Avatar.Root>
+                    </Menu.Trigger>
+                    <Portal>
+                        <Menu.Positioner>
+                            <Menu.Content>
+                                <Menu.Item value="profile" py={2} px={4}>
+                                    Profile
+                                </Menu.Item>
+                                <Menu.Item value="settings" py={2} px={4}>
+                                    Settings
+                                </Menu.Item>
+                                <Menu.Separator />
+                                <Menu.Item value="logout" py={2} px={4} color="red.500">
+                                    Logout
+                                </Menu.Item>
+                            </Menu.Content>
+                        </Menu.Positioner>
+                    </Portal>
+                </Menu.Root>
             </Flex>
 
             {/* Меню */} 
@@ -53,7 +66,7 @@ function Home() {
                 width="100%"
                 justify="center"
             >
-                <Menu />
+                <MainMenu />
             </Flex>
         </Flex>
     )

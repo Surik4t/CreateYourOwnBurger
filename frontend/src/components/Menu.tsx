@@ -26,7 +26,7 @@ interface Order {
     creation_datetime: string,
 }
 
-const Menu = () => {
+export const Menu = () => {
 
     const [tabValue, setTabValue] = useState<string | null>("creator")
     const [orderInEdit, setOrderInEdit] = useState<Order | null>(null);
@@ -72,5 +72,3 @@ const Menu = () => {
         </Box>
     );
 };
-
-export default Menu;
