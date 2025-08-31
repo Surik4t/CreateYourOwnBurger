@@ -41,7 +41,7 @@ export const Login = () => {
                     headers: {
                         "Content-Type": "application/x-www-form-urlencoded",
                     },
-                    timeout: 10000 // 10 секунд таймаут
+                    timeout: 5000
                 }
             );
             await login(response.data.access_token);
