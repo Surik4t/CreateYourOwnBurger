@@ -1,10 +1,11 @@
-import { Button, Field, Input, Stack, IconButton, Text } from "@chakra-ui/react"
+import { Button, Field, Input, Stack, IconButton, Text, Flex } from "@chakra-ui/react"
 import { HiEye, HiEyeOff } from "react-icons/hi"
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from "react-hook-form"
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
+import Header from "./Header";
 
 interface FormValues {
     username: string
@@ -64,52 +65,72 @@ export const Login = () => {
     };
     
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <Stack gap="4" align="flex-start" maxW="sm">
+        <Flex bg="#f8ebd7ff" direction="column" colorPalette="orange" minHeight="100vh">
+            <Flex
+                as="nav"
+                align="center"
+                justify="space-between"
+                bg="#502212ff"
+                height="75px"
+                width="100%"
+                position="fixed"
+                flexWrap="wrap"
+                zIndex="1000"
+            >
+                <Header />
+            </Flex>
+        
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <Stack color="black" gap="4" align="flex-start" width="25em" mt="300px" justifySelf="center">
 
-                <Field.Root invalid={!!errors.username}>
-                    <Field.Label>Username</Field.Label>
-                    <Input {...register("username", { 
-                        required: "Username is required",
-                        minLength: { value: 3, message: "Username must be at least 3 characters" }
-                    })} />
-                    <Field.ErrorText>{errors.username?.message}</Field.ErrorText>
-                </Field.Root>
+                    <Field.Root invalid={!!errors.username}>
+                        <Field.Label>Username</Field.Label>
+                        <Input bg="orange.200"
+                            {...register("username", { 
+                                required: "Username is required",
+                                minLength: { value: 3, message: "Username must be at least 3 characters" }
+                        })} />
+                        <Field.ErrorText>{errors.username?.message}</Field.ErrorText>
+                    </Field.Root>
 
-                <Field.Root invalid={!!errors.password}>
-                    <Field.Label>Password</Field.Label>
-                        <Input 
-                            type={showPassword ? "text" : "password"} 
-                            {...register("password", { 
-                                required: "Password is required",
-                                minLength: { value: 6, message: "Password must be at least 6 characters" }
-                            })} 
-                            pr="12"
-                        />
-                        <IconButton
-                            variant="ghost"
-                            aria-label={showPassword ? "Hide password" : "Show password"}
-                            onClick={togglePasswordVisibility}
-                            position="absolute"
-                            right="1"
-                            
-                        >
-                            {showPassword ? <HiEye /> : <HiEyeOff />}
-                        </IconButton>
-                    <Field.ErrorText>{errors.password?.message}</Field.ErrorText>
-                </Field.Root>
-                
-                <Text color="red">{error}</Text>
+                    <Field.Root invalid={!!errors.password}>
+                        <Field.Label>Password</Field.Label>
+                            <Input bg="orange.200"
+                                type={showPassword ? "text" : "password"} 
+                                {...register("password", { 
+                                    required: "Password is required",
+                                    minLength: { value: 6, message: "Password must be at least 6 characters" }
+                                })} 
+                                pr="12"
+                            />
+                            <IconButton
+                                variant="ghost"
+                                bg="orange.400"
+                                aria-label={showPassword ? "Hide password" : "Show password"}
+                                onClick={togglePasswordVisibility}
+                                position="absolute"
+                                right="1"
+                                
+                            >
+                                {showPassword ? <HiEye /> : <HiEyeOff />}
+                            </IconButton>
+                        <Field.ErrorText>{errors.password?.message}</Field.ErrorText>
+                    </Field.Root>
+                    
+                    <Text color="red">{error}</Text>
 
-                <Button type="submit" loading={isLoading}>
-                    {isLoading ? "Logging in..." : "Submit"}
-                </Button>
-                
-                <Link to="/register">Sign up</Link>
+                    <Flex width="100%" direction="column" justify="center" align="center" gap="1em"> 
+                        <Button bg="orange.400" type="submit" loading={isLoading}>
+                            {isLoading ? "Logging in..." : "Submit"}
+                        </Button>
+                        
+                        <Link to="/register">Sign up</Link>
+                    </Flex>
 
-            </Stack>
-        </form>
 
+                </Stack>
+            </form>
+        </Flex>
     );
 };
 
