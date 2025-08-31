@@ -28,7 +28,7 @@ export const Login = () => {
 
     const onSubmit = async (data: FormValues) => {
         setIsLoading(true);
-        setError("");
+        setError('');
 
         try {
             const response = await axios.post(
@@ -39,18 +39,25 @@ export const Login = () => {
                 },
                 {
                     headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },                
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                    timeout: 10000 // 10 секунд таймаут
                 }
             );
             await login(response.data.access_token);
             navigate("/"); 
         } catch (err) {
-            setError(
-                axios.isAxiosError(err) 
-                ? err.response?.data?.detail || 'Invalid email or password'
-                : 'Login failed'
-            );
+            if (axios.isAxiosError(err)) {
+                if (err.response) {
+                    setError(err.response?.data?.detail);
+                } else if (err.code === "ECONNABORTED" || err.request) {
+                    setError("Server is not responding. Please try again later.");
+                } else {
+                    setError("An unexpected error occurred");
+                }
+            } else {
+                setError("Login failed");
+            }
         } finally {
             setIsLoading(false);
         }
@@ -94,7 +101,9 @@ export const Login = () => {
                 
                 <Text color="red">{error}</Text>
 
-                <Button type="submit">Submit</Button>
+                <Button type="submit" loading={isLoading}>
+                    {isLoading ? "Logging in..." : "Submit"}
+                </Button>
                 
                 <Link to="/register">Sign up</Link>
 
