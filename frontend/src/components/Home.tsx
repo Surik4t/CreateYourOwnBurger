@@ -19,7 +19,7 @@ function Home() {
     if (!isAuthenticated) return null;
     
     return (
-        <Flex bg="#f8ebd7ff" colorPalette="orange">
+        <Flex bg="#f8ebd7ff" colorPalette="orange" minHeight="100vh">
             {/* Шапка */} 
             <Flex
                 as="nav"
