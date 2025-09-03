@@ -79,10 +79,18 @@ export const Login = () => {
             >
                 <Header />
             </Flex>
-        
+            <Flex mt="300px"/>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <Stack color="black" gap="4" align="flex-start" width="25em" mt="300px" justifySelf="center">
-
+                <Stack
+                    bg="white" 
+                    color="black"
+                    gap="1em"
+                    align="flex-start"
+                    width="30em"
+                    justifySelf="center"
+                    padding="2em"
+                    rounded="2xl"
+                >
                     <Field.Root invalid={!!errors.username}>
                         <Field.Label>Username</Field.Label>
                         <Input bg="orange.200"
@@ -110,7 +118,6 @@ export const Login = () => {
                                 onClick={togglePasswordVisibility}
                                 position="absolute"
                                 right="1"
-                                
                             >
                                 {showPassword ? <HiEye /> : <HiEyeOff />}
                             </IconButton>
