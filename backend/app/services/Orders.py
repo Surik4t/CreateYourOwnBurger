@@ -14,7 +14,8 @@ async def get_orders(
 ):
     result = list()
     if customer:
-        query = {"customer": customer}
+        if customer == current_user.username:
+            query = {"customer": customer}
     else:
         query = {}
 
@@ -32,7 +33,7 @@ async def create_order(new_order: OrderModel):
             "message": f"Order id: {cursor.inserted_id} created.",
         }
     except Exception as e:
-        return HTTPException(status_code=500, detail=f"Could not create an order: {e}")
+        raise HTTPException(status_code=500, detail=f"Could not create an order: {e}")
 
 
 @router.put("/{order_id}")
@@ -45,9 +46,9 @@ async def update_order(order_id, updated_order: OrderModel):
             )
             return {"message": "Order updated."}
         else:
-            return HTTPException(status_code=404, detail="Order not found.")
+            raise HTTPException(status_code=404, detail="Order not found.")
     except Exception as e:
-        return HTTPException(status_code=500, detail=f"Error updating order: {e}")
+        raise HTTPException(status_code=500, detail=f"Error updating order: {e}")
 
 
 @router.delete("/{order_id}")

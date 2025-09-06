@@ -27,7 +27,7 @@ async def db_response():
         if info:
             return {"message": "DB connection: OK"}
     except Exception as e:
-        return HTTPException(status_code=500, detail=f"{e}")
+        raise HTTPException(status_code=500, detail=f"{e}")
 
 
 @router.get("/healthcheck")
