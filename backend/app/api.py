@@ -2,7 +2,7 @@ from fastapi import FastAPI, APIRouter, HTTPException
 from configurations import client
 from .services import Ingredients, Orders, Users
 from fastapi.middleware.cors import CORSMiddleware
-
+from dotenv import load_dotenv
 
 app = FastAPI()
 router = APIRouter()

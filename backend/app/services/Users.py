@@ -1,13 +1,15 @@
 import jwt
 import logging
+from random import randint
 from jwt.exceptions import InvalidTokenError
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from database.models import UserModel, NewUserModel, UserInDB, Token, TokenData
-from configurations import users_collection
+from database.models import UserModel, NewUserModel, UnconfirmedUser, UserInDB, Token, TokenData
+from configurations import users_collection, unconfirmed_users_collecition
 from passlib.context import CryptContext
 from datetime import timedelta, datetime, timezone
+from app.RabbitMQ.Message_sender import queue_message
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/users/token")
 
@@ -113,8 +115,8 @@ async def read_users_me(
     }
 
 
-@router.post("")
-async def create_user(new_user: NewUserModel):
+@router.post("/confirmation")
+async def confirm_user(new_user: NewUserModel):
     try:
         username_exists = await users_collection.find_one(
             {"username": new_user.username}
@@ -130,7 +132,33 @@ async def create_user(new_user: NewUserModel):
                 status_code=status.HTTP_409_CONFLICT,
                 detail="User with such email already exists",
             )
+        
+        unconfirmed_user = UnconfirmedUser(
+            username=new_user.username,
+            email=new_user.email,
+            disabled=new_user.disabled,
+            hashed_password=get_password_hash(new_user.password),
+            confirmation_code="".join(str(randint(0, 9)) for x in range(4)),
+            expiring_at=datetime.now() + timedelta(minutes=15),
+            attempts=0,
+        )
 
+        await unconfirmed_users_collecition.insert_one(dict(unconfirmed_user))
+
+        queue_message(unconfirmed_user)
+
+        return {"status_code": 200, "message": f"Confirmation code sent to {unconfirmed_user.email}"}
+
+    except HTTPException as http_e:
+        raise HTTPException(status_code=http_e.status_code, detail=http_e.detail)
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Internal server error: {e}")
+    
+
+@router.post("")
+async def create_user(new_user: NewUserModel):
+    try:
         user_in_db = UserInDB(
             username=new_user.username,
             email=new_user.email,

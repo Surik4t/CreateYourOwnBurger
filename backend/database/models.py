@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field
+from datetime import datetime
 
 
 class UserModel(BaseModel):
@@ -9,6 +10,13 @@ class UserModel(BaseModel):
 
 class NewUserModel(UserModel):
     password: str
+
+
+class UnconfirmedUser(UserModel):
+    hashed_password: str
+    confirmation_code: str
+    expiring_at: datetime
+    attempts: int
 
 
 class UserInDB(UserModel):
