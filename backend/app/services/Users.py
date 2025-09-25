@@ -1,12 +1,20 @@
 import jwt
 import logging
+from bson.objectid import ObjectId
 from random import randint
 from jwt.exceptions import InvalidTokenError
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from database.models import UserModel, NewUserModel, UnconfirmedUser, UserInDB, Token, TokenData
-from configurations import users_collection, unconfirmed_users_collecition
+from database.models import (
+    UserModel,
+    NewUserModel,
+    UnconfirmedUser,
+    UserInDB,
+    Token,
+    TokenData,
+)
+from configurations import users_collection, unconfirmed_users_collection
 from passlib.context import CryptContext
 from datetime import timedelta, datetime, timezone
 from app.RabbitMQ.Message_sender import queue_message
@@ -111,28 +119,28 @@ async def read_users_me(
     return {
         "username": current_user.username,
         "email": current_user.email,
-        "disabled": current_user.disabled
+        "disabled": current_user.disabled,
     }
 
 
-@router.post("/confirmation")
-async def confirm_user(new_user: NewUserModel):
+@router.post("/user_verification")
+async def verify_user(new_user: NewUserModel):
     try:
-        username_exists = await users_collection.find_one(
-            {"username": new_user.username}
-        )
-        if username_exists:
+        if await users_collection.find_one({"username": new_user.username}):
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT, detail="Username already taken"
             )
 
-        email_exists = await users_collection.find_one({"email": new_user.email})
-        if email_exists:
+        if await users_collection.find_one({"email": new_user.email}):
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
                 detail="User with such email already exists",
             )
-        
+
+        await unconfirmed_users_collection.find_one_and_delete(
+            {"email": new_user.email}
+        )
+
         unconfirmed_user = UnconfirmedUser(
             username=new_user.username,
             email=new_user.email,
@@ -143,18 +151,65 @@ async def confirm_user(new_user: NewUserModel):
             attempts=0,
         )
 
-        await unconfirmed_users_collecition.insert_one(dict(unconfirmed_user))
+        await unconfirmed_users_collection.insert_one(dict(unconfirmed_user))
 
         queue_message(unconfirmed_user)
 
-        return {"status_code": 200, "message": f"Confirmation code sent to {unconfirmed_user.email}"}
+        return {
+            "status_code": 200,
+            "message": f"Confirmation code sent to {unconfirmed_user.email}",
+        }
 
     except HTTPException as http_e:
-        raise HTTPException(status_code=http_e.status_code, detail=http_e.detail)
+        raise http_e
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal server error: {e}")
-    
+
+
+async def get_unconfirmed_user(email):
+    user = await unconfirmed_users_collection.find_one({"email": email})
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Something went wrong.",
+        )
+    return UnconfirmedUser(**user)
+
+
+@router.post("/code_confirmation")
+async def confirm_code(data: dict):
+    code = data["confirmation_code"]
+    email = data["email"]
+
+    try:
+        user = await get_unconfirmed_user(email)
+        if user.attempts >= 3:
+            raise HTTPException(
+                status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+                detail="You have exceeded the maximum number of activation attempts. Please request a new code.",
+            )    
+        if code != user.confirmation_code:
+            await unconfirmed_users_collection.update_one(
+                {"email": user.email}, {"$inc": {"attempts": 1}}
+            )
+
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid confirmation code.",
+            )
+
+        confirmed_user = UserInDB(**user.model_dump())
+        await users_collection.insert_one(dict(confirmed_user))
+
+        return {"status_code": 200, "message": f"User {str(confirmed_user.username)} created."}
+
+    except HTTPException as http_e:
+        raise http_e
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Internal server error: {e}")
+
 
 @router.post("")
 async def create_user(new_user: NewUserModel):
@@ -171,7 +226,7 @@ async def create_user(new_user: NewUserModel):
         return {"status_code": 200, "message": f"User {str(cursor)} created"}
 
     except HTTPException as http_e:
-        raise HTTPException(status_code=http_e.status_code, detail=http_e.detail)
+        raise http_e
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal server error: {e}")

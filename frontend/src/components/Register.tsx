@@ -31,18 +31,25 @@ const Register = () => {
 
     const passwordValue = watch("password")
 
+    const setCookie = (name: string, value: string) => {
+        const date = new Date();
+        date.setTime(date.getTime() + (1440 * 60 * 1000));
+        document.cookie = `${name}=${value}; expires=${date.toUTCString()}; path=/`;
+    };
+
     const onSubmit = async (data: FormValues) => {
         try {
-            const response = await axios.post("http://localhost:8000/users/", {
+            setCookie("CYOB_email", data.email);
+            const response = await axios.post("http://localhost:8000/users/user_verification", {
                 username: data.username,
                 email: data.email,
                 password: data.password,
                 disabled: false,
             });
-            console.log("Registration successful:", response.data);
-            navigate("/login");
+            console.log(response.data);
+            navigate("/confirmation");
         } catch (error) {
-            console.error("Registration failed:", error);
+            console.error(error);
         }
     };
 
