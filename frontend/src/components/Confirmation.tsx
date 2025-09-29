@@ -1,7 +1,8 @@
-import { Button, Field, Input, Stack, Flex } from "@chakra-ui/react"
+import { Button, Field, Input, Stack, Flex, Text } from "@chakra-ui/react"
 import { useForm } from "react-hook-form"
-import { useNavigate } from 'react-router-dom';
-import axios from "axios"
+import { useState } from "react"
+import { useNavigate } from 'react-router-dom'
+import axios, { AxiosError } from "axios"
 import Header from "./Header"
 
 interface FormValues {
@@ -15,6 +16,8 @@ const Confirmation = () => {
         formState: { errors },
     } = useForm<FormValues>()
 
+    const [httpError, setHttpError] = useState("");
+
     const navigate = useNavigate();
 
     function get_cookie(name: string) {
@@ -24,6 +27,7 @@ const Confirmation = () => {
 
     const onSubmit = async (data: FormValues) => {
         try {
+            setHttpError("");
             const email = get_cookie("CYOB_email");
             const response = await axios.post("http://localhost:8000/users/code_confirmation", {
                 confirmation_code: data.confirmationCode,
@@ -32,9 +36,15 @@ const Confirmation = () => {
             console.log("Registration successful:", response.data);
             navigate("/login");
         } catch (error) {
-            console.error("Registration failed:", error);
-        }
-    };
+            if (axios.isAxiosError(error)) {
+                if (error.response) {
+                    setHttpError(error.response.data.detail || error.message);
+                } else {
+                    setHttpError(error.message);
+                }
+            }
+        };
+    }
     return (
         <Flex bg="#f8ebd7ff" direction="column" colorPalette="orange" minHeight="100vh">
             <Flex
@@ -70,6 +80,7 @@ const Confirmation = () => {
                         <Field.ErrorText>{errors.confirmationCode?.message}</Field.ErrorText>
                     </Field.Root>
 
+                    <Text style={{color: "red"}}> {httpError} </Text>
                     <Button mt="1em" alignSelf="center" bg="orange.400" type="submit">Submit</Button>
                 </Stack>
             </form>

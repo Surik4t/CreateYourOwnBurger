@@ -1,10 +1,10 @@
-import { Button, Field, Input, Stack, IconButton, Flex } from "@chakra-ui/react"
+import { Button, Field, Input, Stack, IconButton, Flex, Text } from "@chakra-ui/react"
 import { useNavigate } from 'react-router-dom';
 import { useForm } from "react-hook-form"
 import { useState } from "react"
 import { HiEye, HiEyeOff } from "react-icons/hi"
-import axios from "axios"
-import Header from "./Header";
+import axios, { AxiosError } from "axios"
+import Header from "./Header"
 
 
 interface FormValues {
@@ -22,6 +22,7 @@ const Register = () => {
         watch,
     } = useForm<FormValues>()
 
+    const [httpError, setHttpError] = useState("")
     const [showPassword, setShowPassword] = useState(false)
     const [showRepeatPassword, setShowRepeatPassword] = useState(false)
     const navigate = useNavigate()
@@ -39,6 +40,7 @@ const Register = () => {
 
     const onSubmit = async (data: FormValues) => {
         try {
+            setHttpError("");
             setCookie("CYOB_email", data.email);
             const response = await axios.post("http://localhost:8000/users/user_verification", {
                 username: data.username,
@@ -49,6 +51,14 @@ const Register = () => {
             console.log(response.data);
             navigate("/confirmation");
         } catch (error) {
+            if (axios.isAxiosError(error)) {
+                // For HTTP errors (4xx, 5xx), the error details are in response.data
+                if (error.response) {
+                    setHttpError(error.response.data.detail || error.message);
+                } else {
+                    setHttpError(error.message);
+                }
+            }
             console.error(error);
         }
     };
@@ -154,6 +164,7 @@ const Register = () => {
                         <Field.ErrorText>{errors.repeatPassword?.message}</Field.ErrorText>
                     </Field.Root>
 
+                    <Text style={{color: "red"}}> {httpError} </Text>
                     <Button mt="1em" alignSelf="center" bg="orange.400" type="submit">Submit</Button>
                 </Stack>
             </form>
