@@ -306,6 +306,15 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
                                 <Text textStyle="2xl" fontWeight="medium" letterSpacing="tight" mt="2">
                                     {burger.price}₽
                                 </Text>
+                                <CloseButton
+                                    bg="red.400" size="2xs" rounded="2xl"
+                                    onClick={() => 
+                                        setBurgers(burger => 
+                                            burger.filter((_, index) => index !== burgerIndex)
+                                        )
+                                    }>
+                                    X
+                                </CloseButton>
                             </CardFooter>
                         </Card.Root>
                     ))}
