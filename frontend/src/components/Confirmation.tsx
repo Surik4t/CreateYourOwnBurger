@@ -2,7 +2,7 @@ import { Button, Field, Input, Stack, Flex, Text } from "@chakra-ui/react"
 import { useForm } from "react-hook-form"
 import { useState } from "react"
 import { useNavigate } from 'react-router-dom'
-import axios, { AxiosError } from "axios"
+import axios from "axios"
 import Header from "./Header"
 
 interface FormValues {

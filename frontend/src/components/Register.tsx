@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from "react-hook-form"
 import { useState } from "react"
 import { HiEye, HiEyeOff } from "react-icons/hi"
-import axios, { AxiosError } from "axios"
+import axios from "axios"
 import Header from "./Header"
 
 
