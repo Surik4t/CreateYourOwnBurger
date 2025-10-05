@@ -306,8 +306,24 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
                                 <Text textStyle="2xl" fontWeight="medium" letterSpacing="tight" mt="2">
                                     {burger.price}₽
                                 </Text>
+                                <Button
+                                    bg="green.400"
+                                    size="2xs"
+                                    padding="0"
+                                    rounded="2xl"
+                                    onClick={() => {
+                                        setSelectedIngredients(burger.ingredients),
+                                        setBurgerName(burger.name),
+                                        setBurgers(burger => 
+                                            burger.filter((_, index) => index !== burgerIndex)
+                                        )
+                                    }}>
+                                    O
+                                </Button>
                                 <CloseButton
-                                    bg="red.400" size="2xs" rounded="2xl"
+                                    bg="red.400"
+                                    size="2xs"
+                                    rounded="2xl"
                                     onClick={() => 
                                         setBurgers(burger => 
                                             burger.filter((_, index) => index !== burgerIndex)
