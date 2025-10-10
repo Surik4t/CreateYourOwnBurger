@@ -1,4 +1,4 @@
-import { Flex, Text, Card, CardDescription, CardFooter, Button } from "@chakra-ui/react";
+import { Flex, Text, Card, CardDescription, CardFooter, Button, Dialog, CloseButton, Table, Heading } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { format } from "date-fns"
@@ -36,6 +36,8 @@ interface OrderProps {
 
 const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder }) => {
     const [orders, setOrders] = useState<Order[]>([]);
+    const [modalOpen, setModalOpen] = useState(false);
+    const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
     const { user } = useAuth();
     const token = localStorage.getItem('access_token');
 
@@ -82,6 +84,11 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
         }
     }
 
+    const openOrderModal = (order: Order) => {
+        setSelectedOrder(order);
+        setModalOpen(true);
+    }
+
 
     useEffect(() => {getOrders()}, [menuState]);
 
@@ -111,9 +118,9 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
 
     return (
         <Flex direction="column" rounded="xl" justifySelf="center" width="85%" height="100%">
-            <Flex direction="column" rounded="xl" width="100%" padding="1em">
+            <Flex direction="column" rounded="xl" width="100%">
                 {orders.map((order) => (
-                    <Flex key={order.id} margin="0.5em" bg="white" color="black" rounded="xl" justifyContent="space-between">
+                    <Flex key={order.id} margin="0.5em" bg="white" color="black" rounded="xl">
                         <Flex padding="1em" direction="column">
                             <Text>Order ID:</Text>
                             <Text>{order.id}</Text>
@@ -164,20 +171,72 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                                 </Card.Root>
                             ))}
                         </Flex>
-                        <Flex margin="1em">
-                            <Button
-                                hidden={!orderStatusEquals(order, "Waiting for payment")} 
-                                height="100%"
-                                width="150px"
-                                bg="green.400"
-                                textStyle="6xl"
-                                >
-                                🛒
-                            </Button>
-                        </Flex>
+
+                        <Button
+                            m="0.5em"
+                            onClick={() => openOrderModal(order)}
+                            hidden={!orderStatusEquals(order, "Waiting for payment")} 
+                            height="100%"
+                            width="150px"
+                            bg="green.400"
+                            textStyle="6xl"
+                        >
+                        $
+                        </Button>
                     </Flex>
                 ))}
             </Flex>
+            <Dialog.Root
+                lazyMount 
+                placement="center"
+                open={modalOpen}
+                motionPreset="slide-in-bottom"
+                onOpenChange={(e) => setModalOpen(e.open)}
+                >
+                <Dialog.Backdrop bg="blackAlpha.600" />
+                <Dialog.Positioner>
+                    <Dialog.Content bg="white" color="gray.800">
+                    <Dialog.Header>
+                        <Dialog.Title color="gray.800">
+                            Order confirmation {selectedOrder && `- ${selectedOrder.id}`}
+                        </Dialog.Title>
+                    </Dialog.Header>
+                    <Dialog.Body>
+                        {selectedOrder && selectedOrder.content.map((burger, burgerIndex) => (
+                            <div key={burgerIndex}>
+                                <Table.Root size="sm">
+                                    <Table.Header>
+                                        <Heading size="2xl">{burger.name}</Heading>
+                                    </Table.Header>
+                                    <Table.Body>
+                                        {burger.ingredients.map((ingr, ingrIndex) => (
+                                            <Table.Row>
+                                                <Table.Cell> {ingr.name} </Table.Cell>
+                                                <Table.Cell textAlign="end"> {ingr.price}₽ </Table.Cell>
+                                            </Table.Row>
+                                        ))}
+                                        <Table.Row>
+                                            <Table.Cell><b>total:</b></Table.Cell>
+                                            <Table.Cell textAlign="end"> <b>{burger.price}₽</b></Table.Cell>
+                                        </Table.Row>
+                                    </Table.Body>
+                                </Table.Root>
+
+                            </div>
+                        ))}
+                    </Dialog.Body>
+                    <Dialog.Footer>
+                        <Dialog.ActionTrigger asChild>
+                            <Button variant="outline">Cancel</Button>
+                        </Dialog.ActionTrigger>
+                        <Button>Save</Button>
+                    </Dialog.Footer>
+                    <Dialog.CloseTrigger asChild>
+                        <CloseButton size="sm" />
+                    </Dialog.CloseTrigger>
+                    </Dialog.Content>
+                </Dialog.Positioner>
+            </Dialog.Root>
         </Flex>
     )
 }
