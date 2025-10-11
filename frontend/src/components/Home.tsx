@@ -34,8 +34,21 @@ function Home() {
             >
                 <Header />
                 <Menu.Root positioning={{ placement: "right-end" }}>
-                    <Menu.Trigger mr="2em" rounded="2xl" focusRing="inside" bg="orange.900" >
-                        <Avatar.Root size="xl" style={{ cursor:"pointer" }}>
+                    <Menu.Trigger 
+                        mr="2em"
+                        focusRing="inside" 
+                        bg="red"
+                        border="none"
+                        outline="none"
+                        _focusVisible={{ boxShadow: "none" }}
+                        >
+                        <Avatar.Root 
+                            size="xl" 
+                            style={{ cursor:"pointer" }}
+                            border="none"
+                            outline="none"
+                            boxShadow="none"
+                        >
                             <Avatar.Fallback name="Segun Adebayo" />
                             <Avatar.Image src="https://bit.ly/sage-adebayo" />
                         </Avatar.Root>
