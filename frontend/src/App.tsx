@@ -5,6 +5,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Confirmation from './components/Confirmation';
 import Home from './components/Home'
+import Test from './components/Test';
 
 
 export const App = () => {
@@ -16,6 +17,7 @@ export const App = () => {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/confirmation" element={<Confirmation />} />
+                    <Route path="/test" element={<Test />} />
                     <Route path="/unauthorized" element={<div>404</div>} />
 
                     {/* Protected routes */}

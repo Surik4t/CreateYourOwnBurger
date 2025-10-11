@@ -13,11 +13,6 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-[data-scope="dialog"] {
-  background: #1a1a1a !important;
-  --bg-currentcolor: #1a1a1a !important;
-}
-
 button {
   background-color: #1a1a1a;
   color: #ffffff;

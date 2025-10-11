@@ -190,7 +190,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                 lazyMount 
                 placement="center"
                 open={modalOpen}
-                motionPreset="slide-in-bottom"
+                motionPreset="scale"
                 onOpenChange={(e) => setModalOpen(e.open)}
                 >
                 <Dialog.Backdrop bg="blackAlpha.600" />
@@ -204,13 +204,11 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                     <Dialog.Body>
                         {selectedOrder && selectedOrder.content.map((burger, burgerIndex) => (
                             <div key={burgerIndex}>
+                                <Heading size="2xl">{burger.name}</Heading>
                                 <Table.Root size="sm">
-                                    <Table.Header>
-                                        <Heading size="2xl">{burger.name}</Heading>
-                                    </Table.Header>
                                     <Table.Body>
                                         {burger.ingredients.map((ingr, ingrIndex) => (
-                                            <Table.Row>
+                                            <Table.Row key={ingrIndex}>
                                                 <Table.Cell> {ingr.name} </Table.Cell>
                                                 <Table.Cell textAlign="end"> {ingr.price}₽ </Table.Cell>
                                             </Table.Row>
@@ -221,7 +219,6 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                                         </Table.Row>
                                     </Table.Body>
                                 </Table.Root>
-
                             </div>
                         ))}
                     </Dialog.Body>
