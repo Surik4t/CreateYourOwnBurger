@@ -198,11 +198,12 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                         </Flex>
 
                         <Button
-                            m="0.5em"
                             onClick={() => openOrderModal(order)}
                             hidden={!orderStatusEquals(order, "Waiting for payment")} 
-                            height="100%"
+                            height="150px"
                             width="150px"
+                            mt="auto" mb="auto" mr="0.5em"
+                            rounded="xl"
                             bg="green.400"
                             textStyle="6xl"
                         >

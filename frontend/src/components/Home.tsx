@@ -1,4 +1,4 @@
-import { Flex, Avatar, defineStyle, Menu, Portal } from "@chakra-ui/react"
+import { Flex, Avatar, defineStyle, Menu, Portal, Button } from "@chakra-ui/react"
 import Header from "./Header";
 import { Menu as MainMenu } from './Menu';
 import { useAuth } from "../contexts/AuthContext"
@@ -33,22 +33,9 @@ function Home() {
                 zIndex="1000"
             >
                 <Header />
-                <Menu.Root positioning={{ placement: "right-end" }}>
-                    <Menu.Trigger 
-                        mr="2em"
-                        focusRing="inside" 
-                        bg="red"
-                        border="none"
-                        outline="none"
-                        _focusVisible={{ boxShadow: "none" }}
-                        >
-                        <Avatar.Root 
-                            size="xl" 
-                            style={{ cursor:"pointer" }}
-                            border="none"
-                            outline="none"
-                            boxShadow="none"
-                        >
+                <Menu.Root>
+                    <Menu.Trigger rounded="full" mr="2em">   
+                        <Avatar.Root size="xl" style={{ cursor:"pointer" }}>
                             <Avatar.Fallback name="Segun Adebayo" />
                             <Avatar.Image src="https://bit.ly/sage-adebayo" />
                         </Avatar.Root>
@@ -56,14 +43,14 @@ function Home() {
                     <Portal>
                         <Menu.Positioner>
                             <Menu.Content>
-                                <Menu.Item value="profile" py={2} px={4}>
+                                <Menu.Item value="profile" py={2} px={4} style={{ cursor:"pointer" }}>
                                     Profile
                                 </Menu.Item>
-                                <Menu.Item value="settings" py={2} px={4}>
+                                <Menu.Item value="settings" py={2} px={4} style={{ cursor:"pointer" }}>
                                     Settings
                                 </Menu.Item>
                                 <Menu.Separator />
-                                <Menu.Item onClick={logout} value="logout" py={2} px={4} color="red.500">
+                                <Menu.Item onClick={logout} value="logout" py={2} px={4} color="red.500" style={{ cursor:"pointer" }}>
                                     Logout
                                 </Menu.Item>
                             </Menu.Content>
