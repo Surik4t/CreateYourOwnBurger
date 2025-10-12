@@ -1,4 +1,4 @@
-import { Flex, Text, Card, CardDescription, CardFooter, Button, Dialog, CloseButton, Table, Heading } from "@chakra-ui/react";
+import { Flex, Text, Card, CardDescription, CardFooter, Button, Dialog, CloseButton, Table, Heading, Separator, Checkbox } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { format } from "date-fns"
@@ -7,6 +7,12 @@ import { useAuth } from "../contexts/AuthContext";
 interface Ingredient {
     name: string,
     weight: number,
+    price: number,
+}
+
+interface CombinedIngredient {
+    name: string,
+    quantity: number,
     price: number,
 }
 
@@ -56,6 +62,25 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
             changeOrderStatus(order, "Editing");
         }
     }
+
+    const combineIngredients = (burger: Burger): CombinedIngredient[] => {
+        const map = new Map<string, CombinedIngredient>();
+        
+        burger.ingredients.forEach(ingr => {
+            const existing = map.get(ingr.name);
+            if (existing) {
+                existing.quantity++;
+                existing.price += ingr.price;
+            } else {
+                map.set(ingr.name, {
+                    name: ingr.name,
+                    quantity: 1,
+                    price: ingr.price
+                });
+            }
+        });
+        return Array.from(map.values());
+    };
 
 
     async function getOrders() {
@@ -204,32 +229,49 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                     <Dialog.Body>
                         {selectedOrder && selectedOrder.content.map((burger, burgerIndex) => (
                             <div key={burgerIndex}>
-                                <Heading size="2xl">{burger.name}</Heading>
+                                <Heading size="xl">{burger.name}</Heading>
                                 <Table.Root size="sm">
                                     <Table.Body>
-                                        {burger.ingredients.map((ingr, ingrIndex) => (
+                                        {combineIngredients(burger).map((ingr, ingrIndex) => (
                                             <Table.Row key={ingrIndex}>
                                                 <Table.Cell> {ingr.name} </Table.Cell>
+                                                <Table.Cell> x{ingr.quantity} </Table.Cell>
                                                 <Table.Cell textAlign="end"> {ingr.price}₽ </Table.Cell>
                                             </Table.Row>
                                         ))}
                                         <Table.Row>
-                                            <Table.Cell><b>total:</b></Table.Cell>
+                                            <Table.Cell></Table.Cell>
+                                            <Table.Cell />
                                             <Table.Cell textAlign="end"> <b>{burger.price}₽</b></Table.Cell>
                                         </Table.Row>
                                     </Table.Body>
                                 </Table.Root>
                             </div>
                         ))}
+                        <Separator mb="1em"/>
+                        <Flex justifyContent="space-between">
+                            <p>Send receipt to your email</p>
+                            <Checkbox.Root defaultChecked>
+                                <Checkbox.HiddenInput />
+                                    <Checkbox.Control>
+                                        <Checkbox.Indicator />
+                                    </Checkbox.Control>
+                                <Checkbox.Label />
+                            </Checkbox.Root>
+                        </Flex>
+                        <Flex mt="1em" justifyContent="space-between">
+                            <Text textStyle="xl" fontWeight="medium">Total: </Text>
+                            <Text textStyle="xl" fontWeight="medium">{selectedOrder && selectedOrder.price}₽</Text>
+                        </Flex>
                     </Dialog.Body>
                     <Dialog.Footer>
                         <Dialog.ActionTrigger asChild>
-                            <Button variant="outline">Cancel</Button>
+                            <Button bg="orange.400">Cancel</Button>
                         </Dialog.ActionTrigger>
-                        <Button>Save</Button>
+                        <Button bg="green.500">Confirm</Button>
                     </Dialog.Footer>
                     <Dialog.CloseTrigger asChild>
-                        <CloseButton size="sm" />
+                        <CloseButton bg="orange.400" size="sm" />
                     </Dialog.CloseTrigger>
                     </Dialog.Content>
                 </Dialog.Positioner>
