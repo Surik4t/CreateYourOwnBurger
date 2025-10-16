@@ -6,12 +6,12 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function Home() {
-    const { isAuthenticated, isLoading, logout } = useAuth();
+    const { isAuthenticated, isLoading, logout, user } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
             if (!isLoading && !isAuthenticated) {
-            navigate('/login');
+                navigate('/login');
             }
         }, [isAuthenticated, isLoading, navigate]);
 
@@ -36,7 +36,7 @@ function Home() {
                 <Menu.Root>
                     <Menu.Trigger rounded="full" mr="2em">   
                         <Avatar.Root size="xl" style={{ cursor:"pointer" }}>
-                            <Avatar.Fallback name="Segun Adebayo" />
+                            <Avatar.Fallback name={user?.username} />
                             <Avatar.Image src="https://bit.ly/sage-adebayo" />
                         </Avatar.Root>
                     </Menu.Trigger>
