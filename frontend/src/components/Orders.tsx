@@ -44,6 +44,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
     const [orders, setOrders] = useState<Order[]>([]);
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+    const [sendReceiptIsChecked, setSendReceiptIsChecked] = useState(true);
     const { user } = useAuth();
     const token = localStorage.getItem('access_token');
 
@@ -109,23 +110,21 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
         }
     }
 
+
     const openOrderModal = (order: Order) => {
         setSelectedOrder(order);
         setModalOpen(true);
     }
 
 
-    useEffect(() => {getOrders()}, [menuState]);
-
-
-    async function changeOrderStatus(order: Order, newStatus=order.status)  {
+    async function changeOrderStatus(order: Order, newStatus=order.status, newDT=order.creation_datetime) {
         const payload = {
             customer: order.customer,
             status: newStatus,
             content: order.content,
             price: order.price,
             weight: order.weight,
-            creation_datetime: order.creation_datetime,
+            creation_datetime: newDT,
         }
         const url = `http://localhost:8000/orders/${order.id}`;
         axios.put(url, payload)
@@ -140,6 +139,38 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                 }
             });
     }
+
+
+    async function sendReceipt(order: Order) {
+        const payload = {
+            email: user?.email, 
+            ...order,
+        }
+        const url = `http://localhost:8000/orders/email`;
+        axios.post(url, payload)
+            .then(response => {
+                console.log(response.data.message);
+            })
+            .catch((error: AxiosError) => {
+                if (error.response) {
+                    console.error("Error status code:", error.response.status);
+                    console.error("Details:", error.message);
+                }
+            });
+    } 
+
+
+    async function ConfirmPayment(order: Order) {
+        const currentDT = new Date().toISOString();
+        console.log(order);
+        await changeOrderStatus(order, "Preparing", currentDT);
+        if (sendReceiptIsChecked) {
+            sendReceipt(order);
+        }
+        setModalOpen(false);
+    }
+
+    useEffect(() => {getOrders()}, [menuState]);
 
     return (
         <Flex direction="column" rounded="xl" justifySelf="center" width="85%" height="100%">
@@ -224,7 +255,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                     <Dialog.Content bg="white" color="gray.800">
                     <Dialog.Header>
                         <Dialog.Title color="gray.800">
-                            Order confirmation {selectedOrder && `- ${selectedOrder.id}`}
+                            Order confirmation {`- ${selectedOrder &&selectedOrder.id}`}
                         </Dialog.Title>
                     </Dialog.Header>
                     <Dialog.Body>
@@ -252,7 +283,10 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                         <Separator mb="1em"/>
                         <Flex justifyContent="space-between">
                             <p>Send receipt to your email</p>
-                            <Checkbox.Root defaultChecked>
+                            <Checkbox.Root 
+                                defaultChecked 
+                                onChange={(e) => setSendReceiptIsChecked(!sendReceiptIsChecked)}
+                            >
                                 <Checkbox.HiddenInput />
                                     <Checkbox.Control>
                                         <Checkbox.Indicator />
@@ -262,14 +296,18 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                         </Flex>
                         <Flex mt="1em" justifyContent="space-between">
                             <Text textStyle="xl" fontWeight="medium">Total: </Text>
-                            <Text textStyle="xl" fontWeight="medium">{selectedOrder && selectedOrder.price}₽</Text>
+                            <Text textStyle="xl" fontWeight="medium">{selectedOrder && selectedOrder!.price}₽</Text>
                         </Flex>
                     </Dialog.Body>
                     <Dialog.Footer>
                         <Dialog.ActionTrigger asChild>
                             <Button bg="orange.400">Cancel</Button>
                         </Dialog.ActionTrigger>
-                        <Button bg="green.500">Confirm</Button>
+                        <Button
+                            onClick={() => ConfirmPayment(selectedOrder!)}
+                            bg="green.500"
+                        >
+                            Confirm</Button>
                     </Dialog.Footer>
                     <Dialog.CloseTrigger asChild>
                         <CloseButton bg="orange.400" size="sm" />
