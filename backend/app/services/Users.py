@@ -153,7 +153,12 @@ async def verify_user(new_user: NewUserModel):
 
         await unconfirmed_users_collection.insert_one(dict(unconfirmed_user))
 
-        queue_message(unconfirmed_user)
+        message = {
+            "username": unconfirmed_user.username,
+            "email": unconfirmed_user.email,
+            "code": unconfirmed_user.confirmation_code,
+        }
+        queue_message(message, queue="confirmation")
 
         return {
             "status_code": 200,

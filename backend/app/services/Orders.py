@@ -1,9 +1,10 @@
 from fastapi import APIRouter, HTTPException, Depends
 from configurations import orders_collection
 from database.schemas import order_schema
-from database.models import OrderModel
+from database.models import OrderModel, ReceiptData
 from bson.objectid import ObjectId
 from .Users import get_current_user
+from app.RabbitMQ.Message_sender import queue_message
 
 router = APIRouter(prefix="/orders", tags=["orders"])
 
@@ -64,3 +65,13 @@ async def remove_order(order_id):
         raise HTTPException(status_code=http_e.status_code, detail=http_e.detail)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"An error occured: {e}")
+    
+
+@router.post("/email")
+async def send_receipt(data: ReceiptData):
+    try:
+        queue_message(data.model_dump(), queue="receipts")
+        return {"message": f"Receipt for order {data.id} sent to queue."}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An error occured: {e}")
+    

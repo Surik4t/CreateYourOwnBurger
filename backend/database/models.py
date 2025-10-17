@@ -53,3 +53,8 @@ class OrderModel(BaseModel):
     price: int = Field(gt=0, description="The price must be greater than zero")
     weight: int = Field(gt=0, description="The weight must be greater than zero")
     creation_datetime: str
+
+
+class ReceiptData(OrderModel):
+    id: str
+    email: str
