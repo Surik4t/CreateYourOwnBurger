@@ -24,9 +24,9 @@ interface Burger {
 }
 
 interface Order {
-    id: string,
+    id?: string,
     customer: string,
-    status: string,
+    status: "Waiting for payment" | "Editing" | "Canceled" | "Complete"
     content: Burger[],
     price: number,
     weight: number,
@@ -93,13 +93,13 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
 
     function orderStatusEquals(
         order: Order,
-        ...statuses: Array<"Waiting for payment" | "Editing" | "Canceled">
+        ...statuses: Array<"Waiting for payment" | "Editing" | "Canceled" | "Complete">
     ): boolean {
-        return (statuses.some(status => order.status == status))
+        return (statuses.some(status => order.status === status))
     }
 
 
-    function applyColorToStatus(status: string) {
+    function applyColorToStatus(status: "Waiting for payment" | "Editing" | "Canceled" | "Complete") {
         switch(status) {
         case "Canceled":
             return <span style={{color: 'red', fontWeight: 'bold'}}>{status}</span>;
@@ -163,27 +163,59 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
     async function ConfirmPayment(order: Order) {
         const currentDT = new Date().toISOString();
         console.log(order);
-        await changeOrderStatus(order, "Preparing", currentDT);
+        await changeOrderStatus(order, "Complete", currentDT);
         if (sendReceiptIsChecked) {
             sendReceipt(order);
         }
         setModalOpen(false);
     }
 
+
+    async function createOrder(order: Order)  {
+        const payload: Order = {
+            customer: order.customer,
+            status: "Waiting for payment",
+            content: order.content,
+            price: order.price,
+            weight: order.weight,
+            creation_datetime: new Date().toISOString(),
+        }
+        const url = "http://localhost:8000/orders";
+        axios.post(url, payload)
+            .then(response => {
+                console.log(response.data.message);
+                changeTab("orders");
+            })
+            .catch((error: AxiosError) => {
+                if (error.response) {
+                    console.error("Error status code:", error.response.status);
+                    console.error("Details:", error.message);
+                }
+            });
+    }
+
+
     useEffect(() => {getOrders()}, [menuState]);
 
     return (
         <Flex direction="column" rounded="xl" justifySelf="center" width="85%" height="100%">
-            <Flex direction="column" rounded="xl" width="100%">
+            <Flex direction="column" width="100%">
                 {orders.map((order) => (
-                    <Flex key={order.id} margin="0.5em" bg="white" color="black" rounded="xl">
-                        <Flex padding="1em" direction="column">
+                    <Flex key={order.id} margin="0.25em" bg="white" color="black" rounded="xl" height="12em">
+                        <Flex padding="1em" direction="column" width="15em">
                             <Text>Order ID:</Text>
                             <Text>{order.id}</Text>
                             <Text>Status: {applyColorToStatus(order.status)}</Text>
                             <Text>{format(new Date(order.creation_datetime), "yyyy.MM.dd / HH:mm")}</Text>
                             <Text>Total price: <b>{order.price}₽</b></Text>
                             <Flex justifyContent="space-between" mt="0.5em">
+                                <Button onClick={
+                                    () => (createOrder(order), getOrders)}
+                                    hidden={!orderStatusEquals(order, "Complete", "Canceled")}
+                                    bg="orange.400"
+                                    >
+                                        Reorder <b>⟲</b>
+                                </Button>
                                 <Button onClick={
                                     () => (editOrder(order), getOrders)}
                                     hidden={!orderStatusEquals(order, "Waiting for payment", "Editing")}
@@ -200,13 +232,13 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                                 </Button>
                             </Flex>
                         </Flex>
-                        <Flex overflowX="auto" marginEnd="auto">
+                        <Flex ml="1em" overflowX="auto" marginEnd="auto">
                             {order.content.map((burger, burgerIndex) => (
                                 <Card.Root
                                     key={burgerIndex}
                                     bg="orange.200"
                                     colorPalette="orange"
-                                    width="200px"
+                                    width="175px"
                                     maxHeight="200px"
                                     flexShrink={0}
                                     margin="0.5em"
@@ -252,7 +284,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                 >
                 <Dialog.Backdrop bg="blackAlpha.600" />
                 <Dialog.Positioner>
-                    <Dialog.Content bg="white" color="gray.800">
+                    <Dialog.Content color="gray.800">
                     <Dialog.Header>
                         <Dialog.Title color="gray.800">
                             Order confirmation {`- ${selectedOrder &&selectedOrder.id}`}
