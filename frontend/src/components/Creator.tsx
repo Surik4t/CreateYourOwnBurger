@@ -2,6 +2,15 @@ import { Table, Text, List, Button, Flex, CloseButton, Input, Box, Image, Card, 
 import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
+import bottomBun from '../assets/bottom-bun.png'
+import beefpatty from '../assets/beef-patty.png'
+import cheese from '../assets/cheese.png'
+import ketchup from '../assets/ketchup.png'
+import mayo from '../assets/mayo.png'
+import lettuce from '../assets/lettuce.png'
+import mustard from '../assets/mustard.png'
+import tomato from '../assets/tomato.png'
+import pickles from '../assets/pickles.png'
 
 
 interface Ingredient {
@@ -63,17 +72,18 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
     }
 
     const clearOrder = () => {
+        setSelectedIngredients([]);
         setBurgers([]);
     }
 
     const selectIngredient = (ingredient: Ingredient) => {
         setSelectedIngredients([
+            ...selectedIngredients,
             {
                 name: ingredient.name,
                 weight: ingredient.weight,
                 price: ingredient.price,
             },
-            ...selectedIngredients,
         ]);
         setNextId(nextId + 1);
     }
@@ -183,19 +193,57 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
         }
     }
    
+
+    const ingredientImages: Record<string, string> = {
+        "Bun": bottomBun,
+        "Beef Patty": beefpatty,
+        "Cheese": cheese,
+        "Ketchup": ketchup,
+        "Mayo": mayo,
+        "Lettuce": lettuce,
+        "Mustard": mustard,
+        "Tomato Slice": tomato,
+        "Pickles": pickles
+    };
+
+
+    const getIngredientHeight = (ingredient: string) => {
+        const sauces = ["Ketchup", "Mayo", "Mustard"]
+        const slices = ["Cheese", "Tomato Slice", "Pickles"]
+        const meat = ["Beef Patty"]
+        if (sauces.includes(ingredient)) {
+            return 5;
+        } else if (slices.includes(ingredient)) {
+            return 20;
+        } else if (meat.includes(ingredient)) {
+            return 30;
+        } else {
+            return 35;
+        }
+    }
     return (
         <Flex wrap="wrap">
             <Flex minWidth="100%" justifyContent="space-between" gap="2em" >
 
                 {/* Динамическая иллюстрация бургера */}
                 <Flex direction="column" gap="1em">
-                    <Image
-                        rounded="xl"
-                        src="https://img.freepik.com/free-photo/delicious-burgers-studio_23-2150902146.jpg?semt=ais_items_boosted&w=740"
-                        height="400px"
-                        width="400px"
-                        alt="BURGA"
-                    />
+                    <Flex  alignItems="end" position="relative" minHeight="400px" justifyContent="center" >
+                        {selectedIngredients.map((item, index) => {
+                            const accumulatedHeight = selectedIngredients
+                                .slice(0, index)
+                                .reduce((total, ingredient) => total + getIngredientHeight(ingredient.name), 0);
+                            console.log(index, accumulatedHeight);
+                            return (
+                                <Image
+                                    key={index} 
+                                    zIndex={index} 
+                                    src={ingredientImages[item.name]}
+                                    bottom={`${accumulatedHeight}px`}
+                                    position="absolute"
+                                />
+                            )  
+                        })}
+                    </Flex>
                     <Flex direction="column" width="400px" gap="1em">
                         <Input
                             value={burgerName}
@@ -214,16 +262,16 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
 
                 {/* Список добавленных ингредиентов */} 
                 <Flex direction="column" color="black" bg="white" rounded="xl" width="25%">
-                    <Text ml="1em"textStyle="2xl">Ingredients: {len}/15</Text>
+                    <Text ml="1em"textStyle="xl">Ingredients: {len}/20</Text>
                     <List.Root
                         ml="auto" mr="auto"
                         fontSize="xl"
                         width="80%"
                         >
-                        {selectedIngredients.map((selectedIngredient, selectedIngrIndex) => (
+                        {[...selectedIngredients].reverse().map((selectedIngredient, selectedIngrIndex) => (
                             <List.Item key={selectedIngrIndex}>
-                                <Flex justifyContent="space-between">
-                                    {selectedIngredient.name}
+                                <Flex justifyContent="space-between" mt="-0.3em">
+                                    <Text textStyle="sm">{selectedIngredient.name}</Text>
                                     <CloseButton 
                                         size="2xs"
                                         bg="orange.400"
