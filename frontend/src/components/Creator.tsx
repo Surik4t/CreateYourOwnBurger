@@ -207,31 +207,48 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
     };
 
 
-    const getIngredientHeight = (ingredient: string) => {
+    const getIngredientHeight = (ingredient: string, miniature=true) => {
         const sauces = ["Ketchup", "Mayo", "Mustard"]
         const slices = ["Cheese", "Tomato Slice", "Pickles"]
         const meat = ["Beef Patty"]
+
+        let result = 35;
+
         if (sauces.includes(ingredient)) {
-            return 5;
+            result = 5;
         } else if (slices.includes(ingredient)) {
-            return 20;
+            result = 15;
         } else if (meat.includes(ingredient)) {
-            return 30;
+            result = 10;
+        }
+
+        if (miniature) {
+            return result/2.5
         } else {
-            return 35;
+            return result
         }
     }
+
+
     return (
         <Flex wrap="wrap">
             <Flex minWidth="100%" justifyContent="space-between" gap="2em" >
 
                 {/* Динамическая иллюстрация бургера */}
                 <Flex direction="column" gap="1em">
-                    <Flex  alignItems="end" position="relative" minHeight="400px" justifyContent="center" >
+                    <Flex
+                        bg="orange.200"
+                        borderWidth="thick"
+                        borderColor="white"
+                        borderRadius="2xl"
+                        position="relative"
+                        minHeight="400px"
+                        justifyContent="center"
+                    >
                         {selectedIngredients.map((item, index) => {
                             const accumulatedHeight = selectedIngredients
                                 .slice(0, index)
-                                .reduce((total, ingredient) => total + getIngredientHeight(ingredient.name), 0);
+                                .reduce((total, ingredient) => total + getIngredientHeight(ingredient.name, false), 0);
                             console.log(index, accumulatedHeight);
                             return (
                                 <Image
@@ -268,7 +285,7 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
                         fontSize="xl"
                         width="80%"
                         >
-                        {[...selectedIngredients].reverse().map((selectedIngredient, selectedIngrIndex) => (
+                        {selectedIngredients.map((selectedIngredient, selectedIngrIndex) => (
                             <List.Item key={selectedIngrIndex}>
                                 <Flex justifyContent="space-between" mt="-0.3em">
                                     <Text textStyle="sm">{selectedIngredient.name}</Text>
@@ -285,7 +302,7 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
                                     </CloseButton>
                                 </Flex>
                             </List.Item>
-                        ))}
+                        )).reverse()}
                     </List.Root>
                     <Text mt="auto" ml="auto" mr="1em" textStyle="2xl">Price: {burgerPrice}₽</Text>
                 </Flex>
@@ -341,17 +358,32 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
                             width="200px"
                             flexShrink={0}
                             margin="0.5em"
+                            position="relative"
                             >
+                            <Box alignSelf="center" borderWidth="2px" position="relative" height="150px" width="50%" overflow="hidden">
+                                {burger.ingredients.map((item, index) => {
+                                    const accumulatedHeight = burger.ingredients
+                                        .slice(0, index)
+                                        .reduce((total, ingredient) => total + getIngredientHeight(ingredient.name), 0);
+                                    console.log(index, accumulatedHeight);
+                                    return (
+                                        <Image
+                                            key={`${burgerIndex}-${index}`} 
+                                            zIndex={index} 
+                                            src={ingredientImages[item.name]}
+                                            bottom={`${accumulatedHeight}px`}
+                                            position="absolute"
+                                        />
+                                    )  
+                                })}
+                            </Box>
                             <Card.Body>
                                 <Card.Title>
                                     {burger.name}
                                 </Card.Title>
-                                <CardDescription>
-                                    {burger.ingredients.map(ingr => ingr.name).join(", ")}
-                                </CardDescription>
                             </Card.Body>
                             <CardFooter>
-                                <Text textStyle="2xl" fontWeight="medium" letterSpacing="tight" mt="2">
+                                <Text textStyle="2xl" fontWeight="medium" letterSpacing="tight">
                                     {burger.price}₽
                                 </Text>
                                 <Button
