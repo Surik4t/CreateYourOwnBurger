@@ -3,12 +3,7 @@ import { useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { format } from "date-fns"
 import { useAuth } from "../contexts/AuthContext";
-
-interface Ingredient {
-    name: string,
-    weight: number,
-    price: number,
-}
+import type { Ingredient, Burger, Order } from "../common/types";
 
 interface CombinedIngredient {
     name: string,
@@ -16,22 +11,6 @@ interface CombinedIngredient {
     price: number,
 }
 
-interface Burger {
-    name: string,
-    ingredients: Ingredient[],
-    weight: number,
-    price: number,
-}
-
-interface Order {
-    id?: string,
-    customer: string,
-    status: "Waiting for payment" | "Editing" | "Canceled" | "Complete"
-    content: Burger[],
-    price: number,
-    weight: number,
-    creation_datetime: string,
-}
 
 interface OrderProps {
     changeTab: (Tab: string) => void,
@@ -205,7 +184,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                         <Flex padding="1em" direction="column" width="15em">
                             <Text>Order ID:</Text>
                             <Text>{order.id}</Text>
-                            <Text>Status: {applyColorToStatus(order.status)}</Text>
+                            <Text>Status: {applyColorToStatus(order.status!)}</Text>
                             <Text>{format(new Date(order.creation_datetime), "yyyy.MM.dd / HH:mm")}</Text>
                             <Text>Total price: <b>{order.price}₽</b></Text>
                             <Flex justifyContent="space-between" mt="0.5em">

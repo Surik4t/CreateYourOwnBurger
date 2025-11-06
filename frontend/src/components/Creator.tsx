@@ -11,29 +11,8 @@ import lettuce from '../assets/lettuce.png'
 import mustard from '../assets/mustard.png'
 import tomato from '../assets/tomato.png'
 import pickles from '../assets/pickles.png'
+import type { Ingredient, Burger, Order } from "../common/types";
 
-
-interface Ingredient {
-    name: string,
-    weight: number,
-    price: number,
-}
-
-interface Burger {
-    name: string,
-    ingredients: Ingredient[],
-    weight: number,
-    price: number,
-}
-
-interface Order {
-    customer: string | undefined,
-    status: string,
-    content: Burger[],
-    price: number,
-    weight: number,
-    creation_datetime: string,
-}
 
 interface CreatorProps {
     changeTab: (Tab: string) => void;
@@ -137,7 +116,7 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
     async function createOrder(content:Burger[])  {
         if (content.length != 0) {
             const order: Order = {
-                customer: user?.username,
+                customer: user?.username!,
                 status: "Waiting for payment",
                 content: content,
                 price: OrderPrice,
@@ -167,7 +146,7 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
     async function changeOrder(content:Burger[])  {
         if (content.length != 0) {
             const order: Order = {
-                customer: user?.username,
+                customer: user?.username!,
                 status: "Waiting for payment",
                 content: content,
                 price: OrderPrice,
@@ -258,7 +237,7 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
                                     bottom={`${accumulatedHeight}px`}
                                     position="absolute"
                                 />
-                            )  
+                            )
                         })}
                     </Flex>
                     <Flex direction="column" width="400px" gap="1em">
