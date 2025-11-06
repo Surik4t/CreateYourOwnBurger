@@ -2,29 +2,7 @@ import { Box, Tabs } from "@chakra-ui/react";
 import { useState } from "react";
 import Creator from "./Creator";
 import Orders from "./Orders";
-
-interface Ingredient {
-    name: string,
-    weight: number,
-    price: number,
-}
-
-interface Burger {
-    name: string,
-    ingredients: Ingredient[],
-    weight: number,
-    price: number,
-}
-
-interface Order {
-    id: string,
-    customer: string,
-    status: string,
-    content: Burger[],
-    price: number,
-    weight: number,
-    creation_datetime: string,
-}
+import type { Order } from "../common/types";
 
 export const Menu = () => {
 
