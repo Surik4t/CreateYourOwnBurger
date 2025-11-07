@@ -104,7 +104,6 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
     const openBurgerInfo = (burger: Burger) => {
         setSelectedBurger(burger);
         setBurgerModalOpen(true);
-        console.log(`burger modal open: ${burger.ingredients}`)
     }
 
 
@@ -190,6 +189,13 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
 
     return (
         <Flex direction="column" rounded="xl" justifySelf="center" width="85%" height="100%">
+            
+            <BurgerInfo 
+                selectedBurger={selectedBurger}
+                burgerModalOpen={burgerModalOpen}
+                handleCloseBurgerModal={handleCloseBurgerModal}
+            />
+
             <Flex direction="column" width="100%">
                 {orders.map((order) => (
                     <Flex key={order.id} margin="0.25em" bg="white" color="black" rounded="xl" height="12em">
@@ -272,11 +278,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                     </Flex>
                 ))}
             </Flex>
-            <BurgerInfo 
-                selectedBurger={selectedBurger}
-                burgerModalOpen={burgerModalOpen}
-                handleCloseBurgerModal={handleCloseBurgerModal}
-            />
+
             <Dialog.Root
                 lazyMount 
                 placement="center"
