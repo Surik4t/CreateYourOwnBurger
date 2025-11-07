@@ -5,10 +5,10 @@ import type { Burger, CombinedIngredient } from "../common/types";
 interface BurgerInfoProps {
     selectedBurger: Burger | null;
     burgerModalOpen: boolean;
+    handleCloseBurgerModal: () => void;
 }
 
-const BurgerInfo: React.FC<BurgerInfoProps> = ({ selectedBurger, burgerModalOpen }) => {
-    //const [burgerModalOpen, setBurgerModalOpen] = useState(false);
+const BurgerInfo: React.FC<BurgerInfoProps> = ({ selectedBurger, burgerModalOpen, handleCloseBurgerModal }) => {
 
     const combineIngredients = (burger: Burger): CombinedIngredient[] => {
         const map = new Map<string, CombinedIngredient>();
@@ -36,7 +36,7 @@ const BurgerInfo: React.FC<BurgerInfoProps> = ({ selectedBurger, burgerModalOpen
                 placement="center"
                 open={burgerModalOpen}
                 motionPreset="scale"
-                //onOpenChange={(e) => setBurgerModalOpen(e.open)}
+                //onOpenChange={(e) => burgerModalOpen(e.open)}
                 >
                 <Dialog.Backdrop bg="blackAlpha.600" />
                 <Dialog.Positioner>
@@ -73,16 +73,9 @@ const BurgerInfo: React.FC<BurgerInfoProps> = ({ selectedBurger, burgerModalOpen
                         </Flex>
                     </Dialog.Body>
                     <Dialog.Footer>
-                        <Dialog.ActionTrigger asChild>
-                            <Button bg="orange.400">Cancel</Button>
-                        </Dialog.ActionTrigger>
-                        <Button
-                            bg="green.500"
-                        >
-                            Confirm</Button>
                     </Dialog.Footer>
                     <Dialog.CloseTrigger asChild>
-                        <CloseButton bg="orange.400" size="sm" />
+                        <CloseButton onClick={handleCloseBurgerModal} bg="orange.400" size="sm" />
                     </Dialog.CloseTrigger>
                     </Dialog.Content>
                 </Dialog.Positioner>

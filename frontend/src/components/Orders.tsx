@@ -1,5 +1,5 @@
 import { Flex, Text, Card, CardDescription, CardFooter, Button, Dialog, CloseButton, Table, Heading, Separator, Checkbox } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { format } from "date-fns"
 import { useAuth } from "../contexts/AuthContext";
@@ -94,6 +94,11 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
         setSelectedOrder(order);
         setOrderModalOpen(true);
     }
+
+
+    const handleCloseBurgerModal = useCallback(() => {
+        setBurgerModalOpen(false);
+    }, [burgerModalOpen])
 
 
     const openBurgerInfo = (burger: Burger) => {
@@ -267,7 +272,11 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                     </Flex>
                 ))}
             </Flex>
-            <BurgerInfo selectedBurger={selectedBurger} burgerModalOpen={burgerModalOpen}/>
+            <BurgerInfo 
+                selectedBurger={selectedBurger}
+                burgerModalOpen={burgerModalOpen}
+                handleCloseBurgerModal={handleCloseBurgerModal}
+            />
             <Dialog.Root
                 lazyMount 
                 placement="center"
