@@ -1,6 +1,6 @@
 import { Table, Text, List, Button, Flex, CloseButton, Input, Box, Image, Card, CardDescription, CardFooter } from "@chakra-ui/react"
 import axios, { AxiosError } from "axios";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import bottomBun from '../assets/bottom-bun.png'
 import beefpatty from '../assets/beef-patty.png'
@@ -12,6 +12,7 @@ import mustard from '../assets/mustard.png'
 import tomato from '../assets/tomato.png'
 import pickles from '../assets/pickles.png'
 import type { Ingredient, Burger, Order } from "../common/types";
+import BurgerInfo from "./BurgerInfo";
 
 
 interface CreatorProps {
@@ -28,6 +29,8 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
     const [burgerPrice, setBurgerPrice] = useState<number>(0);
     const [burgerWeight, setBurgerWeight] = useState<number>(0);
     const [burgerName, setBurgerName] = useState("");
+    const [burgerModalOpen, setBurgerModalOpen] = useState(false);
+    const [selectedBurger, setSelectedBurger] = useState<Burger | null>(null);
     const [orderId, setOrderId] = useState<string>("")
     const [OrderPrice, setOrderPrice] = useState<number>(0);
     const [OrderWeight, setOrderWeight] = useState<number>(0);
@@ -209,8 +212,26 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
     }
 
 
+    const handleCloseBurgerModal = useCallback(() => {
+        setBurgerModalOpen(false);
+    }, [burgerModalOpen])
+
+
+    const openBurgerInfo = (burger: Burger) => {
+        setSelectedBurger(burger);
+        setBurgerModalOpen(true);
+    }
+
+
     return (
         <Flex wrap="wrap">
+
+            <BurgerInfo 
+                selectedBurger={selectedBurger}
+                burgerModalOpen={burgerModalOpen}
+                handleCloseBurgerModal={handleCloseBurgerModal}
+            />
+
             <Flex minWidth="100%" justifyContent="space-between" gap="2em" >
 
                 {/* Динамическая иллюстрация бургера */}
@@ -338,6 +359,11 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
                             flexShrink={0}
                             margin="0.5em"
                             position="relative"
+                            style={{ cursor:"pointer" }}
+                            _hover={{
+                                outline: "2px solid orange"
+                            }}
+                            onClick={() => openBurgerInfo(burger)}
                             >
                             <Box alignSelf="center" borderWidth="2px" position="relative" height="150px" width="50%" overflow="hidden">
                                 {burger.ingredients.map((item, index) => {
@@ -445,8 +471,8 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
                     </Button>
                     <Text>Total price: {OrderPrice}₽, Weight: {OrderWeight}g </Text>
                 </Flex>
-            </Flex>    
-    
+                
+            </Flex>   
         </Flex>
     );
 }
