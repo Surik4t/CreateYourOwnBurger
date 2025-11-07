@@ -3,13 +3,8 @@ import { useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { format } from "date-fns"
 import { useAuth } from "../contexts/AuthContext";
-import type { Ingredient, Burger, Order } from "../common/types";
-
-interface CombinedIngredient {
-    name: string,
-    quantity: number,
-    price: number,
-}
+import BurgerInfo from "./BurgerInfo";
+import type { CombinedIngredient, Burger, Order } from "../common/types";
 
 
 interface OrderProps {
@@ -21,11 +16,14 @@ interface OrderProps {
 
 const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder }) => {
     const [orders, setOrders] = useState<Order[]>([]);
-    const [modalOpen, setModalOpen] = useState(false);
+    const [orderModalOpen, setOrderModalOpen] = useState(false);
+    const [burgerModalOpen, setBurgerModalOpen] = useState(false);
+    const [selectedBurger, setSelectedBurger] = useState<Burger | null>(null);
     const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
     const [sendReceiptIsChecked, setSendReceiptIsChecked] = useState(true);
     const { user } = useAuth();
     const token = localStorage.getItem('access_token');
+
 
     const api = axios.create({
         baseURL: "http://localhost:8000",
@@ -33,6 +31,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
             'Authorization': `Bearer ${token}`
         }
     });
+
 
     const editOrder = (order: Order) => {
         changeTab("creator");
@@ -42,6 +41,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
             changeOrderStatus(order, "Editing");
         }
     }
+
 
     const combineIngredients = (burger: Burger): CombinedIngredient[] => {
         const map = new Map<string, CombinedIngredient>();
@@ -92,7 +92,14 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
 
     const openOrderModal = (order: Order) => {
         setSelectedOrder(order);
-        setModalOpen(true);
+        setOrderModalOpen(true);
+    }
+
+
+    const openBurgerInfo = (burger: Burger) => {
+        setSelectedBurger(burger);
+        setBurgerModalOpen(true);
+        console.log(`burger modal open: ${burger.ingredients}`)
     }
 
 
@@ -146,7 +153,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
         if (sendReceiptIsChecked) {
             sendReceipt(order);
         }
-        setModalOpen(false);
+        setOrderModalOpen(false);
     }
 
 
@@ -214,6 +221,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                         <Flex ml="1em" overflowX="auto" marginEnd="auto">
                             {order.content.map((burger, burgerIndex) => (
                                 <Card.Root
+                                    className="a"
                                     key={burgerIndex}
                                     bg="orange.200"
                                     colorPalette="orange"
@@ -221,6 +229,11 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                                     maxHeight="200px"
                                     flexShrink={0}
                                     margin="0.5em"
+                                    style={{ cursor:"pointer" }}
+                                    _hover={{
+                                        outline: "2px solid orange"
+                                    }}
+                                    onClick={() => openBurgerInfo(burger)}
                                     >
                                     <Card.Body>
                                         <Card.Title>
@@ -254,12 +267,13 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                     </Flex>
                 ))}
             </Flex>
+            <BurgerInfo selectedBurger={selectedBurger} burgerModalOpen={burgerModalOpen}/>
             <Dialog.Root
                 lazyMount 
                 placement="center"
-                open={modalOpen}
+                open={orderModalOpen}
                 motionPreset="scale"
-                onOpenChange={(e) => setModalOpen(e.open)}
+                onOpenChange={(e) => setOrderModalOpen(e.open)}
                 >
                 <Dialog.Backdrop bg="blackAlpha.600" />
                 <Dialog.Positioner>

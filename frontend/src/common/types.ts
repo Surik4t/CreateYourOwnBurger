@@ -4,6 +4,12 @@ export interface Ingredient {
     price: number,
 }
 
+export interface CombinedIngredient {
+    name: string,
+    quantity: number,
+    price: number,
+}
+
 export interface Burger {
     name: string,
     ingredients: Ingredient[],
