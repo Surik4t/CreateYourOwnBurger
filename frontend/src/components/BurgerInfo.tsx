@@ -4,10 +4,10 @@ import type { Burger, CombinedIngredient } from "../common/types";
 
 interface BurgerInfoProps {
     selectedBurger: Burger | null;
-    selectedBurgerIndex: number;
+    selectedBurgerIndex?: number;
     burgerModalOpen: boolean;
     handleCloseBurgerModal: () => void;
-    editBurger: (burger: Burger, index: number) => void;
+    editBurger?: (burger: Burger, index: number) => void;
 }
 
 const BurgerInfo: React.FC<BurgerInfoProps> = ({ selectedBurger, selectedBurgerIndex, burgerModalOpen, handleCloseBurgerModal, editBurger }) => {
@@ -68,7 +68,8 @@ const BurgerInfo: React.FC<BurgerInfoProps> = ({ selectedBurger, selectedBurgerI
                     <Dialog.Footer>
                         <Button 
                             bg="orange.400"
-                            onClick={() => editBurger(selectedBurger!, selectedBurgerIndex)}
+                            hidden={selectedBurgerIndex === undefined}
+                            onClick={() => editBurger && editBurger(selectedBurger!, selectedBurgerIndex!)}
                             >
                                 Edit
                         </Button>
