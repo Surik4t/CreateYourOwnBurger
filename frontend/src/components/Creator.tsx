@@ -31,6 +31,7 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
     const [burgerName, setBurgerName] = useState("");
     const [burgerModalOpen, setBurgerModalOpen] = useState(false);
     const [selectedBurger, setSelectedBurger] = useState<Burger | null>(null);
+    const [selectedBurgerIndex, setSelectedBurgerIndex] = useState<number>(0);
     const [orderId, setOrderId] = useState<string>("")
     const [OrderPrice, setOrderPrice] = useState<number>(0);
     const [OrderWeight, setOrderWeight] = useState<number>(0);
@@ -217,9 +218,18 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
     }, [burgerModalOpen])
 
 
-    const openBurgerInfo = (burger: Burger) => {
+    const openBurgerInfo = (burger: Burger, index: number) => {
         setSelectedBurger(burger);
+        setSelectedBurgerIndex(index)
         setBurgerModalOpen(true);
+    }
+
+    const handleEditBurger = (burger: Burger, index: number) => {
+        setSelectedIngredients(burger.ingredients);
+        setBurgerName(burger.name);
+        setBurgers(burger => 
+            burger.filter((_, i) => i !== index));
+        setBurgerModalOpen(false);
     }
 
 
@@ -228,8 +238,10 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
 
             <BurgerInfo 
                 selectedBurger={selectedBurger}
+                selectedBurgerIndex={selectedBurgerIndex}
                 burgerModalOpen={burgerModalOpen}
                 handleCloseBurgerModal={handleCloseBurgerModal}
+                editBurger={handleEditBurger}
             />
 
             <Flex minWidth="100%" justifyContent="space-between" gap="2em" >
@@ -363,9 +375,9 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
                             _hover={{
                                 outline: "2px solid orange"
                             }}
-                            onClick={() => openBurgerInfo(burger)}
+                            onClick={() => openBurgerInfo(burger, burgerIndex)}
                             >
-                            <Box alignSelf="center" borderWidth="2px" position="relative" height="150px" width="50%" overflow="hidden">
+                            <Box alignSelf="center" position="relative" height="150px" width="50%" overflow="hidden">
                                 {burger.ingredients.map((item, index) => {
                                     const accumulatedHeight = burger.ingredients
                                         .slice(0, index)
@@ -388,23 +400,9 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
                                 </Card.Title>
                             </Card.Body>
                             <CardFooter>
-                                <Text textStyle="2xl" fontWeight="medium" letterSpacing="tight">
+                                <Text textStyle="xl" fontWeight="medium" letterSpacing="tight">
                                     {burger.price}₽
                                 </Text>
-                                <Button
-                                    bg="green.400"
-                                    size="2xs"
-                                    padding="0"
-                                    rounded="2xl"
-                                    onClick={() => {
-                                        setSelectedIngredients(burger.ingredients),
-                                        setBurgerName(burger.name),
-                                        setBurgers(burger => 
-                                            burger.filter((_, index) => index !== burgerIndex)
-                                        )
-                                    }}>
-                                    O
-                                </Button>
                                 <CloseButton
                                     bg="red.400"
                                     size="2xs"

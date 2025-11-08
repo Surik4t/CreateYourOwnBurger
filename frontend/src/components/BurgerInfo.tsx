@@ -4,11 +4,13 @@ import type { Burger, CombinedIngredient } from "../common/types";
 
 interface BurgerInfoProps {
     selectedBurger: Burger | null;
+    selectedBurgerIndex: number;
     burgerModalOpen: boolean;
     handleCloseBurgerModal: () => void;
+    editBurger: (burger: Burger, index: number) => void;
 }
 
-const BurgerInfo: React.FC<BurgerInfoProps> = ({ selectedBurger, burgerModalOpen, handleCloseBurgerModal }) => {
+const BurgerInfo: React.FC<BurgerInfoProps> = ({ selectedBurger, selectedBurgerIndex, burgerModalOpen, handleCloseBurgerModal, editBurger }) => {
 
     const combineIngredients = (burger: Burger): CombinedIngredient[] => {
         const map = new Map<string, CombinedIngredient>();
@@ -36,7 +38,6 @@ const BurgerInfo: React.FC<BurgerInfoProps> = ({ selectedBurger, burgerModalOpen
                 placement="center"
                 open={burgerModalOpen}
                 motionPreset="scale"
-                //onOpenChange={(e) => burgerModalOpen(e.open)}
                 >
                 <Dialog.Backdrop bg="blackAlpha.600" />
                 <Dialog.Positioner>
@@ -56,23 +57,21 @@ const BurgerInfo: React.FC<BurgerInfoProps> = ({ selectedBurger, burgerModalOpen
                                         <Table.Cell textAlign="end"> {ingr.price}₽ </Table.Cell>
                                     </Table.Row>
                                 ))}
-                                <Table.Row>
-                                    <Table.Cell></Table.Cell>
-                                    <Table.Cell />
-                                    <Table.Cell textAlign="end"> <b>{selectedBurger?.price}₽</b></Table.Cell>
-                                </Table.Row>
                             </Table.Body>
                         </Table.Root>
                         <Separator mb="1em"/>
-                        <Flex justifyContent="space-between">
-                            <p>Send receipt to your email</p>
-                        </Flex>
                         <Flex mt="1em" justifyContent="space-between">
                             <Text textStyle="xl" fontWeight="medium">Total: </Text>
                             <Text textStyle="xl" fontWeight="medium">{selectedBurger && selectedBurger!.price}₽</Text>
                         </Flex>
                     </Dialog.Body>
                     <Dialog.Footer>
+                        <Button 
+                            bg="orange.400"
+                            onClick={() => editBurger(selectedBurger!, selectedBurgerIndex)}
+                            >
+                                Edit
+                        </Button>
                     </Dialog.Footer>
                     <Dialog.CloseTrigger asChild>
                         <CloseButton onClick={handleCloseBurgerModal} bg="orange.400" size="sm" />
