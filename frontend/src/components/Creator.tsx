@@ -73,13 +73,13 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
 
     const addToOrder = () => {
         setBurgers([
+            ...burgers,
             {
                 name: burgerName || "Custom Burger",
                 ingredients: selectedIngredients,
                 weight: burgerWeight,
                 price: burgerPrice,
             },
-            ...burgers,
         ]);
         clearBurger();
     }
@@ -363,59 +363,79 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
             <Flex width="100%" minHeight="275px" mt="1em">
                 <Flex width="80%" bg="white" color="black" rounded="xl" overflowX="auto">
                     {burgers.map((burger, burgerIndex) => (
-                        <Card.Root
-                            key={burgerIndex}
-                            bg="orange.200"
-                            colorPalette="orange"
-                            width="200px"
-                            flexShrink={0}
-                            margin="0.5em"
-                            position="relative"
-                            style={{ cursor:"pointer" }}
-                            _hover={{
-                                outline: "2px solid orange"
-                            }}
-                            onClick={() => openBurgerInfo(burger, burgerIndex)}
+                        <Flex position="relative">
+                            <Card.Root
+                                key={burgerIndex}
+                                bg="orange.200"
+                                colorPalette="orange"
+                                width="200px"
+                                flexShrink={0}
+                                margin="0.5em"
+                                position="relative"
+                                style={{ cursor:"pointer" }}
+                                _hover={{
+                                    outline: "2px solid orange"
+                                }}
+                                onClick={() => openBurgerInfo(burger, burgerIndex)}
+                                >
+                                <Box alignSelf="center" position="relative" height="150px" width="50%" overflow="hidden">
+                                    {burger.ingredients.map((item, index) => {
+                                        const accumulatedHeight = burger.ingredients
+                                            .slice(0, index)
+                                            .reduce((total, ingredient) => total + getIngredientHeight(ingredient.name), 0);
+                                        console.log(index, accumulatedHeight);
+                                        return (
+                                            <Image
+                                                key={`${burgerIndex}-${index}`} 
+                                                zIndex={index} 
+                                                src={ingredientImages[item.name]}
+                                                bottom={`${accumulatedHeight}px`}
+                                                position="absolute"
+                                            />
+                                        )  
+                                    })}
+                                </Box>
+                                <Card.Body>
+                                    <Card.Title alignSelf="center">
+                                        <Text textStyle="xl" fontWeight="medium" letterSpacing="tight">
+                                            {burger.name}
+                                        </Text>
+                                    </Card.Title>
+                                </Card.Body>
+                                <CardFooter mt="-1em" alignSelf="flex-end">
+                                    <Text textStyle="lg" fontWeight="medium" letterSpacing="tight">
+                                        {burger.price}₽
+                                    </Text>
+                                </CardFooter>
+                            </Card.Root>
+                            
+                            <Button
+                                bg="orange.400"
+                                rounded="full"
+                                position="absolute"
+                                size="sm"
+                                bottom="0"
+                                onClick={() => setBurgers([...burgers, burger])}
                             >
-                            <Box alignSelf="center" position="relative" height="150px" width="50%" overflow="hidden">
-                                {burger.ingredients.map((item, index) => {
-                                    const accumulatedHeight = burger.ingredients
-                                        .slice(0, index)
-                                        .reduce((total, ingredient) => total + getIngredientHeight(ingredient.name), 0);
-                                    console.log(index, accumulatedHeight);
-                                    return (
-                                        <Image
-                                            key={`${burgerIndex}-${index}`} 
-                                            zIndex={index} 
-                                            src={ingredientImages[item.name]}
-                                            bottom={`${accumulatedHeight}px`}
-                                            position="absolute"
-                                        />
-                                    )  
-                                })}
-                            </Box>
-                            <Card.Body>
-                                <Card.Title>
-                                    {burger.name}
-                                </Card.Title>
-                            </Card.Body>
-                            <CardFooter>
-                                <Text textStyle="xl" fontWeight="medium" letterSpacing="tight">
-                                    {burger.price}₽
-                                </Text>
-                                <CloseButton
-                                    bg="red.400"
-                                    size="2xs"
-                                    rounded="2xl"
-                                    onClick={() => 
-                                        setBurgers(burger => 
-                                            burger.filter((_, index) => index !== burgerIndex)
-                                        )
-                                    }>
-                                    X
-                                </CloseButton>
-                            </CardFooter>
-                        </Card.Root>
+                                add another
+                            </Button>
+
+                            <CloseButton
+                                bg="red.400"
+                                rounded="full"
+                                position="absolute"
+                                size="sm"
+                                right="0"
+                                onClick={() => 
+                                    setBurgers(burger => 
+                                        burger.filter((_, index) => index !== burgerIndex)
+                                    )
+                                }>
+                                X
+                            </CloseButton>
+
+
+                        </Flex>
                     ))}
                 </Flex>
                 
