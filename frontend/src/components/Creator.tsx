@@ -1,17 +1,9 @@
-import { Table, Text, List, Button, Flex, CloseButton, Input, Box, Image, Card, CardDescription, CardFooter } from "@chakra-ui/react"
+import { Table, Text, List, Button, Flex, CloseButton, Input, Box, Card, CardFooter } from "@chakra-ui/react"
 import axios, { AxiosError } from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
-import bottomBun from '../assets/bottom-bun.png'
-import beefpatty from '../assets/beef-patty.png'
-import cheese from '../assets/cheese.png'
-import ketchup from '../assets/ketchup.png'
-import mayo from '../assets/mayo.png'
-import lettuce from '../assets/lettuce.png'
-import mustard from '../assets/mustard.png'
-import tomato from '../assets/tomato.png'
-import pickles from '../assets/pickles.png'
 import type { Ingredient, Burger, Order } from "../common/types";
+import BurgerImage from "../common/BurgerImage";
 import BurgerInfo from "./BurgerInfo";
 
 
@@ -177,42 +169,6 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
     }
    
 
-    const ingredientImages: Record<string, string> = {
-        "Bun": bottomBun,
-        "Beef Patty": beefpatty,
-        "Cheese": cheese,
-        "Ketchup": ketchup,
-        "Mayo": mayo,
-        "Lettuce": lettuce,
-        "Mustard": mustard,
-        "Tomato Slice": tomato,
-        "Pickles": pickles
-    };
-
-
-    const getIngredientHeight = (ingredient: string, miniature=true) => {
-        const sauces = ["Ketchup", "Mayo", "Mustard"]
-        const slices = ["Cheese", "Tomato Slice", "Pickles"]
-        const meat = ["Beef Patty"]
-
-        let result = 35;
-
-        if (sauces.includes(ingredient)) {
-            result = 5;
-        } else if (slices.includes(ingredient)) {
-            result = 15;
-        } else if (meat.includes(ingredient)) {
-            result = 10;
-        }
-
-        if (miniature) {
-            return result/2.5
-        } else {
-            return result
-        }
-    }
-
-
     const handleCloseBurgerModal = useCallback(() => {
         setBurgerModalOpen(false);
     }, [burgerModalOpen])
@@ -255,24 +211,10 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
                         borderRadius="2xl"
                         position="relative"
                         minHeight="400px"
-                        justifyContent="center"
                     >
-                        {selectedIngredients.map((item, index) => {
-                            const accumulatedHeight = selectedIngredients
-                                .slice(0, index)
-                                .reduce((total, ingredient) => total + getIngredientHeight(ingredient.name, false), 0);
-                            console.log(index, accumulatedHeight);
-                            return (
-                                <Image
-                                    key={index} 
-                                    zIndex={index} 
-                                    src={ingredientImages[item.name]}
-                                    bottom={`${accumulatedHeight}px`}
-                                    position="absolute"
-                                />
-                            )
-                        })}
+                        <BurgerImage ingredients={selectedIngredients} miniature={false}/>
                     </Flex>
+
                     <Flex direction="column" width="400px" gap="1em">
                         <Input
                             value={burgerName}
@@ -379,21 +321,7 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
                                 onClick={() => openBurgerInfo(burger, burgerIndex)}
                                 >
                                 <Box alignSelf="center" position="relative" height="150px" width="50%" overflow="hidden">
-                                    {burger.ingredients.map((item, index) => {
-                                        const accumulatedHeight = burger.ingredients
-                                            .slice(0, index)
-                                            .reduce((total, ingredient) => total + getIngredientHeight(ingredient.name), 0);
-                                        console.log(index, accumulatedHeight);
-                                        return (
-                                            <Image
-                                                key={`${burgerIndex}-${index}`} 
-                                                zIndex={index} 
-                                                src={ingredientImages[item.name]}
-                                                bottom={`${accumulatedHeight}px`}
-                                                position="absolute"
-                                            />
-                                        )  
-                                    })}
+                                    <BurgerImage ingredients={burger.ingredients} miniature={true}/>
                                 </Box>
                                 <Card.Body>
                                     <Card.Title alignSelf="center">
