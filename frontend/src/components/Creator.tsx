@@ -121,7 +121,7 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
         if (content.length != 0) {
             const order: Order = {
                 customer: user?.username!,
-                status: "Waiting for payment",
+                status: "Awaiting payment",
                 content: content,
                 price: OrderPrice,
                 weight: OrderWeight,
@@ -151,7 +151,7 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
         if (content.length != 0) {
             const order: Order = {
                 customer: user?.username!,
-                status: "Waiting for payment",
+                status: "Awaiting payment",
                 content: content,
                 price: OrderPrice,
                 weight: OrderWeight,

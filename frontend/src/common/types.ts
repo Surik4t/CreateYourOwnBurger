@@ -20,7 +20,7 @@ export interface Burger {
 export interface Order {
     id?: string,
     customer: string,
-    status?: "Waiting for payment" | "Editing" | "Canceled" | "Complete"
+    status?: "Awaiting payment" | "Editing" | "Canceled" | "Complete"
     content: Burger[],
     price: number,
     weight: number,
