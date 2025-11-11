@@ -1,9 +1,10 @@
-import { Flex, Text, Card, CardDescription, CardFooter, Button, Dialog, CloseButton, Table, Heading, Separator, Checkbox } from "@chakra-ui/react";
+import { Flex, Text, Card, CardDescription, CardFooter, Button, Dialog, CloseButton, Table, Heading, Separator, Checkbox, Box, Image } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { format } from "date-fns"
 import { useAuth } from "../contexts/AuthContext";
 import BurgerInfo from "./BurgerInfo";
+import BurgerImage from "../common/BurgerImage";
 import type { CombinedIngredient, Burger, Order } from "../common/types";
 
 
@@ -198,14 +199,14 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
 
             <Flex direction="column" width="100%">
                 {orders.map((order) => (
-                    <Flex key={order.id} margin="0.25em" bg="white" color="black" rounded="xl" height="13em">
+                    <Flex key={order.id} margin="0.25em" bg="white" color="black" rounded="xl" height="250px">
                         <Flex padding="1em" direction="column" width="15em">
                             <Text>Order ID:</Text>
                             <Text>{order.id}</Text>
                             <Text>Status: {applyColorToStatus(order.status!)}</Text>
                             <Text>{format(new Date(order.creation_datetime), "yyyy.MM.dd / HH:mm")}</Text>
                             <Text>Total price: <b>{order.price}₽</b></Text>
-                            <Flex justifyContent="space-between" mt="1em">
+                            <Flex justifyContent="space-between" mt="4em">
                                 <Button onClick={
                                     () => (createOrder(order), getOrders)}
                                     hidden={!orderStatusEquals(order, "Complete", "Canceled")}
@@ -229,15 +230,16 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                                 </Button>
                             </Flex>
                         </Flex>
-                        <Flex ml="1em" overflowX="auto" marginEnd="auto">
+                        <Flex ml="1em" overflowX="auto">
                             {order.content.map((burger, burgerIndex) => (
+                            <Flex position="relative">
                                 <Card.Root
                                     className="a"
                                     key={burgerIndex}
                                     bg="orange.200"
                                     colorPalette="orange"
-                                    width="175px"
-                                    maxHeight="200px"
+                                    width="200px"
+                                    maxHeight="300px"
                                     flexShrink={0}
                                     margin="0.5em"
                                     style={{ cursor:"pointer" }}
@@ -246,21 +248,39 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                                     }}
                                     onClick={() => openBurgerInfo(burger)}
                                     >
-                                    <Card.Body>
-                                        <Card.Title>
-                                            {burger.name}
+                                    <Box alignSelf="center" position="relative" height="150px" width="50%" overflow="hidden">
+                                        <BurgerImage ingredients={burger.ingredients} miniature={true}/>
+                                    </Box>
+                                    <Card.Body mt="-5">
+                                        <Card.Title alignSelf="center">
+                                            <Text textStyle="xl" fontWeight="medium" letterSpacing="tight">
+                                                {burger.name}
+                                            </Text>
                                         </Card.Title>
-                                        <CardDescription maxHeight="3em" overflow="hidden">
-                                            {burger.ingredients.map(ingr => ingr.name ).join(", ")}
-                                        </CardDescription>
                                     </Card.Body>
-                                    <CardFooter alignSelf="end">
-                                        <Text textStyle="xl" fontWeight="medium" letterSpacing="tight">
-                                            {burger.price}₽
-                                        </Text>
-                                    </CardFooter>
                                 </Card.Root>
+
+                                <Box
+                                    _hover={{
+                                        outline: "0",
+                                        border: "none",
+                                        boxShadow: "none",
+                                        cursor: "default",
+                                    }}
+                                    bg="orange.400"
+                                    rounded="full"
+                                    position="absolute"
+                                    right="0"
+                                    bottom="5px"
+                                >                                          
+                                    <Text margin="5px" textStyle="lg" fontWeight="medium" color="white">
+                                        {burger.price}₽
+                                    </Text>
+                                </Box>
+                            </Flex>
                             ))}
+
+                            
                         </Flex>
 
                         <Button
