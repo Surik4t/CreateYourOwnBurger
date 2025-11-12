@@ -206,31 +206,45 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                             <Text>Status: {applyColorToStatus(order.status!)}</Text>
                             <Text>{format(new Date(order.creation_datetime), "yyyy.MM.dd / HH:mm")}</Text>
                             <Text>Total price: <b>{order.price}₽</b></Text>
-                            <Flex justifyContent="space-between" mt="4em">
-                                <Button onClick={
-                                    () => (createOrder(order), getOrders)}
-                                    hidden={!orderStatusEquals(order, "Complete", "Canceled")}
-                                    bg="orange.400"
-                                    >
-                                        Reorder <b>⟲</b>
-                                </Button>
-                                <Button onClick={
-                                    () => (editOrder(order), getOrders)}
-                                    hidden={!orderStatusEquals(order, "Awaiting payment", "Editing")}
-                                    bg="orange.400"
-                                    >
-                                        Edit
-                                </Button>
+                            <Flex direction="column" mt="auto">
                                 <Button
-                                onClick={() => (changeOrderStatus(order, "Canceled"), changeTab("orders"))}
-                                hidden={!orderStatusEquals(order, "Awaiting payment", "Editing")}
-                                bg="red.400"
+                                    onClick={() => openOrderModal(order)}
+                                    hidden={!orderStatusEquals(order, "Awaiting payment")} 
+                                    height="3.2em"
+                                    rounded="sm"
+                                    mb="0.5em"
+                                    bg="green.400"
                                 >
-                                    Cancel
+                                    <b>Continue to Payment</b>
                                 </Button>
+                                <Flex justifyContent="space-between">
+                                    <Button onClick={
+                                        () => (createOrder(order), getOrders)}
+                                        hidden={!orderStatusEquals(order, "Complete", "Canceled")}
+                                        bg="orange.400"
+                                        >
+                                            <b>Reorder ⟲</b>
+                                    </Button>
+                                    <Button onClick={
+                                        () => (editOrder(order), getOrders)}
+                                        hidden={!orderStatusEquals(order, "Awaiting payment", "Editing")}
+                                        width="60%"
+                                        bg="orange.400"
+                                        >
+                                           <b>Edit</b>
+                                    </Button>
+                                    <Button
+                                    onClick={() => (changeOrderStatus(order, "Canceled"), changeTab("orders"))}
+                                    hidden={!orderStatusEquals(order, "Awaiting payment", "Editing")}
+                                    width="30%"
+                                    bg="red.400"
+                                    >
+                                        <b>Cancel</b>
+                                    </Button>
+                                </Flex>
                             </Flex>
                         </Flex>
-                        <Flex ml="1em" overflowX="auto">
+                        <Flex ml="1em" mr="0.5em" overflowX="auto">
                             {order.content.map((burger, burgerIndex) => (
                             <Flex position="relative">
                                 <Card.Root
@@ -279,22 +293,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                                 </Box>
                             </Flex>
                             ))}
-
-                            
                         </Flex>
-
-                        <Button
-                            onClick={() => openOrderModal(order)}
-                            hidden={!orderStatusEquals(order, "Awaiting payment")} 
-                            height="150px"
-                            width="150px"
-                            mt="auto" mb="auto" mr="0.5em"
-                            rounded="xl"
-                            bg="green.400"
-                            textStyle="6xl"
-                        >
-                        $
-                        </Button>
                     </Flex>
                 ))}
             </Flex>
@@ -340,11 +339,11 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                         <Flex justifyContent="space-between">
                             <p>Send receipt to your email</p>
                             <Checkbox.Root 
-                                defaultChecked 
+                                defaultChecked
                                 onChange={(e) => setSendReceiptIsChecked(!sendReceiptIsChecked)}
                             >
                                 <Checkbox.HiddenInput />
-                                    <Checkbox.Control>
+                                    <Checkbox.Control _hover={{ cursor: "pointer" }}>
                                         <Checkbox.Indicator />
                                     </Checkbox.Control>
                                 <Checkbox.Label />
