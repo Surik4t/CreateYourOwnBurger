@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/PrivateRoute'
+import { ToastContainer } from "react-toastify";
 import Login from './components/Login';
 import Register from './components/Register';
 import Confirmation from './components/Confirmation';
@@ -25,6 +26,7 @@ export const App = () => {
                         <Route path="/" element={<Home />} />
                     </Route>
                 </Routes>
+                <ToastContainer aria-label="Notifications" />
             </AuthProvider>
         </BrowserRouter>
     );

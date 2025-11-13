@@ -1,6 +1,7 @@
 import { Table, Text, List, Button, Flex, CloseButton, Input, Box, Card, CardFooter } from "@chakra-ui/react"
 import axios, { AxiosError } from "axios";
 import { useCallback, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { useAuth } from "../contexts/AuthContext";
 import type { Ingredient, Burger, Order } from "../common/types";
 import BurgerImage from "../common/BurgerImage";
@@ -64,16 +65,20 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
     }
 
     const addToOrder = () => {
-        setBurgers([
-            ...burgers,
-            {
-                name: burgerName || "Custom Burger",
-                ingredients: selectedIngredients,
-                weight: burgerWeight,
-                price: burgerPrice,
-            },
-        ]);
-        clearBurger();
+        if (selectedIngredients.length != 0) {
+            setBurgers([
+                ...burgers,
+                {
+                    name: burgerName || "Custom Burger",
+                    ingredients: selectedIngredients,
+                    weight: burgerWeight,
+                    price: burgerPrice,
+                },
+            ]);
+            clearBurger();
+        } else {
+            toast("WOW");
+        }
     }
 
     function loadOrder(order: any) {
