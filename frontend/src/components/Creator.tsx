@@ -77,7 +77,7 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
             ]);
             clearBurger();
         } else {
-            toast("WOW");
+            toast.warn("Add some ingredients first!");
         }
     }
 
