@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { format } from "date-fns"
 import { useAuth } from "../contexts/AuthContext";
-import BurgerInfo from "./BurgerInfo";
+import BurgerInfo from "../common/BurgerInfo";
 import BurgerImage from "../common/BurgerImage";
 import type { CombinedIngredient, Burger, Order } from "../common/types";
 
@@ -313,7 +313,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                             Order confirmation {`- ${selectedOrder &&selectedOrder.id}`}
                         </Dialog.Title>
                     </Dialog.Header>
-                    <Dialog.Body>
+                    <Dialog.Body maxHeight="400px" overflowY="auto">
                         {selectedOrder && selectedOrder.content.map((burger, burgerIndex) => (
                             <div key={burgerIndex}>
                                 <Heading size="xl">{burger.name}</Heading>

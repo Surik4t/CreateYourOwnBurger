@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import type { Ingredient, Burger, Order } from "../common/types";
 import BurgerImage from "../common/BurgerImage";
-import BurgerInfo from "./BurgerInfo";
+import BurgerInfo from "../common/BurgerInfo";
 
 
 interface CreatorProps {

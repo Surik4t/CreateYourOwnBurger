@@ -1,5 +1,5 @@
 import { Flex, Dialog, Table, Separator, Text, Button, CloseButton } from "@chakra-ui/react";
-import type { Burger, CombinedIngredient } from "../common/types";
+import type { Burger, CombinedIngredient } from "./types";
 
 
 interface BurgerInfoProps {
