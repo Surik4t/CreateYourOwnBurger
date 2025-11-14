@@ -136,8 +136,7 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
                     }
                 });
         } else {
-            console.error("Empty order.")
-            return;
+            toast.warn("Order is empty, add some burgers first!");
         }
 
     }
@@ -167,8 +166,7 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
                     }
                 });
         } else {
-            console.error("Empty order.")
-            return;
+            toast.warn("Order is empty, add some burgers first!");
         }
     }
    
