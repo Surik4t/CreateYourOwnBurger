@@ -1,10 +1,50 @@
-import { Flex, Heading, Separator } from "@chakra-ui/react";  
-  
+import { Flex, Heading, Menu, Avatar, Portal } from "@chakra-ui/react";  
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from "../contexts/AuthContext"
+
 
 const Header = () => {
+
+    const navigate = useNavigate();
+    const { logout, user } = useAuth();
+
     return (
-        <Flex ml="2em" align="center" as="nav">
+            <Flex
+                as="nav"
+                align="center"
+                justify="space-between"
+                bg="#502212ff"
+                height="75px"
+                width="100%"
+                position="fixed"
+                flexWrap="wrap"
+                zIndex="1000"
+            >
             <Heading as="h1" size="sm">Create Your Own Burger!</Heading>
+            <Menu.Root>
+                <Menu.Trigger rounded="full" mr="2em">   
+                    <Avatar.Root size="xl" style={{ cursor:"pointer" }}>
+                        <Avatar.Fallback name={user?.username} />
+                        <Avatar.Image src="https://bit.ly/sage-adebayo" />
+                    </Avatar.Root>
+                </Menu.Trigger>
+                <Portal>
+                    <Menu.Positioner>
+                        <Menu.Content>
+                            <Menu.Item onClick={() => navigate("/profile")} value="profile" py={2} px={4} style={{ cursor:"pointer" }}>
+                                Profile
+                            </Menu.Item>
+                            <Menu.Item value="settings" py={2} px={4} style={{ cursor:"pointer" }}>
+                                Settings
+                            </Menu.Item>
+                            <Menu.Separator />
+                            <Menu.Item onClick={logout} value="logout" py={2} px={4} color="red.500" style={{ cursor:"pointer" }}>
+                                Logout
+                            </Menu.Item>
+                        </Menu.Content>
+                    </Menu.Positioner>
+                </Portal>
+            </Menu.Root>
         </Flex>
     );
 };
