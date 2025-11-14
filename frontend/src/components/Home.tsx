@@ -15,6 +15,11 @@ function Home() {
             }
         }, [isAuthenticated, isLoading, navigate]);
 
+    const navigateToProfilePage = () => {
+        navigate('/profile');
+    }
+    
+
     if (isLoading) return <div>Loading...</div>;
     if (!isAuthenticated) return null;
     
@@ -43,7 +48,7 @@ function Home() {
                     <Portal>
                         <Menu.Positioner>
                             <Menu.Content>
-                                <Menu.Item value="profile" py={2} px={4} style={{ cursor:"pointer" }}>
+                                <Menu.Item onClick={() => navigate("/profile")} value="profile" py={2} px={4} style={{ cursor:"pointer" }}>
                                     Profile
                                 </Menu.Item>
                                 <Menu.Item value="settings" py={2} px={4} style={{ cursor:"pointer" }}>

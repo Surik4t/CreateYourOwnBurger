@@ -7,7 +7,7 @@ import Register from './components/Register';
 import Confirmation from './components/Confirmation';
 import Home from './components/Home'
 import Test from './components/Test';
-
+import Profile from './components/Profile';
 
 export const App = () => {
     return (
@@ -24,6 +24,7 @@ export const App = () => {
                     {/* Protected routes */}
                     <Route element={<ProtectedRoute />}>
                         <Route path="/" element={<Home />} />
+                        <Route path="/profile" element={<Profile />} />
                     </Route>
                 </Routes>
                 <ToastContainer 
