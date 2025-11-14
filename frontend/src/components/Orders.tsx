@@ -228,6 +228,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                                     <Button onClick={
                                         () => (createOrder(order), getOrders)}
                                         hidden={!orderStatusEquals(order, "Complete", "Canceled")}
+                                        width="100%"
                                         bg="orange.400"
                                         >
                                             <b>Reorder ⟲</b>
@@ -241,10 +242,10 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                                            <b>Edit</b>
                                     </Button>
                                     <Button
-                                    onClick={() => (changeOrderStatus(order, "Canceled"), changeTab("orders"))}
-                                    hidden={!orderStatusEquals(order, "Awaiting payment", "Editing")}
-                                    width="30%"
-                                    bg="red.400"
+                                        onClick={() => (changeOrderStatus(order, "Canceled"), changeTab("orders"))}
+                                        hidden={!orderStatusEquals(order, "Awaiting payment", "Editing")}
+                                        width="30%"
+                                        bg="red.400"
                                     >
                                         <b>Cancel</b>
                                     </Button>
@@ -268,7 +269,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                                         outline: "2px solid orange"
                                     }}
                                     onClick={() => openBurgerInfo(burger)}
-                                    >
+                                >
                                     <Box alignSelf="center" position="relative" height="150px" width="50%" overflow="hidden">
                                         <BurgerImage ingredients={burger.ingredients} miniature={true}/>
                                     </Box>
