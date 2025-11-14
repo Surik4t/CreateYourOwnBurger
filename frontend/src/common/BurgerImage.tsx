@@ -57,7 +57,6 @@ const BurgerImage: React.FC<BurgerImageProps> = ({ ingredients, miniature }) => 
                 const accumulatedHeight = ingredients
                     .slice(0, index)
                     .reduce((total, ingredient) => total + getIngredientHeight(ingredient.name, miniature), 0);
-                console.log(index, accumulatedHeight);
                 return (
                     <Image
                         key={index} 

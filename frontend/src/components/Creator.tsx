@@ -83,7 +83,6 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
 
     function loadOrder(order: any) {
         if (order) {
-            console.log(order);
             setOrderId(order.id);
             setBurgers(order.content);
         }
