@@ -96,7 +96,10 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
         const url = "http://localhost:8000/ingredients";
         await axios.get(url)
             .then(response => setIngredients(response.data))
-            .catch((error: AxiosError) => console.error(error.message))    
+            .catch((error: AxiosError) => {
+                toast.error(error.message);
+                console.error(error.message);
+            })    
     }
 
 
@@ -106,6 +109,7 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
             .then(response => console.log(response.data.message))
             .catch((error: AxiosError) => {
                 if (error.response) {
+                    toast.error(error.message);
                     console.error("Error status code:", error.response.status);
                     console.error("Details:", error.message);
                 }
@@ -131,6 +135,7 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
                 })
                 .catch((error: AxiosError) => {
                     if (error.response) {
+                        toast.error(error.message);
                         console.error("Error status code:", error.response.status);
                         console.error("Details:", error.message);
                     }
@@ -161,6 +166,7 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
                 })
                 .catch((error: AxiosError) => {
                     if (error.response) {
+                        toast.error(error.message);
                         console.error("Error status code:", error.response.status);
                         console.error("Details:", error.message);
                     }

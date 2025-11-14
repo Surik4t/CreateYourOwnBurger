@@ -6,6 +6,7 @@ import { useAuth } from "../contexts/AuthContext";
 import BurgerInfo from "../common/BurgerInfo";
 import BurgerImage from "../common/BurgerImage";
 import type { CombinedIngredient, Burger, Order } from "../common/types";
+import { toast } from "react-toastify";
 
 
 interface OrderProps {
@@ -65,9 +66,12 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
 
 
     async function getOrders() {
-        const response = await api.get(`/orders?customer=${user?.username}`)
+        await api.get(`/orders?customer=${user?.username}`)
             .then(response => setOrders(response.data))
-            .catch((error: AxiosError) => console.error(error.message))
+            .catch((error: AxiosError) => {
+                toast.error(error.message);
+                console.error(error.message);
+            })
     }
 
 
@@ -125,6 +129,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
             })
             .catch((error: AxiosError) => {
                 if (error.response) {
+                    toast.error(error.message);
                     console.error("Error status code:", error.response.status);
                     console.error("Details:", error.message);
                 }
@@ -144,6 +149,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
             })
             .catch((error: AxiosError) => {
                 if (error.response) {
+                    toast.error(error.message);
                     console.error("Error status code:", error.response.status);
                     console.error("Details:", error.message);
                 }
@@ -179,6 +185,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
             })
             .catch((error: AxiosError) => {
                 if (error.response) {
+                    toast.error(error.message);
                     console.error("Error status code:", error.response.status);
                     console.error("Details:", error.message);
                 }
