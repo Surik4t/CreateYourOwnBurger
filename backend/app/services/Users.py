@@ -235,3 +235,18 @@ async def create_user(new_user: NewUserModel):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal server error: {e}")
+    
+
+@router.get("")
+async def fetch_user(user: Annotated[UserInDB, Depends(get_user)]):
+    if user:
+        return user
+    raise HTTPException(status_code=404, detail="User not found.")
+
+
+@router.get("/exists")
+async def check_user_exists(user: Annotated[UserInDB, Depends(get_user)]):
+    if user:
+        raise HTTPException(status_code=409, detail="Username is already taken.")
+    raise HTTPException(status_code=404, detail="User not found.")
+
