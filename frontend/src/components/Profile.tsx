@@ -51,7 +51,7 @@ const Profile = () => {
             <Flex mt="7em" width="60%" bg="orange.200" border="white" borderRadius="2xl" borderStyle="solid">
                 
                 <ConfirmationDialog 
-                    title="test" 
+                    title={"Do you want to change your username to " + username + "?"} 
                     dialogOpen={changeUsernameDialogOpen} 
                     handleConfirmation={handleSubmit}
                     handleClose={() => setChangeUsernameDialogOpen(false)}
