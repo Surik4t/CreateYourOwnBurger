@@ -1,4 +1,4 @@
-import { Button, Flex, Image, Input, Text, FileUpload } from "@chakra-ui/react";
+import { Button, Flex, Image, Input, Text, FileUpload, Table } from "@chakra-ui/react";
 import { LuFileImage } from "react-icons/lu"
 import Header from "./Header";
 import { useAuth } from "../contexts/AuthContext"
@@ -8,6 +8,10 @@ import defaultAvatar from "../assets/defaultAvatar.png"
 const Profile = () => {
 
     const { user } = useAuth();
+
+    const handleSubmit = () => {
+
+    }
 
     return (
         <Flex bg="#f8ebd7ff" colorPalette="orange" minHeight="100vh" justifyContent="center">
@@ -38,32 +42,58 @@ const Profile = () => {
 
                     <Flex 
                         bg="white"
-                        padding="1em"
                         justifyContent="space-between" 
-                        h="15%" 
+                        h="40%" 
                         w="60%"
-                        rounded="xl"
                         color="black"
+                        rounded="xl"
+                        padding="1em"
+                        mb="1em"
                     >
-                        <Flex direction="column" w="20%" justifyContent="space-between">
-                            <Text> Username: </Text>
-                            <Text> Email: </Text>
-                        </Flex>
-                        <Flex direction="column" w="80%" justifyContent="space-between">
-                            <Flex >
-                                <Input 
-                                    borderStyle="solid"
-                                    borderColor="orange" 
-                                    bg="orange.200" 
-                                    placeholder={user?.username} 
-                                />
-                                <Button bg="orange.400" ml="2em">Change</Button>
-                            </Flex>
-                            <Flex>
-                                <Text> {user?.email} </Text>
-                            </Flex>
-                        </Flex>
-                        
+                        <Table.Root>
+                            <Table.Body>
+                                <Table.Row>
+                                    <Table.Cell>
+                                        <Text> Username: </Text>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <Input 
+                                            w="70%"
+                                            borderStyle="solid"
+                                            borderColor="orange" 
+                                            bg="orange.200" 
+                                            placeholder={user?.username} 
+                                        />
+                                        <Button bg="orange.400" ml="2em">Change</Button>
+                                    </Table.Cell>
+                                </Table.Row>
+                                <Table.Row>
+                                    <Table.Cell>
+                                        <Text> Email: </Text>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <Text> {user?.email} </Text>
+                                    </Table.Cell>
+                                </Table.Row>
+                                <Table.Row>
+                                    <Table.Cell>
+                                        <Text> Complete orders: </Text>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <Text> Number </Text>
+                                    </Table.Cell>
+                                </Table.Row>
+                                <Table.Row>
+                                    <Table.Cell>
+                                        <Text> Total spent: </Text>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <Text> Number </Text>
+                                    </Table.Cell>
+                                </Table.Row>
+                            </Table.Body>
+                        </Table.Root>
+                    
                     </Flex>
                 </Flex>
             </Flex>
