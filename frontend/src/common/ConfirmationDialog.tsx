@@ -21,7 +21,7 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({ title, dialogOp
             <Dialog.Backdrop bg="blackAlpha.600" />
             <Dialog.Positioner>
                 <Dialog.Content color="black">
-                    <Dialog.Header alignSelf="center">
+                    <Dialog.Header textAlign="center">
                         <Dialog.Title> {title} </Dialog.Title>
                     </Dialog.Header>
                     <Dialog.Body>
