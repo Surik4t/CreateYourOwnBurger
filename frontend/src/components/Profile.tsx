@@ -22,7 +22,7 @@ const Profile = () => {
         await axios.get(`http://localhost:8000/users/exists?username=${username}`)
             .catch((error: any) => {
                 if (error.status === 404) {
-                    //open dialog
+                    setChangeUsernameDialogOpen(true);
                 } else {
                     toast.error(`${error.response.data.detail}`);
                 }
@@ -30,9 +30,17 @@ const Profile = () => {
     }
 
     const handleSubmit = () => {
-        
-        console.log();
         setChangeUsernameDialogOpen(false);
+        const payload = {
+            new_username: username,
+        }
+        axios.put(`http://localhost:8000/users?username=${user?.username}`, payload)
+            .then((response) => {
+                toast.info(response.data.message);
+            })
+            .catch((error: any) => {
+                toast.error(error.response.data.detail);
+            })
     }
 
     return (

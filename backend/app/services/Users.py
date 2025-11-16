@@ -250,3 +250,13 @@ async def check_user_exists(user: Annotated[UserInDB, Depends(get_user)]):
         raise HTTPException(status_code=409, detail="Username is already taken.")
     raise HTTPException(status_code=404, detail="User not found.")
 
+
+@router.put("")
+async def update_user(data: dict, user: Annotated[UserInDB, Depends(get_user)]):
+    new_username = data.get("new_username")
+    user.username = new_username
+    try:
+        await users_collection.replace_one({"email": user.email}, dict(user))
+        return {"message": "Username changed."}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error updating username: {e}")
