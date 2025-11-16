@@ -7,6 +7,7 @@ import BurgerInfo from "../common/BurgerInfo";
 import BurgerImage from "../common/BurgerImage";
 import type { CombinedIngredient, Burger, Order } from "../common/types";
 import { toast } from "react-toastify";
+import ConfirmationDialog from "../common/ConfirmationDialog";
 
 
 interface OrderProps {
@@ -17,11 +18,13 @@ interface OrderProps {
 
 
 const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder }) => {
+    const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
     const [orders, setOrders] = useState<Order[]>([]);
     const [orderModalOpen, setOrderModalOpen] = useState(false);
     const [burgerModalOpen, setBurgerModalOpen] = useState(false);
     const [selectedBurger, setSelectedBurger] = useState<Burger | null>(null);
     const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+    const [orderForCanceling, setOrderForCancelign] = useState<Order | null>(null);
     const [sendReceiptIsChecked, setSendReceiptIsChecked] = useState(true);
     const { user } = useAuth();
     const token = localStorage.getItem('access_token');
@@ -105,6 +108,12 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
         setBurgerModalOpen(false);
     }, [burgerModalOpen])
 
+
+    const handleCancelOrder = () => {
+        changeOrderStatus(orderForCanceling!, "Canceled");
+        changeTab("orders");
+        setConfirmationDialogOpen(false);
+    }
 
     const openBurgerInfo = (burger: Burger) => {
         setSelectedBurger(burger);
@@ -198,6 +207,13 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
     return (
         <Flex direction="column" rounded="xl" justifySelf="center" width="90%" height="100%">
             
+            <ConfirmationDialog
+                dialogOpen={confirmationDialogOpen}
+                title={"Do you really want to cancel order " + orderForCanceling?.id}
+                handleConfirmation={handleCancelOrder}
+                handleClose={() => setConfirmationDialogOpen(false)}
+            />
+
             <BurgerInfo 
                 selectedBurger={selectedBurger}
                 burgerModalOpen={burgerModalOpen}
@@ -242,7 +258,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                                            <b>Edit</b>
                                     </Button>
                                     <Button
-                                        onClick={() => (changeOrderStatus(order, "Canceled"), changeTab("orders"))}
+                                        onClick={() => (setOrderForCancelign(order), setConfirmationDialogOpen(true))}
                                         hidden={!orderStatusEquals(order, "Awaiting payment", "Editing")}
                                         width="30%"
                                         bg="red.400"

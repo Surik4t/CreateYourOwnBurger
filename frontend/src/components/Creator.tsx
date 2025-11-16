@@ -6,6 +6,7 @@ import { useAuth } from "../contexts/AuthContext";
 import type { Ingredient, Burger, Order } from "../common/types";
 import BurgerImage from "../common/BurgerImage";
 import BurgerInfo from "../common/BurgerInfo";
+import ConfirmationDialog from "../common/ConfirmationDialog";
 
 
 interface CreatorProps {
@@ -16,6 +17,7 @@ interface CreatorProps {
 
 
 const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) => {
+    const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
     const [ingredients, setIngredients] = useState<Ingredient[]>([]);
     const [selectedIngredients, setSelectedIngredients] = useState<Ingredient[]>([]);    
     const [burgers, setBurgers] = useState<Burger[]>([]);
@@ -50,6 +52,7 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
     const clearOrder = () => {
         setSelectedIngredients([]);
         setBurgers([]);
+        setConfirmationDialogOpen(false);
     }
 
     const selectIngredient = (ingredient: Ingredient) => {
@@ -199,6 +202,13 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
 
     return (
         <Flex wrap="wrap">
+
+            <ConfirmationDialog 
+                dialogOpen={confirmationDialogOpen} 
+                title="Do you really want to remove everything from the order?"
+                handleConfirmation={clearOrder}
+                handleClose={() => setConfirmationDialogOpen(false)}
+            />
 
             <BurgerInfo 
                 selectedBurger={selectedBurger}
@@ -409,7 +419,7 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
                         height="20%"
                         width="90%"
                         textStyle="3xl"
-                        onClick={clearOrder}
+                        onClick={() => setConfirmationDialogOpen(true)}
                     >
                         Clear order
                     </Button>
