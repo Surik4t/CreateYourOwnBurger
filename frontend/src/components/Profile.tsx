@@ -2,7 +2,6 @@ import { Button, Flex, Image, Input, Text, FileUpload, Table, type FileUploadFil
 import { LuFileImage } from "react-icons/lu"
 import Header from "./Header";
 import { useAuth } from "../contexts/AuthContext"
-import defaultAvatar from "../assets/defaultAvatar.png"
 import ConfirmationDialog from "../common/ConfirmationDialog";
 import { useState } from "react";
 import axios from "axios";
@@ -53,9 +52,11 @@ const Profile = () => {
             axios.post(`http://localhost:8000/users/profilepic?username=${user?.username}`, formData)
                 .then((response) => {
                     toast.info(response.data.message);
+                    fileDetails.files.pop();
                 })
                 .catch((error: any) => {
                     toast.error(error.response.data.detail);
+                    fileDetails.files.pop();
                 })
 
         } else {
@@ -92,7 +93,7 @@ const Profile = () => {
                             h="320px"
                             rounded="md"
                             mb="2em"
-                            src={defaultAvatar}
+                            src={`/profile_pics/${user?.profile_pic}`}
                             alt={username}
                         />
                         <FileUpload.Root

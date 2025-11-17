@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 interface User {
     username: string;
     email: string;
+    profile_pic: string;
 }
 
 interface AuthContextType {

@@ -4,6 +4,7 @@ def user_schema(user):
         "password": str(user["password"]),
         "email": str(user["email"]),
         "disabled": bool(user["disabled"]),
+        "profile_pic": str(user.get("profile_pic", "defaultAvatar.png"))
     }
 
 

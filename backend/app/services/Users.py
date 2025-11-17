@@ -4,7 +4,7 @@ from bson.objectid import ObjectId
 from random import randint
 from jwt.exceptions import InvalidTokenError
 from typing import Annotated
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from database.models import (
     UserModel,
@@ -120,6 +120,7 @@ async def read_users_me(
         "username": current_user.username,
         "email": current_user.email,
         "disabled": current_user.disabled,
+        "profile_pic": current_user.profile_pic,
     }
 
 
@@ -260,3 +261,18 @@ async def update_user(data: dict, user: Annotated[UserInDB, Depends(get_user)]):
         return {"message": "Username changed."}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error updating username: {e}")
+
+
+@router.post("/profilepic")
+async def upload_pic(user: Annotated[UserInDB, Depends(get_user)], image: UploadFile = File()):
+    if not user:
+        raise HTTPException(status_code=401, detail="Not authorized.")
+    
+    print(user)
+    return
+
+    with open("image.png", "wb") as file:
+        content = await image.read()
+        file.write(content)
+    
+    return {"message": "all good"}
