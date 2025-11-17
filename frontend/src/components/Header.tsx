@@ -25,7 +25,7 @@ const Header = () => {
                 <Menu.Trigger rounded="full" mr="2em">   
                     <Avatar.Root size="xl" style={{ cursor:"pointer" }}>
                         <Avatar.Fallback name={user?.username} />
-                        <Avatar.Image src="https://bit.ly/sage-adebayo" />
+                        <Avatar.Image src={`/profile_pics/${user?.profile_pic}`} />
                     </Avatar.Root>
                 </Menu.Trigger>
                 <Portal>
