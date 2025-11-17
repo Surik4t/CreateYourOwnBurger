@@ -1,4 +1,4 @@
-import { Button, Flex, Image, Input, Text, FileUpload, Table } from "@chakra-ui/react";
+import { Button, Flex, Image, Input, Text, FileUpload, Table, type FileUploadFileAcceptDetails, type FileUploadFileRejectDetails } from "@chakra-ui/react";
 import { LuFileImage } from "react-icons/lu"
 import Header from "./Header";
 import { useAuth } from "../contexts/AuthContext"
@@ -43,6 +43,32 @@ const Profile = () => {
             })
     }
 
+    const handleFileAccept = (fileDetails: FileUploadFileAcceptDetails) => {
+        console.log(fileDetails);
+        const file = fileDetails.files[0];
+        if (file) {
+            console.log(file);
+            let formData = new FormData();
+            formData.append("image", file);
+            axios.post(`http://localhost:8000/users/profilepic?username=${user?.username}`, formData)
+                .then((response) => {
+                    toast.info(response.data.message);
+                })
+                .catch((error: any) => {
+                    toast.error(error.response.data.detail);
+                })
+
+        } else {
+            toast.error("Error uploading file.");
+        }
+    }
+
+    const handleFileReject = (fileDetails: FileUploadFileRejectDetails) => {
+        fileDetails.files.pop();
+        toast.warn("File must be an image!");
+
+    }
+
     return (
         <Flex bg="#f8ebd7ff" colorPalette="orange" minHeight="100vh" justifyContent="center">
             
@@ -69,14 +95,18 @@ const Profile = () => {
                             src={defaultAvatar}
                             alt={username}
                         />
-                        <FileUpload.Root>
+                        <FileUpload.Root
+                            accept={["image/png"]}
+                            maxFiles={1}
+                            onFileAccept={handleFileAccept}
+                            onFileReject={handleFileReject}
+                        >
                             <FileUpload.HiddenInput />
                             <FileUpload.Trigger w="100%" bg="orange.400" asChild>
                                 <Button variant="outline" size="sm">
                                     <LuFileImage /> Change avatar
                                 </Button>
                             </FileUpload.Trigger>
-                            <FileUpload.List />
                         </FileUpload.Root>
                     </Flex>
 
