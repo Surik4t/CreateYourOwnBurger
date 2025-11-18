@@ -7,7 +7,7 @@ class UserModel(BaseModel):
     username: str
     email: str
     disabled: bool = Field(default=False)
-    profile_pic: str = Field(default="defaultAvatar.png")
+    profile_pic: str | None = None
 
 
 class NewUserModel(UserModel):

@@ -1,5 +1,7 @@
 import jwt
 import logging
+import uuid
+from pathlib import Path
 from bson.objectid import ObjectId
 from random import randint
 from jwt.exceptions import InvalidTokenError
@@ -267,12 +269,27 @@ async def update_user(data: dict, user: Annotated[UserInDB, Depends(get_user)]):
 async def upload_pic(user: Annotated[UserInDB, Depends(get_user)], image: UploadFile = File()):
     if not user:
         raise HTTPException(status_code=401, detail="Not authorized.")
-    
-    print(user)
-    return
 
-    with open("image.png", "wb") as file:
-        content = await image.read()
-        file.write(content)
+    path = Path("../frontend/public/profile_pics")
+    if path.exists():
+        try:
+            print(f"current uuid: {user.profile_pic}")
+            if not user.profile_pic:
+                print("creating profile pic uuid")
+                profile_pic = f"{uuid.uuid4()}.png"
+                user.profile_pic = profile_pic
+                users_collection.replace_one({"email": user.email}, dict(user))
+
+            with open(f"{path}/{user.profile_pic}", "wb") as file:
+                content = await image.read()
+                file.write(content)
+                print("Image upload successful")
+            return {"message": "Profile picture updated."}
+        
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Error uplading profile picture: {e}")
+
+    print(f"{path} does not exist")
+    raise HTTPException(status_code=500, detail="Internal server error.")
     
-    return {"message": "all good"}
+    
