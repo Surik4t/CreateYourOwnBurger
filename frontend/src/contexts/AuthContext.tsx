@@ -26,18 +26,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     useEffect(() => {
         const requestInterceptor = axios.interceptors.request.use(
-        (config) => {
-            const token = localStorage.getItem('access_token');
-            if (token && !config.headers.Authorization) {
-                config.headers.Authorization = `Bearer ${token}`;
-            }
-            return config;
-        },
-        (error) => Promise.reject(error)
+            (config) => {
+                const token = localStorage.getItem('access_token');
+                if (token && !config.headers.Authorization) {
+                    config.headers.Authorization = `Bearer ${token}`;
+                }
+                return config;
+            },
+            (error) => Promise.reject(error)
         );
 
         return () => {
-        axios.interceptors.request.eject(requestInterceptor);
+            axios.interceptors.request.eject(requestInterceptor);
         };
     }, []);
 
@@ -46,9 +46,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         try {
             const token = localStorage.getItem('access_token');
             if (token) {
-            const response = await axios.get('http://localhost:8000/users/me');
-            setUser(response.data);
-            setIsAuthenticated(true);
+                const response = await axios.get('http://localhost:8000/users/me');
+                setUser(response.data);
+                setIsAuthenticated(true);
             }
         } catch (error) {
             console.error('Auth check failed:', error);
@@ -70,14 +70,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             
             setUser(userResponse.data);
             setIsAuthenticated(true);
-            navigate('/');
         } catch (error) {
             localStorage.removeItem('access_token');
             setUser(null);
             setIsAuthenticated(false);
             throw error;
         }
-    }, [navigate]);
+    }, []);
 
     const logout = useCallback(() => {
         localStorage.removeItem('access_token');

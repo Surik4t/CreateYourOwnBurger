@@ -260,7 +260,18 @@ async def update_user(data: dict, user: Annotated[UserInDB, Depends(get_user)]):
     user.username = new_username
     try:
         await users_collection.replace_one({"email": user.email}, dict(user))
-        return {"message": "Username changed."}
+
+        access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        access_token = create_access_token(
+            data={"sub": new_username}, expires_delta=access_token_expires
+        )
+        new_token = Token(access_token=access_token, token_type="bearer")
+
+        return {
+            "message": "Username changed.",
+            "access_token": new_token.access_token,
+        }
+    
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error updating username: {e}")
 
