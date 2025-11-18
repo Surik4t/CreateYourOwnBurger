@@ -14,6 +14,7 @@ const Profile = () => {
     const [username, setUsername] = useState(user?.username);
     const [buttonDisabled, setButtonDisabled] = useState(true);
     const [changeUsernameDialogOpen, setChangeUsernameDialogOpen] = useState(false);
+    const [avatarUpdateCount, setAvatarUpdateCount] = useState(0);
 
 
     const checkUsername = async (e: React.FormEvent) => {
@@ -52,20 +53,19 @@ const Profile = () => {
             axios.post(`http://localhost:8000/users/profilepic?username=${user?.username}`, formData)
                 .then((response) => {
                     toast.info(response.data.message);
+                    setAvatarUpdateCount(avatarUpdateCount + 1);
                     fileDetails.files.pop();
                 })
                 .catch((error: any) => {
                     toast.error(error.response.data.detail);
                     fileDetails.files.pop();
                 })
-
         } else {
             toast.error("Error uploading file.");
         }
     }
 
     const handleFileReject = (fileDetails: FileUploadFileRejectDetails) => {
-        
         fileDetails.files.pop();
         toast.warn("File must be an image with a maximum size of 20 MB");
     }
@@ -93,7 +93,8 @@ const Profile = () => {
                             h="320px"
                             rounded="md"
                             mb="2em"
-                            src={`/profile_pics/${user?.profile_pic}`}
+                            key={avatarUpdateCount}
+                            src={`/profile_pics/${user?.profile_pic}?v=${avatarUpdateCount}`}
                             alt={username}
                         />
                         <FileUpload.Root
