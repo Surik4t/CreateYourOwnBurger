@@ -36,8 +36,9 @@ const Profile = () => {
         }
         axios.put(`http://localhost:8000/users?username=${user?.username}`, payload)
             .then((response) => {
-                toast.info(response.data.message);
                 login(response.data.access_token);
+                setButtonDisabled(true);
+                toast.info(response.data.message);
             })
             .catch((error: any) => {
                 toast.error(error.response.data.detail);
