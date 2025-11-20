@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from configurations import orders_collection
 from database.schemas import order_schema
 from database.models import OrderModel, ReceiptData
+from database.models import UserInDB
 from bson.objectid import ObjectId
 from .Users import get_current_user
 from app.RabbitMQ.Message_sender import queue_message
@@ -10,18 +11,12 @@ router = APIRouter(prefix="/orders", tags=["orders"])
 
 
 @router.get("")
-async def get_orders(
-    customer: str = None, current_user: dict = Depends(get_current_user)
-):
+async def get_orders(customer: UserInDB = Depends(get_current_user)):
     result = list()
-    if customer:
-        if customer == current_user.username:
-            query = {"customer": customer}
-    else:
-        query = {}
-
+    query = {"customer": customer.username}
     async for order in orders_collection.find(query):
         result.append(order_schema(order))
+
     return sorted(result, key=lambda order: order["creation_datetime"], reverse=True)
 
 
@@ -74,4 +69,15 @@ async def send_receipt(data: ReceiptData):
         return {"message": f"Receipt for order {data.id} sent to queue."}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"An error occured: {e}")
+    
+
+async def update_customer(old_customer: str, new_customer: str, session=None):
+    try:    
+        orders_collection.update_many(
+            {"customer": old_customer},
+            {"$set": {"customer": new_customer}},
+            session=session,
+        )
+    except Exception as e:
+        raise Exception(e)
     

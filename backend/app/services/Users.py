@@ -16,7 +16,7 @@ from database.models import (
     Token,
     TokenData,
 )
-from configurations import users_collection, unconfirmed_users_collection
+from configurations import client, users_collection, unconfirmed_users_collection
 from passlib.context import CryptContext
 from datetime import timedelta, datetime, timezone
 from app.RabbitMQ.Message_sender import queue_message
@@ -256,24 +256,31 @@ async def check_user_exists(user: Annotated[UserInDB, Depends(get_user)]):
 
 @router.put("")
 async def update_user(data: dict, user: Annotated[UserInDB, Depends(get_user)]):
+    old_username = user.username
     new_username = data.get("new_username")
-    user.username = new_username
-    try:
-        await users_collection.replace_one({"email": user.email}, dict(user))
 
-        access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-        access_token = create_access_token(
-            data={"sub": new_username}, expires_delta=access_token_expires
-        )
-        new_token = Token(access_token=access_token, token_type="bearer")
-
-        return {
-            "message": "Username changed.",
-            "access_token": new_token.access_token,
-        }
+    from .Orders import update_customer
     
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error updating username: {e}")
+    async with await client.start_session() as session:
+        try:
+            await update_customer(old_customer=old_username, new_customer=new_username, session=session)
+            
+            user.username = new_username
+            await users_collection.replace_one({"email": user.email}, dict(user), session=session)
+
+            access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+            access_token = create_access_token(
+                data={"sub": new_username}, expires_delta=access_token_expires
+            )
+            new_token = Token(access_token=access_token, token_type="bearer")
+
+            return {
+                "message": "Username changed.",
+                "access_token": new_token.access_token,
+            }
+        
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Error updating username: {e}")
 
 
 @router.post("/profilepic")
