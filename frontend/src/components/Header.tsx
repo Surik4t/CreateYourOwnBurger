@@ -14,16 +14,24 @@ const Header = () => {
                 align="center"
                 justify="space-between"
                 bg="#502212ff"
-                height="75px"
+                height="55px"
                 width="100%"
                 position="fixed"
                 flexWrap="wrap"
                 zIndex="1000"
             >
-            <Heading as="h1" size="sm">Create Your Own Burger!</Heading>
+            <Heading 
+                ml="1em" 
+                size="3xl"
+                style={{cursor: "pointer"}}
+                onClick={() => navigate("/")}
+            >
+                Create Your Own Burger!
+            </Heading>
+
             <Menu.Root>
                 <Menu.Trigger rounded="full" mr="2em">   
-                    <Avatar.Root size="xl" style={{ cursor:"pointer" }}>
+                    <Avatar.Root size="lg" style={{ cursor:"pointer" }}>
                         <Avatar.Fallback name={user?.username} />
                         <Avatar.Image src={`/profile_pics/${user?.profile_pic}`} />
                     </Avatar.Root>

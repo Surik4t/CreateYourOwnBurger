@@ -18,27 +18,27 @@ export const Menu = () => {
 
     return (
         <Box width="75%">
-            <Tabs.Root value={tabValue} onValueChange={(e) => setTabValue(e.value)} variant="line" defaultValue="creator" fitted >
-                <Tabs.List bg="orange.400" p="1" rounded="xl">
-                    <Tabs.Trigger color="black" bg="orange.400" value="creator">
+            <Tabs.Root value={tabValue} onValueChange={(e) => setTabValue(e.value)} variant="enclosed" defaultValue="creator" fitted >
+                <Tabs.List bg="transparent" p="1">
+                    <Tabs.Trigger rounded="xl" mr="0.5em" color="black" bg="orange.400" value="creator">
                         Creator
                     </Tabs.Trigger>
-                    <Tabs.Trigger color="black" bg="orange.400" value="orders">
+                    <Tabs.Trigger rounded="xl" color="black" bg="orange.400" value="orders">
                         Orders
                     </Tabs.Trigger>
-                    <Tabs.Trigger color="black" bg="orange.400" value="about">
+                    <Tabs.Trigger rounded="xl" ml="0.5em" color="black" bg="orange.400" value="about">
                         About
                     </Tabs.Trigger>
                 </Tabs.List>
                 <Tabs.Content value="creator"
-                _open={{
-                    animationName: "fade-in, scale-in",
-                    animationDuration: "300ms",
-                }}
-                _closed={{
-                    animationName: "fade-out, scale-out",
-                    animationDuration: "120ms",
-                }}
+                    _open={{
+                        animationName: "fade-in, scale-in",
+                        animationDuration: "300ms",
+                    }}
+                    _closed={{
+                        animationName: "fade-out, scale-out",
+                        animationDuration: "120ms",
+                    }}
                 >
                     <Creator changeTab={handleTabChange} menuState={menuState} orderInEdit={orderInEdit} />
                 </Tabs.Content>
