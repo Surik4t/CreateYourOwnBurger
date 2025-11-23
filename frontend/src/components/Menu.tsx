@@ -1,12 +1,12 @@
 import { Box, Tabs } from "@chakra-ui/react";
 import { useState } from "react";
-import Creator from "./Creator";
+import Constructor from "./Constructor";
 import Orders from "./Orders";
 import type { Order } from "../common/types";
 
 export const Menu = () => {
 
-    const [tabValue, setTabValue] = useState<string | null>("creator")
+    const [tabValue, setTabValue] = useState<string | null>("constructor")
     const [orderInEdit, setOrderInEdit] = useState<Order | null>(null);
     const [menuState, setMenuState] = useState(0);
 
@@ -18,10 +18,10 @@ export const Menu = () => {
 
     return (
         <Box width="75%">
-            <Tabs.Root value={tabValue} onValueChange={(e) => setTabValue(e.value)} variant="enclosed" defaultValue="creator" fitted >
+            <Tabs.Root value={tabValue} onValueChange={(e) => setTabValue(e.value)} variant="enclosed" defaultValue="constructor" fitted >
                 <Tabs.List bg="transparent" p="1">
-                    <Tabs.Trigger rounded="xl" mr="0.5em" color="black" bg="orange.400" value="creator">
-                        Creator
+                    <Tabs.Trigger rounded="xl" mr="0.5em" color="black" bg="orange.400" value="constructor">
+                        Constructor
                     </Tabs.Trigger>
                     <Tabs.Trigger rounded="xl" color="black" bg="orange.400" value="orders">
                         Orders
@@ -30,7 +30,7 @@ export const Menu = () => {
                         About
                     </Tabs.Trigger>
                 </Tabs.List>
-                <Tabs.Content value="creator"
+                <Tabs.Content value="constructor"
                     _open={{
                         animationName: "fade-in, scale-in",
                         animationDuration: "300ms",
@@ -40,7 +40,7 @@ export const Menu = () => {
                         animationDuration: "120ms",
                     }}
                 >
-                    <Creator changeTab={handleTabChange} menuState={menuState} orderInEdit={orderInEdit} />
+                    <Constructor changeTab={handleTabChange} menuState={menuState} orderInEdit={orderInEdit} />
                 </Tabs.Content>
                 <Tabs.Content value="orders">
                     <Orders changeTab={handleTabChange} menuState={menuState} handleSetEditOrder={setOrderInEdit}/>

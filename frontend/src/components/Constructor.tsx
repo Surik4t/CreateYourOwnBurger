@@ -9,14 +9,14 @@ import BurgerInfo from "../common/BurgerInfo";
 import ConfirmationDialog from "../common/ConfirmationDialog";
 
 
-interface CreatorProps {
+interface ConstructorProps {
     changeTab: (Tab: string) => void;
     menuState: number;
     orderInEdit: Order | null;
 }
 
 
-const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) => {
+const Constructor: React.FC<ConstructorProps> = ({ changeTab, menuState, orderInEdit }) => {
     const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
     const [ingredients, setIngredients] = useState<Ingredient[]>([]);
     const [selectedIngredients, setSelectedIngredients] = useState<Ingredient[]>([]);    
@@ -445,4 +445,4 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
     );
 }
 
-export default Creator;
+export default Constructor;
