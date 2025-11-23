@@ -56,15 +56,19 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
     }
 
     const selectIngredient = (ingredient: Ingredient) => {
-        setSelectedIngredients([
-            ...selectedIngredients,
-            {
-                name: ingredient.name,
-                weight: ingredient.weight,
-                price: ingredient.price,
-            },
-        ]);
-        setNextId(nextId + 1);
+        if (selectedIngredients.length < 20) {
+            setSelectedIngredients([
+                ...selectedIngredients,
+                {
+                    name: ingredient.name,
+                    weight: ingredient.weight,
+                    price: ingredient.price,
+                },
+            ]);
+            setNextId(nextId + 1);
+        } else {
+            toast.warn("Ingredient list is full!");
+        }
     }
 
     const addToOrder = () => {
@@ -251,7 +255,7 @@ const Creator: React.FC<CreatorProps> = ({ changeTab, menuState, orderInEdit }) 
 
                 {/* Список добавленных ингредиентов */} 
                 <Flex direction="column" color="black" bg="white" rounded="xl" width="25%">
-                    <Text ml="1em"textStyle="xl">Ingredients: {len}/20</Text>
+                    <Text ml="1em"textStyle="xl">Ingredients: {selectedIngredients.length}/20</Text>
                     <List.Root
                         ml="auto" mr="auto"
                         fontSize="xl"
