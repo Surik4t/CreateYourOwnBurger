@@ -1,4 +1,4 @@
-import { Table, Text, List, Button, Flex, CloseButton, Input, Box, Card, CardFooter } from "@chakra-ui/react"
+import { Table, Text, List, Button, Flex, CloseButton, Input, Box, Card, CardFooter, Separator } from "@chakra-ui/react"
 import axios, { AxiosError } from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -224,67 +224,12 @@ const Constructor: React.FC<ConstructorProps> = ({ changeTab, menuState, orderIn
 
             <Flex minWidth="100%" justifyContent="space-between" gap="2em" >
 
-                {/* Динамическая иллюстрация бургера */}
-                <Flex direction="column" gap="1em">
-                    <Flex
-                        bg="orange.200"
-                        borderWidth="thick"
-                        borderColor="white"
-                        borderRadius="2xl"
-                        position="relative"
-                        minHeight="400px"
-                    >
-                        <BurgerImage ingredients={selectedIngredients} miniature={false}/>
-                    </Flex>
-
-                    <Flex direction="column" width="400px" gap="1em">
-                        <Input
-                            value={burgerName}
-                            onChange={(e) => setBurgerName(e.currentTarget.value)}
-                            bg="orange.200"
-                            color="black"
-                            placeholder="Name your burger!"
-                            variant="subtle"
-                            >
-                        </Input>
-                        <Button bg="orange.400" onClick={addToOrder}>
-                            Add to order
-                        </Button>
-                    </Flex>
-                </Flex>
-
-                {/* Список добавленных ингредиентов */} 
-                <Flex direction="column" color="black" bg="white" rounded="xl" width="25%">
-                    <Text ml="1em"textStyle="xl">Ingredients: {selectedIngredients.length}/20</Text>
-                    <List.Root
-                        ml="auto" mr="auto"
-                        fontSize="xl"
-                        width="80%"
-                        >
-                        {selectedIngredients.map((selectedIngredient, selectedIngrIndex) => (
-                            <List.Item key={selectedIngrIndex}>
-                                <Flex justifyContent="space-between" mt="-0.3em">
-                                    <Text textStyle="sm">{selectedIngredient.name}</Text>
-                                    <CloseButton 
-                                        size="2xs"
-                                        bg="orange.400"
-                                        alignSelf="center"
-                                        onClick={() => 
-                                            setSelectedIngredients(ingr => 
-                                                ingr.filter((_, index) => index !== selectedIngrIndex)
-                                            )
-                                        }
-                                    >
-                                    </CloseButton>
-                                </Flex>
-                            </List.Item>
-                        )).reverse()}
-                    </List.Root>
-                    <Text mt="auto" ml="auto" mr="1em" textStyle="2xl">Price: {burgerPrice}₽</Text>
-                </Flex>
-
                 {/* Таблица ингредиентов */} 
-                <Flex width="50%">
+                <Flex bg="white" rounded="xl" height="100%" width="30%"
+                    borderWidth="thick"
+                    borderColor="white"
+                    borderRadius="2xl"
+                >
                     <Table.ScrollArea height="100%" flex="1">
                         <Table.Root
                             bg="orange.200"
@@ -304,14 +249,25 @@ const Constructor: React.FC<ConstructorProps> = ({ changeTab, menuState, orderIn
                             <Table.Body>
                                 {ingredients.map((ingredient) => (
                                 <Table.Row key={ingredient.name}>
-                                    <Table.Cell>{ingredient.name}</Table.Cell>
-                                    <Table.Cell>{ingredient.price}</Table.Cell>
+                                    <Table.Cell>
+                                        <Text textStyle="xl">
+                                            {ingredient.name}
+                                        </Text>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <Text textStyle="xl">
+                                            {ingredient.price}
+                                        </Text>
+                                    </Table.Cell>
                                     <Table.Cell textAlign="end">
                                         <Button
+                                            rounded="full"
+                                            border="solid" borderColor="white"
+                                            size="xs"
                                             bg="orange.400"
                                             onClick={() => selectIngredient(ingredient)}
                                         >
-                                            +
+                                            <Text textStyle="md">+</Text>
                                         </Button>
                                     </Table.Cell>
                                 </Table.Row>
@@ -321,11 +277,119 @@ const Constructor: React.FC<ConstructorProps> = ({ changeTab, menuState, orderIn
                     </Table.ScrollArea>
                 </Flex>
 
+                {/* Динамическая иллюстрация бургера */}
+                <Flex direction="column" gap="1em" width="35%">
+                    <Flex
+                        bg="orange.200"
+                        borderWidth="thick"
+                        borderColor="white"
+                        borderRadius="2xl"
+                        position="relative"
+                        minHeight="400px"
+                    >
+                        <BurgerImage ingredients={selectedIngredients} miniature={false}/>
+                        <Box
+                            bg="orange.400"
+                            rounded="full"
+                            position="absolute"
+                            right="-0.5em"
+                            bottom="-0.5em"
+                        >                                          
+                            <Text margin="5px" textStyle="2xl" fontWeight="medium" color="white">
+                                {burgerPrice}₽
+                            </Text>
+                        </Box>
+                    </Flex>
+
+                    <Flex direction="column" gap="1em">
+                        <Input
+                            value={burgerName}
+                            onChange={(e) => setBurgerName(e.currentTarget.value)}
+                            bg="orange.200"
+                            color="black"
+                            borderWidth="thick"
+                            borderColor="white"
+                            borderRadius="xl"
+                            placeholder="Name your burger!"
+                            variant="subtle"
+                            >
+                        </Input>
+                        <Button rounded="xl" bg="orange.400" onClick={addToOrder}>
+                            Add to order
+                        </Button>
+                    </Flex> 
+                </Flex>
+
+                {/* Список добавленных ингредиентов */} 
+                <Flex 
+                    direction="column" 
+                    color="black" 
+                    bg="orange.200" 
+                    rounded="xl" 
+                    width="30%"
+                    borderWidth="thick"
+                    borderColor="white"
+                    borderRadius="2xl"
+                >
+                    <List.Root
+                        mt="0.5em"
+                        ml="auto" mr="auto"
+                        fontSize="xl"
+                        width="80%"
+                        overflowY="auto"
+                        height="450px"
+                    >
+                        {selectedIngredients.map((selectedIngredient, selectedIngrIndex) => (
+                            <List.Item key={selectedIngrIndex}>
+                                <Flex justifyContent="space-between" mt="0.3em">
+                                    <Text textStyle="xl">{selectedIngredient.name}</Text>
+                                    <CloseButton 
+                                        size="xs"
+                                        rounded="full"
+                                        border="solid" borderColor="white"
+                                        bg="red.400"
+                                        alignSelf="center"
+                                        mr="1em"
+                                        onClick={() => 
+                                            setSelectedIngredients(ingr => 
+                                                ingr.filter((_, index) => index !== selectedIngrIndex)
+                                            )
+                                        }
+                                    >
+                                    </CloseButton>
+                                </Flex>
+                                <Separator mt="0.3em" />
+                            </List.Item>
+                        )).reverse()}
+                    </List.Root>
+                    <Flex 
+                        roundedBottom="xl" 
+                        bg="orange.400" 
+                        mt="auto"
+                        justifyContent="space-between"
+                        height="10%"
+                    > 
+                        <Text ml="1em" mt="auto" mb="auto" textStyle="2xl">Ingredients: {selectedIngredients.length}/20</Text>
+                        <Button 
+                            mr="1em" mt="auto" mb="auto" 
+                            size="sm" 
+                            bg="red.400" 
+                            border="solid" borderColor="white" 
+                            rounded="xl"
+                            onClick={() => setSelectedIngredients([])}
+                        >
+                            Clear
+                        </Button>
+                    </Flex>
+                </Flex>
+
             </Flex>
             
             {/* Состав заказа */}
             <Flex width="100%" minHeight="275px" mt="1em">
-                <Flex width="80%" bg="white" color="black" rounded="xl" overflowX="auto">
+                <Flex width="100%" bg="white" color="black" rounded="xl">
+                    <Flex overflowX="auto">
+
                     {burgers.map((burger, burgerIndex) => (
                         <Flex position="relative">
                             <Card.Root
@@ -384,60 +448,69 @@ const Constructor: React.FC<ConstructorProps> = ({ changeTab, menuState, orderIn
                                 X
                             </CloseButton>
 
-
                         </Flex>
                     ))}
-                </Flex>
-                
-                <Flex
-                    justifyContent="space-between"
-                    align="center"
-                    direction="column"
-                    width="20%"
-                    height="275px"
-                    color="black"
+                    </Flex>
+
+                    <Flex
+                        ml="auto"
+                        mt="0.5em" mb="0.5em"
+                        justifyContent="space-between"
+                        align="center"
+                        direction="column"
+                        width="20%"
+                        height="275px"
+                        color="black"
                     >
-                    <Button
-                        hidden={Boolean(orderId)}
-                        bg="green.400"
-                        height="50%"
-                        width="90%"
-                        textStyle="4xl"
-                        onClick={() => createOrder(burgers)}
-                    >
-                        🛒
-                    </Button>
-                    <Button
-                        hidden={!orderId}
-                        bg="green.400"
-                        height="50%"
-                        width="90%"
-                        textStyle="4xl"
-                        onClick={() => changeOrder(burgers)}
-                    >
-                        Confirm
-                    </Button>
-                    <Button
-                        hidden={Boolean(orderId)}
-                        bg="red.400"
-                        height="20%"
-                        width="90%"
-                        textStyle="3xl"
-                        onClick={() => setConfirmationDialogOpen(true)}
-                    >
-                        Clear order
-                    </Button>
-                    <Button
-                        hidden={!orderId}
-                        bg="red.400"
-                        height="20%"
-                        width="90%"
-                        textStyle="3xl"
-                        onClick={() => changeOrder(burgers)}
-                    >
-                        Cancel
-                    </Button>
-                    <Text>Total price: {OrderPrice}₽, Weight: {OrderWeight}g </Text>
+                        <Button
+                            hidden={Boolean(orderId)}
+                            bg="green.400"
+                            height="50%"
+                            width="90%"
+                            rounded="xl"
+                            textStyle="4xl"
+                            onClick={() => createOrder(burgers)}
+                        >
+                            🛒
+                        </Button>
+                        <Button
+                            hidden={!orderId}
+                            bg="green.400"
+                            height="50%"
+                            width="90%"
+                            rounded="xl"
+                            textStyle="4xl"
+                            onClick={() => changeOrder(burgers)}
+                        >
+                            Confirm
+                        </Button>
+                        <Button
+                            hidden={Boolean(orderId)}
+                            bg="red.400"
+                            height="20%"
+                            width="90%"
+                            rounded="xl"
+                            textStyle="3xl"
+                            onClick={() => setConfirmationDialogOpen(true)}
+                        >
+                            Clear order
+                        </Button>
+                        <Button
+                            hidden={!orderId}
+                            bg="red.400"
+                            height="20%"
+                            width="90%"
+                            rounded="xl"
+                            textStyle="3xl"
+                            onClick={() => changeOrder(burgers)}
+                        >
+                            Cancel
+                        </Button>
+                        <Flex h="25%" w="90%" justifyContent="center" rounded="xl" bg="orange.400">
+                            <Text mt="auto" mb="auto" textStyle="2xl" color="white">Total: <b>{OrderPrice}₽</b> </Text>
+                        </Flex>
+                    </Flex>
+
                 </Flex>
                 
             </Flex>   

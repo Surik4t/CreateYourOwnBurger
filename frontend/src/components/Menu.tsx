@@ -1,4 +1,4 @@
-import { Box, Tabs } from "@chakra-ui/react";
+import { Box, Tabs, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import Constructor from "./Constructor";
 import Orders from "./Orders";
@@ -21,13 +21,13 @@ export const Menu = () => {
             <Tabs.Root value={tabValue} onValueChange={(e) => setTabValue(e.value)} variant="enclosed" defaultValue="constructor" fitted >
                 <Tabs.List bg="transparent" p="1">
                     <Tabs.Trigger rounded="xl" mr="0.5em" color="black" bg="orange.400" value="constructor">
-                        Constructor
+                        <Text textStyle="xl">Constructor</Text>
                     </Tabs.Trigger>
                     <Tabs.Trigger rounded="xl" color="black" bg="orange.400" value="orders">
-                        Orders
+                        <Text textStyle="xl">Orders</Text>
                     </Tabs.Trigger>
                     <Tabs.Trigger rounded="xl" ml="0.5em" color="black" bg="orange.400" value="about">
-                        About
+                        <Text textStyle="xl">About</Text>
                     </Tabs.Trigger>
                 </Tabs.List>
                 <Tabs.Content value="constructor"
