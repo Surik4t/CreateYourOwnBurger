@@ -62,7 +62,7 @@ def _get_receipt_body(order):
                 <tr class="service ingredient-row">
                     <td class="tableitem ingredient"><p class="itemtext">{ingr}</p></td>
                     <td class="tableitem qty"><p class="itemtext">{qty}</p></td>
-                    <td class="tableitem price"><p class="itemtext">{price}</p></td>
+                    <td class="tableitem price"><p class="itemtext">${price}</p></td>
                 </tr>
             """
 
@@ -70,7 +70,7 @@ def _get_receipt_body(order):
         <tr class="service total-row">
             <td class="tableitem ingredient"><p class="itemtext">Burger price:</p></td>
             <td class="tableitem qty"><p class="itemtext">-</p></td>
-            <td class="tableitem price"><p class="itemtext">{burger["price"]}</p></td>
+            <td class="tableitem price"><p class="itemtext">${burger["price"]}</p></td>
         </tr>
     """
 
@@ -78,7 +78,7 @@ def _get_receipt_body(order):
                     <tr class="tabletitle">
                         <td></td>
                         <td class="qty"><h2>Total</h2></td>
-                        <td class="price"><h2>{order["price"]}</h2></td>
+                        <td class="price"><h2>${order["price"]}</h2></td>
                     </tr>
                 </table>
             </div>
@@ -90,7 +90,7 @@ def _get_receipt_body(order):
 def _get_receipt_footer():
     return """
                 <div id="legalcopy">
-                    <p class="legal"><strong>Thanks for ordering!</strong> I am gratful for your time and I hope you liked my app.</p>
+                    <p class="legal"><strong>Thanks for ordering!</strong> Thank you for your time and I hope you liked my app.</p>
                     <p class="legal"> <a href="https://github.com/Surik4t/CreateYourOwnBurger" target="_blank">Application source code - CreateYourOwnBurger</a></p>
                 </div>
             </div>

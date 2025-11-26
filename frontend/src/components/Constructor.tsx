@@ -256,7 +256,7 @@ const Constructor: React.FC<ConstructorProps> = ({ changeTab, menuState, orderIn
                                     </Table.Cell>
                                     <Table.Cell>
                                         <Text textStyle="xl">
-                                            {ingredient.price}
+                                            ${ingredient.price}
                                         </Text>
                                     </Table.Cell>
                                     <Table.Cell textAlign="end">
@@ -296,7 +296,7 @@ const Constructor: React.FC<ConstructorProps> = ({ changeTab, menuState, orderIn
                             bottom="-0.5em"
                         >                                          
                             <Text margin="5px" textStyle="2xl" fontWeight="medium" color="white">
-                                {burgerPrice}₽
+                                ${burgerPrice}
                             </Text>
                         </Box>
                     </Flex>
@@ -418,7 +418,7 @@ const Constructor: React.FC<ConstructorProps> = ({ changeTab, menuState, orderIn
                                 </Card.Body>
                                 <CardFooter mt="-1em" alignSelf="flex-end">
                                     <Text textStyle="lg" fontWeight="medium" letterSpacing="tight">
-                                        {burger.price}₽
+                                        ${burger.price}
                                     </Text>
                                 </CardFooter>
                             </Card.Root>
@@ -507,7 +507,7 @@ const Constructor: React.FC<ConstructorProps> = ({ changeTab, menuState, orderIn
                             Cancel
                         </Button>
                         <Flex h="25%" w="90%" justifyContent="center" rounded="xl" bg="orange.400">
-                            <Text mt="auto" mb="auto" textStyle="2xl" color="white">Total: <b>{OrderPrice}₽</b> </Text>
+                            <Text mt="auto" mb="auto" textStyle="2xl" color="white">Total: <b>${OrderPrice}</b> </Text>
                         </Flex>
                     </Flex>
 

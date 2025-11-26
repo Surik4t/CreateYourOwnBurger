@@ -54,7 +54,7 @@ const BurgerInfo: React.FC<BurgerInfoProps> = ({ selectedBurger, selectedBurgerI
                                     <Table.Row key={ingrIndex}>
                                         <Table.Cell> {ingr.name} </Table.Cell>
                                         <Table.Cell> x{ingr.quantity} </Table.Cell>
-                                        <Table.Cell textAlign="end"> {ingr.price}₽ </Table.Cell>
+                                        <Table.Cell textAlign="end"> ${ingr.price} </Table.Cell>
                                     </Table.Row>
                                 ))}
                             </Table.Body>
@@ -62,7 +62,7 @@ const BurgerInfo: React.FC<BurgerInfoProps> = ({ selectedBurger, selectedBurgerI
                         <Separator mb="1em"/>
                         <Flex mt="1em" justifyContent="space-between">
                             <Text textStyle="xl" fontWeight="medium">Total: </Text>
-                            <Text textStyle="xl" fontWeight="medium">{selectedBurger && selectedBurger!.price}₽</Text>
+                            <Text textStyle="xl" fontWeight="medium">${selectedBurger && selectedBurger!.price}</Text>
                         </Flex>
                     </Dialog.Body>
                     <Dialog.Footer>
