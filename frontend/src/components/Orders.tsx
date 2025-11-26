@@ -39,7 +39,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
 
 
     const editOrder = (order: Order) => {
-        changeTab("creator");
+        changeTab("constructor");
         handleSetEditOrder(order);
         if (order.status != "Editing") {
             order.status = "Editing"
