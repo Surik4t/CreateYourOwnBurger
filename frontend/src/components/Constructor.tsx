@@ -239,12 +239,12 @@ const Constructor: React.FC<ConstructorProps> = ({ changeTab, menuState, orderIn
             <Flex minWidth="100%" justifyContent="space-between" gap="2em" >
 
                 {/* Таблица ингредиентов */} 
-                <Flex bg="white" rounded="xl" height="100%" width="30%"
+                <Flex bg="white" rounded="xl" height="33em" width="30%"
                     borderWidth="thick"
                     borderColor="white"
                     borderRadius="2xl"
                 >
-                    <Table.ScrollArea rounded="xl" height="500px" flex="1">
+                    <Table.ScrollArea rounded="xl" height="100%" flex="1">
                         <Table.Root
                             bg="orange.200"
                             color="black"
@@ -339,8 +339,9 @@ const Constructor: React.FC<ConstructorProps> = ({ changeTab, menuState, orderIn
                 <Flex 
                     direction="column" 
                     color="black" 
-                    bg="orange.200" 
+                    bg="orange.200"
                     rounded="xl" 
+                    minHeight="33em"
                     width="30%"
                     borderWidth="thick"
                     borderColor="white"
