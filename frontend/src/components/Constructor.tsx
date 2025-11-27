@@ -244,7 +244,7 @@ const Constructor: React.FC<ConstructorProps> = ({ changeTab, menuState, orderIn
                     borderColor="white"
                     borderRadius="2xl"
                 >
-                    <Table.ScrollArea height="100%" flex="1">
+                    <Table.ScrollArea rounded="xl" height="500px" flex="1">
                         <Table.Root
                             bg="orange.200"
                             color="black"
@@ -260,6 +260,7 @@ const Constructor: React.FC<ConstructorProps> = ({ changeTab, menuState, orderIn
                                     <Table.ColumnHeader textAlign="end">Add</Table.ColumnHeader>
                                 </Table.Row>
                             </Table.Header>
+
                             <Table.Body>
                                 {ingredients.map((ingredient) => (
                                 <Table.Row key={ingredient.name}>
