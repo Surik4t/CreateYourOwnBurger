@@ -3,9 +3,10 @@ import { LuFileImage } from "react-icons/lu"
 import Header from "./Header";
 import { useAuth } from "../contexts/AuthContext"
 import ConfirmationDialog from "../common/ConfirmationDialog";
-import { useState } from "react";
-import axios from "axios";
+import { useEffect, useState } from "react";
+import axios, { AxiosError } from "axios";
 import { toast } from "react-toastify";
+import type { Order } from "../common/types";
 
 const Profile = () => {
 
@@ -15,11 +16,42 @@ const Profile = () => {
     const [buttonDisabled, setButtonDisabled] = useState(true);
     const [changeUsernameDialogOpen, setChangeUsernameDialogOpen] = useState(false);
     const [avatarUpdateCount, setAvatarUpdateCount] = useState(0);
+    const [completeOrders, setCompleteOrders] = useState<Order[]>([]);
+    const token = localStorage.getItem('access_token');
+
+    const api = axios.create({
+        baseURL: "http://localhost:8000",
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    const getCompleteOrders = async () => {
+        await api.get(`/orders?customer=${user?.username}`)
+            .then(response => {
+                let orders: Order[] = response.data;
+                setCompleteOrders(orders.filter((order: Order) => order.status === "Complete"))
+            })
+            .catch((error: AxiosError) => {
+                toast.error(error.message);
+                console.error(error.message);
+            })
+        }
+    
+    const calculateTotalSpent = () => {
+        let total = 0;
+        completeOrders.map(order => {
+            total += order.price;
+        })
+        return total.toFixed(2);
+    } 
+
+    useEffect(() => {getCompleteOrders()}, []);
 
 
     const checkUsername = async (e: React.FormEvent) => {
         e.preventDefault();
-        await axios.get(`http://localhost:8000/users/exists?username=${username}`)
+        await api.get(`/users/exists?username=${username}`)
             .catch((error: any) => {
                 if (error.status === 404) {
                     setChangeUsernameDialogOpen(true);
@@ -34,7 +66,7 @@ const Profile = () => {
         const payload = {
             new_username: username,
         }
-        axios.put(`http://localhost:8000/users?username=${user?.username}`, payload)
+        api.put(`/users?username=${user?.username}`, payload)
             .then((response) => {
                 login(response.data.access_token);
                 setButtonDisabled(true);
@@ -52,7 +84,7 @@ const Profile = () => {
             console.log(file);
             let formData = new FormData();
             formData.append("image", file);
-            axios.post(`http://localhost:8000/users/profilepic?username=${user?.username}`, formData)
+            api.post(`/users/profilepic?username=${user?.username}`, formData)
                 .then((response) => {
                     toast.info(response.data.message);
                     setAvatarUpdateCount(avatarUpdateCount + 1);
@@ -71,6 +103,8 @@ const Profile = () => {
         fileDetails.files.pop();
         toast.warn("File must be an image with a maximum size of 20 MB");
     }
+
+
 
     return (
         <Flex bg="#f8ebd7ff" colorPalette="orange" minHeight="100vh" justifyContent="center">
@@ -165,7 +199,7 @@ const Profile = () => {
                                         <Text> Complete orders: </Text>
                                     </Table.Cell>
                                     <Table.Cell>
-                                        <Text> Number </Text>
+                                        <Text> {completeOrders.length} </Text>
                                     </Table.Cell>
                                 </Table.Row>
                                 <Table.Row>
@@ -173,7 +207,7 @@ const Profile = () => {
                                         <Text> Total spent: </Text>
                                     </Table.Cell>
                                     <Table.Cell>
-                                        <Text> Number </Text>
+                                        <Text> ${calculateTotalSpent()} </Text>
                                     </Table.Cell>
                                 </Table.Row>
                             </Table.Body>
