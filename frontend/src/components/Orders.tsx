@@ -55,12 +55,12 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
             const existing = map.get(ingr.name);
             if (existing) {
                 existing.quantity++;
-                existing.price += ingr.price;
+                existing.price += +(ingr.price.toFixed(2));
             } else {
                 map.set(ingr.name, {
                     name: ingr.name,
                     quantity: 1,
-                    price: ingr.price
+                    price: +(ingr.price.toFixed(2))
                 });
             }
         });
@@ -126,7 +126,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
             customer: order.customer,
             status: newStatus,
             content: order.content,
-            price: order.price,
+            price: +(order.price.toFixed(2)),
             weight: order.weight,
             creation_datetime: newDT,
         }
@@ -182,7 +182,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
             customer: order.customer,
             status: "Awaiting payment",
             content: order.content,
-            price: order.price,
+            price: +(order.price.toFixed(2)),
             weight: order.weight,
             creation_datetime: new Date().toISOString(),
         }
@@ -228,7 +228,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                             <Text>{order.id}</Text>
                             <Text>Status: {applyColorToStatus(order.status!)}</Text>
                             <Text>{format(new Date(order.creation_datetime), "yyyy.MM.dd / HH:mm")}</Text>
-                            <Text>Total price: <b>${order.price}</b></Text>
+                            <Text>Total price: <b>${order.price.toFixed(2)}</b></Text>
                             <Flex direction="column" mt="auto">
                                 <Button
                                     onClick={() => openOrderModal(order)}
@@ -312,7 +312,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                                     bottom="5px"
                                 >                                          
                                     <Text margin="5px" textStyle="lg" fontWeight="medium" color="white">
-                                        ${burger.price}
+                                        ${burger.price.toFixed(2)}
                                     </Text>
                                 </Box>
                             </Flex>
@@ -347,13 +347,13 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                                             <Table.Row key={ingrIndex}>
                                                 <Table.Cell> {ingr.name} </Table.Cell>
                                                 <Table.Cell> x{ingr.quantity} </Table.Cell>
-                                                <Table.Cell textAlign="end"> ${ingr.price} </Table.Cell>
+                                                <Table.Cell textAlign="end"> ${ingr.price.toFixed(2)} </Table.Cell>
                                             </Table.Row>
                                         ))}
                                         <Table.Row>
                                             <Table.Cell></Table.Cell>
                                             <Table.Cell />
-                                            <Table.Cell textAlign="end"> <b>${burger.price}</b></Table.Cell>
+                                            <Table.Cell textAlign="end"> <b>${burger.price.toFixed(2)}</b></Table.Cell>
                                         </Table.Row>
                                     </Table.Body>
                                 </Table.Root>
@@ -375,7 +375,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                         </Flex>
                         <Flex mt="1em" justifyContent="space-between">
                             <Text textStyle="xl" fontWeight="medium">Total: </Text>
-                            <Text textStyle="xl" fontWeight="medium">${selectedOrder && selectedOrder!.price}</Text>
+                            <Text textStyle="xl" fontWeight="medium">${selectedOrder && selectedOrder!.price.toFixed(2)}</Text>
                         </Flex>
                     </Dialog.Body>
                     <Dialog.Footer>

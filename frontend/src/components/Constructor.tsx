@@ -130,7 +130,7 @@ const Constructor: React.FC<ConstructorProps> = ({ changeTab, menuState, orderIn
                 customer: user?.username!,
                 status: "Awaiting payment",
                 content: content,
-                price: OrderPrice,
+                price: +(OrderPrice.toFixed(2)),
                 weight: OrderWeight,
                 creation_datetime: new Date().toISOString(),
             }
@@ -154,9 +154,24 @@ const Constructor: React.FC<ConstructorProps> = ({ changeTab, menuState, orderIn
     }
 
 
-    async function changeOrder(content:Burger[])  {
-        if (content.length != 0) {
-            const order: Order = {
+    async function changeOrder(content:Burger[], cancelEditing=false)  {
+        if (content.length === 0 && !cancelEditing) {
+            toast.warn("Order is empty, add some burgers first!");
+        }
+
+        let order: Order
+
+        if (cancelEditing) {
+            order = {
+                customer: user?.username!,
+                status: "Awaiting payment",
+                content: content,
+                price: orderInEdit?.price!,
+                weight: orderInEdit?.weight!,
+                creation_datetime: orderInEdit?.creation_datetime!,
+            }
+        } else {
+            order = {
                 customer: user?.username!,
                 status: "Awaiting payment",
                 content: content,
@@ -164,23 +179,22 @@ const Constructor: React.FC<ConstructorProps> = ({ changeTab, menuState, orderIn
                 weight: OrderWeight,
                 creation_datetime: new Date().toISOString(),
             }
-            const url = `http://localhost:8000/orders/${orderId}`;
-            axios.put(url, order)
-                .then(response => { 
-                    console.log(response.data.message);
-                    setOrderId("");
-                    changeTab("orders");
-                })
-                .catch((error: AxiosError) => {
-                    if (error.response) {
-                        toast.error(error.message);
-                        console.error("Error status code:", error.response.status);
-                        console.error("Details:", error.message);
-                    }
-                });
-        } else {
-            toast.warn("Order is empty, add some burgers first!");
         }
+
+        const url = `http://localhost:8000/orders/${orderId}`;
+        axios.put(url, order)
+            .then(response => { 
+                console.log(response.data.message);
+                setOrderId("");
+                changeTab("orders");
+            })
+            .catch((error: AxiosError) => {
+                if (error.response) {
+                    toast.error(error.message);
+                    console.error("Error status code:", error.response.status);
+                    console.error("Details:", error.message);
+                }
+            });
     }
    
 
@@ -256,7 +270,7 @@ const Constructor: React.FC<ConstructorProps> = ({ changeTab, menuState, orderIn
                                     </Table.Cell>
                                     <Table.Cell>
                                         <Text textStyle="xl">
-                                            ${ingredient.price}
+                                            ${ingredient.price.toFixed(2)}
                                         </Text>
                                     </Table.Cell>
                                     <Table.Cell textAlign="end">
@@ -296,7 +310,7 @@ const Constructor: React.FC<ConstructorProps> = ({ changeTab, menuState, orderIn
                             bottom="-0.5em"
                         >                                          
                             <Text margin="5px" textStyle="2xl" fontWeight="medium" color="white">
-                                ${burgerPrice}
+                                ${burgerPrice.toFixed(2)}
                             </Text>
                         </Box>
                     </Flex>
@@ -418,7 +432,7 @@ const Constructor: React.FC<ConstructorProps> = ({ changeTab, menuState, orderIn
                                 </Card.Body>
                                 <CardFooter mt="-1em" alignSelf="flex-end">
                                     <Text textStyle="lg" fontWeight="medium" letterSpacing="tight">
-                                        ${burger.price}
+                                        ${burger.price.toFixed(2)}
                                     </Text>
                                 </CardFooter>
                             </Card.Root>
@@ -502,12 +516,12 @@ const Constructor: React.FC<ConstructorProps> = ({ changeTab, menuState, orderIn
                             width="90%"
                             rounded="xl"
                             textStyle="3xl"
-                            onClick={() => changeOrder(burgers)}
+                            onClick={() => changeOrder(orderInEdit?.content!, true)}
                         >
                             Cancel
                         </Button>
                         <Flex h="25%" w="90%" justifyContent="center" rounded="xl" bg="orange.400">
-                            <Text mt="auto" mb="auto" textStyle="2xl" color="white">Total: <b>${OrderPrice}</b> </Text>
+                            <Text mt="auto" mb="auto" textStyle="2xl" color="white">Total: <b>${OrderPrice.toFixed(2)}</b> </Text>
                         </Flex>
                     </Flex>
 

@@ -14,7 +14,7 @@ def order_schema(order):
         "customer": order["customer"],
         "status": order["status"],
         "content": [burger_schema(burger) for burger in order["content"]],
-        "price": int(order["price"]),
+        "price": float(order["price"]),
         "weight": int(order["weight"]),
         "creation_datetime": str(order["creation_datetime"]),
     }
@@ -24,7 +24,7 @@ def burger_schema(burger):
     return {
         "name": str(burger["name"]),
         "ingredients": [ingredient_schema(ingr) for ingr in burger["ingredients"]],
-        "price": int(burger["price"]),
+        "price": float(burger["price"]),
         "weight": int(burger["weight"]),
     }
 
@@ -32,6 +32,6 @@ def burger_schema(burger):
 def ingredient_schema(ingredient):
     return {
         "name": str(ingredient["name"]),
+        "price": float(ingredient["price"]),
         "weight": int(ingredient["weight"]),
-        "price": int(ingredient["price"]),
     }
