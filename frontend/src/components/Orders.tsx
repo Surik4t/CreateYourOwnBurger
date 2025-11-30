@@ -174,6 +174,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
             sendReceipt(order);
         }
         setOrderModalOpen(false);
+        toast.success("Thank you for your order!");
     }
 
 
