@@ -1,5 +1,5 @@
 import { Box, Tabs, Text } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Constructor from "./Constructor";
 import Orders from "./Orders";
 import About from "./About";
@@ -7,15 +7,20 @@ import type { Order } from "../common/types";
 
 export const Menu = () => {
 
-    const [tabValue, setTabValue] = useState<string | null>("constructor")
+    const [tabValue, setTabValue] = useState<string>(localStorage.getItem("current_tab") || "constructor")
     const [orderInEdit, setOrderInEdit] = useState<Order | null>(null);
     const [menuState, setMenuState] = useState(0);
 
     const handleTabChange = (Tab: string) => {
         console.log("Redirecting to:", Tab);
         setMenuState(menuState => menuState + 1);
+        localStorage.setItem("current_tab", Tab);
         setTabValue(Tab);
     }
+
+    useEffect(() => {
+        localStorage.setItem("current_tab", tabValue);
+    }, [tabValue])
 
     return (
         <Box width="75%">

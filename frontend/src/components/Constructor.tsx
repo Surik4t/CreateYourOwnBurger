@@ -31,7 +31,6 @@ const Constructor: React.FC<ConstructorProps> = ({ changeTab, menuState, orderIn
     const [OrderPrice, setOrderPrice] = useState<number>(0);
     const [OrderWeight, setOrderWeight] = useState<number>(0);
     const [nextId, setNextId] = useState<number>(0);
-    const len = selectedIngredients.length;
     const { user } = useAuth();
 
     useEffect(() => {
