@@ -1,4 +1,4 @@
-import { Flex, Text, Card, CardDescription, CardFooter, Button, Dialog, CloseButton, Table, Heading, Separator, Checkbox, Box, Image } from "@chakra-ui/react";
+import { Flex, Text, Card, Button, Dialog, CloseButton, Table, Heading, Separator, Checkbox, Box } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { format } from "date-fns"
@@ -365,7 +365,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
                             <p>Send receipt to your email</p>
                             <Checkbox.Root 
                                 defaultChecked
-                                onChange={(e) => setSendReceiptIsChecked(!sendReceiptIsChecked)}
+                                onChange={() => setSendReceiptIsChecked(!sendReceiptIsChecked)}
                             >
                                 <Checkbox.HiddenInput />
                                     <Checkbox.Control _hover={{ cursor: "pointer" }}>
