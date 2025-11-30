@@ -55,12 +55,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             localStorage.removeItem('access_token');
             setUser(null);
             setIsAuthenticated(false);
+            navigate("/login");
         } finally {
             setIsLoading(false);
         }};
 
         checkAuth();
-    }, []);
+    }, [navigate]);
 
     const login = useCallback(async (token: string) => {
         try {
