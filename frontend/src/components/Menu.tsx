@@ -2,6 +2,7 @@ import { Box, Tabs, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import Constructor from "./Constructor";
 import Orders from "./Orders";
+import About from "./About";
 import type { Order } from "../common/types";
 
 export const Menu = () => {
@@ -45,7 +46,7 @@ export const Menu = () => {
                 <Tabs.Content value="orders">
                     <Orders changeTab={handleTabChange} menuState={menuState} handleSetEditOrder={setOrderInEdit}/>
                 </Tabs.Content>
-                <Tabs.Content value="about">About the project</Tabs.Content>
+                <Tabs.Content value="about"><About/></Tabs.Content>
             </Tabs.Root>
         </Box>
     );
