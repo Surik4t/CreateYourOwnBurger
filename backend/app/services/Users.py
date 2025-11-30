@@ -27,7 +27,7 @@ router = APIRouter(prefix="/users", tags=["users"])
 
 SECRET_KEY = "9f072413b83c826db32605b44194d7179b943d2a767d4f0642eb1139ec40b14e"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 600
+ACCESS_TOKEN_EXPIRE_MINUTES = 1
 
 
 logging.getLogger("passlib").setLevel(logging.ERROR)
@@ -255,7 +255,12 @@ async def check_user_exists(user: Annotated[UserInDB, Depends(get_user)]):
 
 
 @router.put("")
-async def update_user(data: dict, user: Annotated[UserInDB, Depends(get_user)]):
+async def update_user(
+        data: dict, 
+        user: Annotated[UserInDB, Depends(get_user)], 
+        logged_in: Annotated[UserInDB ,Depends(get_current_user)],
+    ):
+
     old_username = user.username
     new_username = data.get("new_username")
 
@@ -284,7 +289,11 @@ async def update_user(data: dict, user: Annotated[UserInDB, Depends(get_user)]):
 
 
 @router.post("/profilepic")
-async def upload_pic(user: Annotated[UserInDB, Depends(get_user)], image: UploadFile = File()):
+async def upload_pic(
+        user: Annotated[UserInDB, Depends(get_user)],
+        logged_in: Annotated[UserInDB ,Depends(get_current_user)],
+        image: UploadFile = File(),
+    ):
     if not user:
         raise HTTPException(status_code=401, detail="Not authorized.")
 

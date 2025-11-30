@@ -11,9 +11,9 @@ router = APIRouter(prefix="/orders", tags=["orders"])
 
 
 @router.get("")
-async def get_orders(customer: UserInDB = Depends(get_current_user)):
+async def get_orders(user: UserInDB = Depends(get_current_user)):
     result = list()
-    query = {"customer": customer.username}
+    query = {"customer": user.username}
     async for order in orders_collection.find(query):
         result.append(order_schema(order))
 
@@ -21,7 +21,7 @@ async def get_orders(customer: UserInDB = Depends(get_current_user)):
 
 
 @router.post("")
-async def create_order(new_order: OrderModel):
+async def create_order(new_order: OrderModel, user: UserInDB = Depends(get_current_user)):
     try:
         cursor = await orders_collection.insert_one(dict(**new_order.model_dump()))
         return {
@@ -33,7 +33,7 @@ async def create_order(new_order: OrderModel):
 
 
 @router.put("/{order_id}")
-async def update_order(order_id, updated_order: OrderModel):
+async def update_order(order_id, updated_order: OrderModel, user: UserInDB = Depends(get_current_user)):
     try:
         order = await orders_collection.find_one({"_id": ObjectId(order_id)})
         if order:
@@ -48,7 +48,7 @@ async def update_order(order_id, updated_order: OrderModel):
 
 
 @router.delete("/{order_id}")
-async def remove_order(order_id):
+async def remove_order(order_id, user: UserInDB = Depends(get_current_user)):
     try:
         order = await orders_collection.find_one({"_id": ObjectId(order_id)})
         if order:
@@ -63,7 +63,7 @@ async def remove_order(order_id):
     
 
 @router.post("/email")
-async def send_receipt(data: ReceiptData):
+async def send_receipt(data: ReceiptData, user: UserInDB = Depends(get_current_user)):
     try:
         queue_message(data.model_dump(), queue="receipts")
         return {"message": f"Receipt for order {data.id} sent to queue."}
