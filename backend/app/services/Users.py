@@ -20,12 +20,16 @@ from configurations import client, users_collection, unconfirmed_users_collectio
 from passlib.context import CryptContext
 from datetime import timedelta, datetime, timezone
 from app.RabbitMQ.Message_sender import queue_message
+from dotenv import load_dotenv
+import os
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/users/token")
 
 router = APIRouter(prefix="/users", tags=["users"])
 
-SECRET_KEY = "9f072413b83c826db32605b44194d7179b943d2a767d4f0642eb1139ec40b14e"
+load_dotenv()
+
+JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 600
 
@@ -64,7 +68,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     else:
         expire = datetime.now(timezone.utc) + timedelta(minutes=15)
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    encoded_jwt = jwt.encode(to_encode, JWT_SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
 
@@ -75,7 +79,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(token, JWT_SECRET_KEY, algorithms=[ALGORITHM])
         username = payload.get("sub")
         if username is None:
             raise credentials_exception
