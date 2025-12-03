@@ -326,10 +326,15 @@ const Constructor: React.FC<ConstructorProps> = ({ changeTab, menuState, orderIn
                             borderRadius="xl"
                             placeholder="Name your burger!"
                             variant="subtle"
-                            >
-                        </Input>
-                        <Button rounded="xl" bg="orange.400" onClick={addToOrder}>
-                            Add to order
+                            size="xl"
+                        />
+                        <Button 
+                            border="5px solid white"
+                            borderRadius="xl" 
+                            bg="orange.400" 
+                            size="xl" 
+                            onClick={addToOrder}>
+                                Add to order
                         </Button>
                     </Flex> 
                 </Flex>
