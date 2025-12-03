@@ -9,7 +9,6 @@ def main():
     channel.queue_declare(queue="receipts")
 
     def callback(ch, method, properties, body):
-        print(f" [x] Received {body}")
         try:
             print(f" [x] Sending email...")
             send_email(body, queue=method.routing_key)
