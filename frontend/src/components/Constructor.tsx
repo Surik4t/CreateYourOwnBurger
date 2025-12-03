@@ -1,4 +1,4 @@
-import { Table, Text, List, Button, Flex, CloseButton, Input, Box, Card, CardFooter, Separator } from "@chakra-ui/react"
+import { Table, Text, List, Button, Flex, CloseButton, Input, Box, Card, Separator } from "@chakra-ui/react"
 import axios, { AxiosError } from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";

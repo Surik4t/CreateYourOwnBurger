@@ -6,8 +6,8 @@ type ProtectedRouteProps = {
     children?: React.ReactNode;
 };
 
-export const ProtectedRoute = ({ roles, children }: ProtectedRouteProps) => {
-    const { isAuthenticated, isLoading, user } = useAuth();
+export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
+    const { isAuthenticated, isLoading } = useAuth();
     const location = useLocation();
 
     if (isLoading) {
