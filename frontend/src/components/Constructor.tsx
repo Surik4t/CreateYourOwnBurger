@@ -421,7 +421,7 @@ const Constructor: React.FC<ConstructorProps> = ({ changeTab, menuState, orderIn
                                 }}
                                 onClick={() => openBurgerInfo(burger, burgerIndex)}
                                 >
-                                <Box alignSelf="center" position="relative" height="150px" width="50%" overflow="hidden">
+                                <Box alignSelf="center" position="relative" height="60%" width="50%" overflow="hidden">
                                     <BurgerImage ingredients={burger.ingredients} miniature={true}/>
                                 </Box>
                                 <Card.Body>
@@ -431,19 +431,27 @@ const Constructor: React.FC<ConstructorProps> = ({ changeTab, menuState, orderIn
                                         </Text>
                                     </Card.Title>
                                 </Card.Body>
-                                <CardFooter mt="-1em" alignSelf="flex-end">
-                                    <Text textStyle="lg" fontWeight="medium" letterSpacing="tight">
-                                        ${burger.price.toFixed(2)}
-                                    </Text>
-                                </CardFooter>
                             </Card.Root>
                             
+                            <Box
+                                bg="orange.400"
+                                rounded="full"
+                                position="absolute"
+                                right="0.2em"
+                                bottom="5px"
+                            >                                          
+                                <Text margin="5px" textStyle="lg" fontWeight="medium" color="white">
+                                    ${burger.price.toFixed(2)}
+                                </Text>
+                            </Box>  
+
                             <Button
                                 bg="orange.400"
                                 rounded="full"
                                 position="absolute"
                                 size="sm"
-                                bottom="0"
+                                bottom="5px"
+                                left="0.2em"
                                 onClick={() => setBurgers([...burgers, burger])}
                             >
                                 add another
