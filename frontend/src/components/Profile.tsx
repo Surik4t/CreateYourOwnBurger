@@ -111,7 +111,12 @@ const Profile = () => {
             
             <Header />
             
-            <Flex mt="7em" width="60%" bg="orange.200" border="white" borderRadius="2xl" borderStyle="solid">
+            <Flex 
+                mt="7em" width="60%" 
+                bg="orange.200" 
+                border="5px solid white"
+                borderRadius="xl"
+            >
                 
                 <ConfirmationDialog 
                     title={"Do you want to change your username to " + username + "?"} 
@@ -124,10 +129,10 @@ const Profile = () => {
 
                     <Flex direction="column">
                         <Image
-                            bg="white"
                             w="320px"
                             h="320px"
-                            rounded="md"
+                            border="5px solid white"
+                            borderRadius="xl"
                             mb="2em"
                             key={avatarUpdateCount}
                             src={`/profile_pics/${user?.profile_pic}?v=${avatarUpdateCount}`}
@@ -142,7 +147,11 @@ const Profile = () => {
                         >
                             <FileUpload.HiddenInput />
                             <FileUpload.Trigger w="100%" bg="orange.400" asChild>
-                                <Button variant="outline" size="sm">
+                                <Button 
+                                    variant="outline" size="xl"
+                                    border="5px solid white"
+                                    borderRadius="xl"
+                                >
                                     <LuFileImage /> Change avatar
                                 </Button>
                             </FileUpload.Trigger>
@@ -150,7 +159,7 @@ const Profile = () => {
                     </Flex>
 
                     <Flex 
-                        bg="white"
+                        //bg="white"
                         justifyContent="space-between" 
                         h="40%" 
                         w="60%"
@@ -158,7 +167,7 @@ const Profile = () => {
                         rounded="xl"
                         padding="1em"
                     >
-                        <Table.Root>
+                        <Table.Root overflow="hidden" rounded="xl">
                             <Table.Body>
                                 <Table.Row>
                                     <Table.Cell>
@@ -169,8 +178,8 @@ const Profile = () => {
                                             <Input 
                                                 name="username"
                                                 w="70%"
-                                                borderStyle="solid"
-                                                borderColor="orange" 
+                                                border="3px solid orange"
+                                                borderRadius="xl" 
                                                 bg="orange.200" 
                                                 value={username}
                                                 onChange={(e) => (setUsername(e.target.value), setButtonDisabled(false))}
@@ -178,6 +187,7 @@ const Profile = () => {
                                             <Button 
                                                 bg="orange.400" 
                                                 ml="2em"
+                                                rounded="xl"
                                                 type="submit"
                                                 disabled={buttonDisabled}
                                             >
