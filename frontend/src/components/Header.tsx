@@ -42,9 +42,6 @@ const Header = () => {
                             <Menu.Item onClick={() => navigate("/profile")} value="profile" py={2} px={4} style={{ cursor:"pointer" }}>
                                 Profile
                             </Menu.Item>
-                            <Menu.Item value="settings" py={2} px={4} style={{ cursor:"pointer" }}>
-                                Settings
-                            </Menu.Item>
                             <Menu.Separator />
                             <Menu.Item onClick={logout} value="logout" py={2} px={4} color="red.500" style={{ cursor:"pointer" }}>
                                 Logout
