@@ -7,7 +7,7 @@ app = FastAPI()
 router = APIRouter()
 
 
-origins = ["http://localhost:5173", "http://localhost", "http://127.0.0.1:5173"]
+origins = ["http://localhost:5173", "http://localhost", "http://127.0.0.1:5173", "https://create-your-own-burger-surik4t.netlify.app"]
 
 
 app.add_middleware(
