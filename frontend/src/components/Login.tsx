@@ -5,6 +5,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from "react-hook-form"
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
+import { BASE_URL } from "../common/API";
 import Header from "./Header";
 
 interface FormValues {
@@ -33,7 +34,7 @@ export const Login = () => {
 
         try {
             const response = await axios.post(
-                "http://localhost:8000/users/token",
+                `${BASE_URL}/users/token`,
                 {
                     username: data.username,
                     password: data.password,

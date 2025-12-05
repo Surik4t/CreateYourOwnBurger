@@ -1,5 +1,5 @@
 import { Table, Text, List, Button, Flex, CloseButton, Input, Box, Card, Separator } from "@chakra-ui/react"
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useAuth } from "../contexts/AuthContext";
@@ -7,6 +7,7 @@ import type { Ingredient, Burger, Order } from "../common/types";
 import BurgerImage from "../common/BurgerImage";
 import BurgerInfo from "../common/BurgerInfo";
 import ConfirmationDialog from "../common/ConfirmationDialog";
+import { get_api_base } from "../common/API";
 
 
 interface ConstructorProps {
@@ -32,6 +33,9 @@ const Constructor: React.FC<ConstructorProps> = ({ changeTab, menuState, orderIn
     const [OrderWeight, setOrderWeight] = useState<number>(0);
     const [nextId, setNextId] = useState<number>(0);
     const { user } = useAuth();
+    const token = localStorage.getItem('access_token');
+
+    const api = get_api_base(token || "")
 
     useEffect(() => {
         setBurgerPrice(selectedIngredients.reduce((sum, ingr) => sum + ingr.price, 0));
@@ -94,32 +98,17 @@ const Constructor: React.FC<ConstructorProps> = ({ changeTab, menuState, orderIn
         }
     }
 
-    useEffect(() => {getIngredients(), healthcheck()}, []);
+    useEffect(() => {getIngredients()}, []);
     useEffect(() => {clearBurger(), clearOrder()}, [menuState]);
     useEffect(() => {loadOrder(orderInEdit)}, [orderInEdit]);
 
     async function getIngredients() {
-        const url = "http://localhost:8000/ingredients";
-        await axios.get(url)
+        await api.get("/ingredients")
             .then(response => setIngredients(response.data))
             .catch((error: AxiosError) => {
                 toast.error(error.message);
                 console.error(error.message);
             })    
-    }
-
-
-    async function healthcheck() {
-        const url = "http://localhost:8000/healthcheck";
-        await axios.get(url)
-            .then(response => console.log(response.data.message))
-            .catch((error: AxiosError) => {
-                if (error.response) {
-                    toast.error(error.message);
-                    console.error("Error status code:", error.response.status);
-                    console.error("Details:", error.message);
-                }
-            });
     }
 
 
@@ -133,8 +122,7 @@ const Constructor: React.FC<ConstructorProps> = ({ changeTab, menuState, orderIn
                 weight: OrderWeight,
                 creation_datetime: new Date().toISOString(),
             }
-            const url = "http://localhost:8000/orders";
-            axios.post(url, order)
+            api.post("/orders", order)
                 .then(response => { 
                     console.log(response.data.message);
                     changeTab("orders");
@@ -180,8 +168,7 @@ const Constructor: React.FC<ConstructorProps> = ({ changeTab, menuState, orderIn
             }
         }
 
-        const url = `http://localhost:8000/orders/${orderId}`;
-        axios.put(url, order)
+        api.put(`/orders/${orderId}`, order)
             .then(response => { 
                 console.log(response.data.message);
                 setOrderId("");

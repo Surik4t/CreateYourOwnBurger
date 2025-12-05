@@ -4,9 +4,10 @@ import Header from "./Header";
 import { useAuth } from "../contexts/AuthContext"
 import ConfirmationDialog from "../common/ConfirmationDialog";
 import { useEffect, useState } from "react";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import type { Order } from "../common/types";
+import { get_api_base } from "../common/API";
 
 const Profile = () => {
 
@@ -19,12 +20,7 @@ const Profile = () => {
     const [completeOrders, setCompleteOrders] = useState<Order[]>([]);
     const token = localStorage.getItem('access_token');
 
-    const api = axios.create({
-        baseURL: "http://localhost:8000",
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    });
+    const api = get_api_base(token || "")
 
     const getCompleteOrders = async () => {
         await api.get(`/orders?customer=${user?.username}`)

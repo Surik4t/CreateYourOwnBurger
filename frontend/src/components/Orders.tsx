@@ -1,6 +1,6 @@
 import { Flex, Text, Card, Button, Dialog, CloseButton, Table, Heading, Separator, Checkbox, Box } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { format } from "date-fns"
 import { useAuth } from "../contexts/AuthContext";
 import BurgerInfo from "../common/BurgerInfo";
@@ -8,6 +8,7 @@ import BurgerImage from "../common/BurgerImage";
 import type { CombinedIngredient, Burger, Order } from "../common/types";
 import { toast } from "react-toastify";
 import ConfirmationDialog from "../common/ConfirmationDialog";
+import { get_api_base } from "../common/API";
 
 
 interface OrderProps {
@@ -30,12 +31,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
     const token = localStorage.getItem('access_token');
 
 
-    const api = axios.create({
-        baseURL: "http://localhost:8000",
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    });
+    const api = get_api_base(token || "")
 
 
     const editOrder = (order: Order) => {
@@ -130,8 +126,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
             weight: order.weight,
             creation_datetime: newDT,
         }
-        const url = `http://localhost:8000/orders/${order.id}`;
-        axios.put(url, payload)
+        api.put(`/orders/${order.id}`, payload)
             .then(response => {
                 console.log(response.data.message)
                 getOrders();
@@ -151,8 +146,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
             email: user?.email, 
             ...order,
         }
-        const url = `http://localhost:8000/orders/email`;
-        axios.post(url, payload)
+        api.post("/orders/email", payload)
             .then(response => {
                 console.log(response.data.message);
             })
@@ -187,8 +181,7 @@ const Orders: React.FC<OrderProps> = ({ changeTab, menuState, handleSetEditOrder
             weight: order.weight,
             creation_datetime: new Date().toISOString(),
         }
-        const url = "http://localhost:8000/orders";
-        axios.post(url, payload)
+        api.post("/orders", payload)
             .then(response => {
                 console.log(response.data.message);
                 changeTab("orders");
