@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { BASE_URL } from '../common/API';
 
 interface User {
     username: string;
@@ -46,7 +47,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         try {
             const token = localStorage.getItem('access_token');
             if (token) {
-                const response = await axios.get('http://localhost:8000/users/me');
+                const response = await axios.get(`${BASE_URL}/users/me`);
                 setUser(response.data);
                 setIsAuthenticated(true);
             }
@@ -67,7 +68,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         try {
             localStorage.setItem('access_token', token);
 
-            const userResponse = await axios.get('http://localhost:8000/users/me');
+            const userResponse = await axios.get(`${BASE_URL}/users/me`);
             
             setUser(userResponse.data);
             setIsAuthenticated(true);
