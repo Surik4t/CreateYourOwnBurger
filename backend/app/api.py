@@ -29,11 +29,6 @@ async def db_response():
         raise HTTPException(status_code=500, detail=f"{e}")
 
 
-@router.get("/healthcheck")
-async def health_check():
-    return {"message": "Server is working fine."}
-
-
 app.include_router(router)
 app.include_router(Orders.router)
 app.include_router(Ingredients.router)
