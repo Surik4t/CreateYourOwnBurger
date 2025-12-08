@@ -4,6 +4,7 @@ import { useState } from "react"
 import { useNavigate } from 'react-router-dom'
 import axios from "axios"
 import Header from "./Header"
+import { BASE_URL } from "../common/API"
 
 interface FormValues {
     confirmationCode: string;
@@ -29,7 +30,7 @@ const Confirmation = () => {
         try {
             setHttpError("");
             const email = get_cookie("CYOB_email");
-            const response = await axios.post("http://localhost:8000/users/code_confirmation", {
+            const response = await axios.post(`${BASE_URL}/users/code_confirmation`, {
                 confirmation_code: data.confirmationCode,
                 email: email,
             });
@@ -45,6 +46,8 @@ const Confirmation = () => {
             }
         };
     }
+
+    
     return (
         <Flex bg="#f8ebd7ff" direction="column" colorPalette="orange" minHeight="100vh">
             <Flex

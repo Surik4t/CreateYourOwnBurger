@@ -5,6 +5,7 @@ import { useState } from "react"
 import { HiEye, HiEyeOff } from "react-icons/hi"
 import axios from "axios"
 import Header from "./Header"
+import { BASE_URL } from "../common/API";
 
 
 interface FormValues {
@@ -42,7 +43,7 @@ const Register = () => {
         try {
             setHttpError("");
             setCookie("CYOB_email", data.email);
-            const response = await axios.post("http://localhost:8000/users/user_verification", {
+            const response = await axios.post(`${BASE_URL}/users/user_verification`, {
                 username: data.username,
                 email: data.email,
                 password: data.password,
@@ -52,7 +53,6 @@ const Register = () => {
             navigate("/confirmation");
         } catch (error) {
             if (axios.isAxiosError(error)) {
-                // For HTTP errors (4xx, 5xx), the error details are in response.data
                 if (error.response) {
                     setHttpError(error.response.data.detail || error.message);
                 } else {
