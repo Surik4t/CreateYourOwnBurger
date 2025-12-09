@@ -296,16 +296,14 @@ async def update_user(
 @router.get("/profilepic")
 async def fetch_profile_picture(user:Annotated[UserModel ,Depends(get_current_user)]):
     path = Path(f"./images/{user.profile_pic}")
-    try:
-        if path.exists():
-            with open(f"{path}", "rb") as image_file:
-                base64image = base64.b64encode(image_file.read())
-                return base64image
+    if not path.exists():
+        path = Path("./images/defaultAvatar.png")
 
-        with open("./images/defaultAvatar.png", "rb") as default_avatar:
-            image_binary = default_avatar.read()
-            return {"profile_pic": image_binary} 
-    
+    try:
+        with open(f"{path}", "rb") as image_file:
+            base64image = base64.b64encode(image_file.read())
+            return base64image
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error loading profile picture: {e}")
 
