@@ -295,11 +295,9 @@ async def update_user(
 
 @router.get("/profilepic")
 async def fetch_profile_picture(user:Annotated[UserModel ,Depends(get_current_user)]):
-    from fastapi.responses import FileResponse
     path = Path(f"./images/{user.profile_pic}")
     try:
         if path.exists():
-#return FileResponse(path=path, media_type="image/png")
             with open(f"{path}", "rb") as image_file:
                 base64image = base64.b64encode(image_file.read())
                 return base64image
