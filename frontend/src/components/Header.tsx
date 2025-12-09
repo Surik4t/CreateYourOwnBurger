@@ -35,7 +35,7 @@ const Header = () => {
                 <Menu.Trigger rounded="full" mr="2em">   
                     <Avatar.Root size="lg" style={{ cursor:"pointer" }}>
                         <Avatar.Fallback name={user?.username} />
-                        <Avatar.Image src={profilePic}/>
+                        <Avatar.Image src={profilePic || undefined}/>
                     </Avatar.Root>
                 </Menu.Trigger>
                 <Portal>

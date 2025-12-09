@@ -31,22 +31,24 @@ export const useAvatar = () => {
 };
 
 export const useProfilePic = () => {
-    const [profilePic, setProfilePic] = useState<string>("");
+    const [profilePic, setProfilePic] = useState<string | null>(null);
     const { avatarVersion } = useAvatar();
     const token = localStorage.getItem('access_token');
     const api = get_api_base(token || "");
 
     useEffect(() => {
         const fetchPic = async () => {
-        try {
-            const response = await api.get("/users/profilepic");
-            setProfilePic(`data:image/jpeg;base64,${response.data}`);
-        } catch (error) {
-            console.error(error);
-            setProfilePic("");
-        }};
+            try {
+                const response = await api.get("/users/profilepic");
+                const image = `data:image/jpeg;base64,${response.data}`;
+                setProfilePic(image);
+            } catch (error) {
+                console.error(error);
+                setProfilePic(null);
+            }};
         fetchPic();
     }, [avatarVersion]);
 
-        return profilePic;
+    return profilePic;
+
 };

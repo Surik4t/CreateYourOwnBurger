@@ -99,9 +99,8 @@ const Profile = () => {
 
     const handleFileReject = (fileDetails: FileUploadFileRejectDetails) => {
         fileDetails.files.pop();
-        toast.warn("File must be an image with a maximum size of 20 MB");
+        toast.warn("File must be an image with a maximum size of 10 MB");
     }
-
 
 
     return (
@@ -132,13 +131,13 @@ const Profile = () => {
                             border="5px solid white"
                             borderRadius="xl"
                             mb="2em"
-                            src={profilePic}
+                            src={profilePic || undefined}
                             alt={username}
                         />
                         <FileUpload.Root
                             accept={["image/png", "image/jpeg", "image/bmp"]}
                             maxFiles={1}
-                            maxFileSize={20000000}
+                            maxFileSize={10000000}
                             onFileAccept={handleFileAccept}
                             onFileReject={handleFileReject}
                         >
