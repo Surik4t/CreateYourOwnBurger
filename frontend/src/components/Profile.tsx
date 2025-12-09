@@ -8,6 +8,7 @@ import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import type { Order } from "../common/types";
 import { get_api_base } from "../common/API";
+import { useAvatar, useProfilePic } from "../contexts/AvatarContext"; 
 
 const Profile = () => {
 
@@ -16,12 +17,14 @@ const Profile = () => {
     const [username, setUsername] = useState(user?.username);
     const [buttonDisabled, setButtonDisabled] = useState(true);
     const [changeUsernameDialogOpen, setChangeUsernameDialogOpen] = useState(false);
-    const [avatarUpdateCount, setAvatarUpdateCount] = useState(0);
     const [completeOrders, setCompleteOrders] = useState<Order[]>([]);
+    const { refreshAvatar } = useAvatar(); 
+    const profilePic = useProfilePic();
+
+
     const token = localStorage.getItem('access_token');
-
     const api = get_api_base(token || "")
-
+    
     const getCompleteOrders = async () => {
         await api.get(`/orders?customer=${user?.username}`)
             .then(response => {
@@ -43,7 +46,6 @@ const Profile = () => {
     } 
 
     useEffect(() => {getCompleteOrders()}, []);
-
 
     const checkUsername = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -83,7 +85,7 @@ const Profile = () => {
             api.post(`/users/profilepic?username=${user?.username}`, formData)
                 .then((response) => {
                     toast.info(response.data.message);
-                    setAvatarUpdateCount(avatarUpdateCount + 1);
+                    refreshAvatar();
                     fileDetails.files.pop();
                 })
                 .catch((error: any) => {
@@ -130,8 +132,7 @@ const Profile = () => {
                             border="5px solid white"
                             borderRadius="xl"
                             mb="2em"
-                            key={avatarUpdateCount}
-                            src={`/profile_pics/${user?.profile_pic}?v=${avatarUpdateCount}`}
+                            src={profilePic}
                             alt={username}
                         />
                         <FileUpload.Root

@@ -1,6 +1,7 @@
 import jwt
 import logging
 import uuid
+import base64
 from pathlib import Path
 from bson.objectid import ObjectId
 from random import randint
@@ -292,6 +293,25 @@ async def update_user(
             raise HTTPException(status_code=500, detail=f"Error updating username: {e}")
 
 
+@router.get("/profilepic")
+async def fetch_profile_picture(user:Annotated[UserModel ,Depends(get_current_user)]):
+    from fastapi.responses import FileResponse
+    path = Path(f"./images/{user.profile_pic}")
+    try:
+        if path.exists():
+#return FileResponse(path=path, media_type="image/png")
+            with open(f"{path}", "rb") as image_file:
+                base64image = base64.b64encode(image_file.read())
+                return base64image
+
+        with open("./images/defaultAvatar.png", "rb") as default_avatar:
+            image_binary = default_avatar.read()
+            return {"profile_pic": image_binary} 
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error loading profile picture: {e}")
+
+
 @router.post("/profilepic")
 async def upload_pic(
         user: Annotated[UserInDB, Depends(get_user)],
@@ -301,7 +321,7 @@ async def upload_pic(
     if not user:
         raise HTTPException(status_code=401, detail="Not authorized.")
 
-    path = Path("../frontend/public/profile_pics")
+    path = Path("./images/")
     if path.exists():
         try:
             print(f"current uuid: {user.profile_pic}")
@@ -314,13 +334,11 @@ async def upload_pic(
             with open(f"{path}/{user.profile_pic}", "wb") as file:
                 content = await image.read()
                 file.write(content)
-                print("Image upload successful")
             return {"message": "Profile picture updated."}
         
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Error uplading profile picture: {e}")
 
-    print(f"{path} does not exist")
     raise HTTPException(status_code=500, detail="Internal server error.")
     
     

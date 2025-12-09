@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
+import { AvatarProvider } from './contexts/AvatarContext.tsx'
 import { ProtectedRoute } from './components/PrivateRoute'
 import { Flip, ToastContainer } from "react-toastify";
 import Login from './components/Login';
@@ -12,19 +13,20 @@ export const App = () => {
     return (
         <BrowserRouter>
             <AuthProvider>
-                <Routes>
-                    {/* Public routes */}
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
-                    <Route path="/confirmation" element={<Confirmation />} />
-                    <Route path="/unauthorized" element={<div>404</div>} />
+                <AvatarProvider>
+                    <Routes>
+                        {/* Public routes */}
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/confirmation" element={<Confirmation />} />
 
-                    {/* Protected routes */}
-                    <Route element={<ProtectedRoute />}>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/profile" element={<Profile />} />
-                    </Route>
-                </Routes>
+                        {/* Protected routes */}
+                        <Route element={<ProtectedRoute />}>
+                            <Route path="/" element={<Home />} />
+                            <Route path="/profile" element={<Profile />} />
+                        </Route>
+                    </Routes>
+                </AvatarProvider>
                 <ToastContainer 
                     aria-label="Notifications"
                     position="bottom-right"

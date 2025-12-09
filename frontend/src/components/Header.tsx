@@ -1,12 +1,14 @@
 import { Flex, Heading, Menu, Avatar, Portal } from "@chakra-ui/react";  
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../contexts/AuthContext"
-
+import { useProfilePic } from "../contexts/AvatarContext"; 
 
 const Header = () => {
 
     const navigate = useNavigate();
     const { logout, user } = useAuth();
+    
+    const profilePic = useProfilePic();
 
     return (
             <Flex
@@ -33,7 +35,7 @@ const Header = () => {
                 <Menu.Trigger rounded="full" mr="2em">   
                     <Avatar.Root size="lg" style={{ cursor:"pointer" }}>
                         <Avatar.Fallback name={user?.username} />
-                        <Avatar.Image src={`/profile_pics/${user?.profile_pic}`} />
+                        <Avatar.Image src={profilePic}/>
                     </Avatar.Root>
                 </Menu.Trigger>
                 <Portal>
