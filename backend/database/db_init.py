@@ -1,5 +1,3 @@
-import pymongo
-
 ingredients = [
     {
         "name": "Bottom Bun",
@@ -63,17 +61,42 @@ ingredients = [
     },
 ]
 
-host = "mongodb://localhost:27017"
+import pymongo
+import os, dotenv
+from passlib.context import CryptContext
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+guest_user = {
+    "username": "Guest",
+    "email": "cyob_guest@cyob.com",
+    "disabled": False,
+    "hashed_password": pwd_context.hash("Guest1337")
+}
+
+dotenv.load_dotenv()
+
+host = os.getenv("DB_HOST")
 
 client = pymongo.MongoClient(host)
 
 db = client["CreateYourOwnBurgerDB"]
-collection = db["IngredientsCollection"]
+ingr_collection = db["IngredientsCollection"]
+user_collection = db["UsersCollection"]
 
 try:
-    collection.delete_many({})
-    collection.insert_many(ingredients)
-    print("db initialization successful.")
+    ingr_collection.delete_many({})
+    ingr_collection.insert_many(ingredients)
+    print("Ingredients loaded.")
+    
+    guest_user_exists = user_collection.find_one({"email": guest_user["email"]})
+    if not guest_user_exists:
+        user_collection.insert_one(guest_user)
+        print("Guest user created.")
+
 except Exception as e:
     print(f"db initialization failed: {e}")
+
+finally:
+    print("db initialization successful.")
 
