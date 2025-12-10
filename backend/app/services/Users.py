@@ -131,6 +131,20 @@ async def read_users_me(
     }
 
 
+@router.get("/guest")
+async def fetch_guest():
+    try:
+        guest = await users_collection.find_one({"email": "cyob_guest@cyob.com"})
+
+        if not guest:
+            raise HTTPException(status_code=404, detail="Guest user not found.")
+        
+        return {"guestUsername": guest["username"]}
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Something went wrong: {e}.")
+    
+
 @router.post("/user_verification")
 async def verify_user(new_user: NewUserModel):
     try:

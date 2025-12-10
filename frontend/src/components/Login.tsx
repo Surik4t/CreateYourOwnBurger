@@ -25,6 +25,8 @@ export const Login = () => {
     const togglePasswordVisibility = () => setShowPassword(!showPassword)
 
     const [isLoading, setIsLoading] = useState(false);
+    const [guestIsLoading, setGuestIsLoading] = useState(false);
+    
     const { login } = useAuth();
     const navigate = useNavigate();
 
@@ -62,6 +64,46 @@ export const Login = () => {
             }
         } finally {
             setIsLoading(false);
+        }
+    };
+
+
+    const onGuestAccountSignIn = async () => {
+        setGuestIsLoading(true);
+        setError('');
+        try {
+            const guestResponse = await axios.get(`${BASE_URL}/users/guest`);
+            const guestUsername = guestResponse.data.guestUsername;
+
+            const response = await axios.post(
+                `${BASE_URL}/users/token`,
+                {
+                    username: guestUsername,
+                    password: "Guest1337",
+                },
+                {
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                    timeout: 5000
+                }
+            );
+            await login(response.data.access_token);
+            navigate("/"); 
+        } catch (err) {
+            if (axios.isAxiosError(err)) {
+                if (err.response) {
+                    setError(err.response?.data?.detail);
+                } else if (err.code === "ECONNABORTED" || err.request) {
+                    setError("Server is not responding. Please try again later.");
+                } else {
+                    setError("An unexpected error occurred");
+                }
+            } else {
+                setError("Login failed");
+            }
+        } finally {
+            setGuestIsLoading(false);
         }
     };
     
@@ -127,14 +169,31 @@ export const Login = () => {
                     
                     <Text color="red">{error}</Text>
 
-                    <Flex width="100%" direction="column" justify="center" align="center" gap="1em"> 
+                    <Flex width="100%" direction="column" justify="center" align="center"> 
                         <Button bg="orange.400" type="submit" loading={isLoading}>
                             {isLoading ? "Logging in..." : "Submit"}
                         </Button>
                         
-                        <Link to="/register">Sign up</Link>
-                    </Flex>
+                        <Flex direction="column" width="100%" align="center">
+                            <Text mt="3em">
+                                Don't have an account?
+                            </Text>
+                            <Link to="/register">Sign up</Link>
 
+                            <Text mt="2em">
+                                Or sign in as a guest
+                            </Text> 
+                            <Button 
+                                mt="1em" 
+                                bg="orange.400" 
+                                color="white"
+                                loading={guestIsLoading} 
+                                onClick={onGuestAccountSignIn}>
+                                {"Just let me in :'("}
+                            </Button>
+                        </Flex>
+
+                    </Flex>
 
                 </Stack>
             </form>
