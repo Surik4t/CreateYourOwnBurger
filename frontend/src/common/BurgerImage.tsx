@@ -1,14 +1,17 @@
-import { Flex, Image } from "@chakra-ui/react";
+import { Flex, Image } from "@chakra-ui/react"
 import bottomBun from '../assets/bottom-bun.png'
+import topBun from '../assets/top-bun.png'
 import beefpatty from '../assets/beef-patty.png'
+import chicken from '../assets/chicken.png'
 import cheese from '../assets/cheese.png'
 import ketchup from '../assets/ketchup.png'
 import mayo from '../assets/mayo.png'
-import lettuce from '../assets/lettuce.png'
 import mustard from '../assets/mustard.png'
+import lettuce from '../assets/lettuce.png'
+import onions from '../assets/onions.png'
 import tomato from '../assets/tomato.png'
 import pickles from '../assets/pickles.png'
-import type { Ingredient } from "../common/types";
+import type { Ingredient } from "../common/types"
  
 interface BurgerImageProps {
     ingredients: Array<Ingredient>,
@@ -18,21 +21,24 @@ interface BurgerImageProps {
 const BurgerImage: React.FC<BurgerImageProps> = ({ ingredients, miniature }) => {
 
     const ingredientImages: Record<string, string> = {
-        "Bun": bottomBun,
+        "Bottom Bun": bottomBun,
+        "Top Bun": topBun,
         "Beef Patty": beefpatty,
+        "Chicken": chicken,
         "Cheese": cheese,
         "Ketchup": ketchup,
         "Mayo": mayo,
         "Lettuce": lettuce,
         "Mustard": mustard,
+        "Onions": onions,
         "Tomato Slice": tomato,
-        "Pickles": pickles
+        "Pickles": pickles,
     };
 
     const getIngredientHeight = (ingredient: string, miniature=true) => {
         const sauces = ["Ketchup", "Mayo", "Mustard"]
-        const slices = ["Cheese", "Tomato Slice", "Pickles"]
-        const meat = ["Beef Patty"]
+        const slices = ["Cheese", "Tomato Slice", "Pickles", "Onions", "Lettuce"]
+        const meat = ["Beef Patty", "Chicken"]
 
         let result = 35;
 
@@ -41,7 +47,7 @@ const BurgerImage: React.FC<BurgerImageProps> = ({ ingredients, miniature }) => 
         } else if (slices.includes(ingredient)) {
             result = 15;
         } else if (meat.includes(ingredient)) {
-            result = 10;
+            result = 25;
         }
 
         if (miniature) {
