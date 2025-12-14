@@ -283,6 +283,9 @@ async def update_user(
     old_username = user.username
     new_username = data.get("new_username")
 
+    if old_username == "Guest":
+        raise HTTPException(status_code=403, detail="Editing a guest account is forbidden.")
+
     from .Orders import update_customer
     
     async with await client.start_session() as session:
@@ -328,8 +331,11 @@ async def upload_pic(
         logged_in: Annotated[UserInDB ,Depends(get_current_user)],
         image: UploadFile = File(),
     ):
-    if not user:
+    
+    if not logged_in:
         raise HTTPException(status_code=401, detail="Not authorized.")
+    if logged_in.username == "Guest":
+        raise HTTPException(status_code=403, detail="Editing a guest account is forbidden.")
 
     path = Path("./images/")
     if path.exists():
